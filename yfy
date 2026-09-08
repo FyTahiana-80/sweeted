@@ -1,0 +1,28 @@
+sweeted-frontend/
+├── App.js             # Point d'entrée principal avec navigation
+├── index.js           # Registration Expo
+├── app.json           # Configuration Expo
+├── package.json       # Dépendances
+├── assets/            # Images (logo, icônes ISPM)
+├── components/        # Composants réutilisables
+│   ├── Post.js        # Carte de post
+│   ├── ReactionButton.js # Bouton de réaction avec emojis
+│   ├── profil.js      # Écran de profil
+│   └── AssetExample.js
+├── ecran/             # Écrans principaux
+│   ├── Home/          # Accueil avec liste de posts
+│   │   └── Home.js
+│   ├── PostDetails/   # Détails d'un post + commentaires
+│   │   └── PostDetails.js 
+│   ├── Search.js      # Recherche avec historique
+│   └── tabs/          # Navigation par onglets
+│       └── index.js
+├── user/
+│   └── user.js        # Ancienne version de l'écran de login (dupliqué)
+└── Untitled file.js
+
+
+
+Bug: SSL Aiven non configuré dans db.js
+visible pendant le dev front: TOUT OU RIEN : si le backend ne se connecte pas, rien ne marche
+Peut attendre ?: ⛔ À vérifier maintenant (30 s) : lance le backend et appelle GET /api/posts. Si ça répond → rien à faire, passe au front. Si erreur SSL → à corriger avant tout
