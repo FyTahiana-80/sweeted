@@ -7,9 +7,5 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
-  },
-  "dependencies": {
-    "expo": "^46.0.21",
-    "expo-dev-client": "~1.3.1"
   }
 }
