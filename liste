@@ -1,0 +1,60 @@
+# Résumé détaillé des modifications - Migration vers Expo SDK 57
+
+## 1. Analyse initiale du projet
+
+- Lecture de `sweeted-frontend/package.json` et `sweeted-frontend/app.json`.
+- Constat : le projet utilisait **Expo SDK 54** (`expo: ~54.0.37`, `react: 19.1.0`, `react-native: 0.81.5`), incompatible avec le client Expo Go du téléphone qui est sous **SDK 57**.
+
+---
+
+## 2. Mise à jour du noyau Expo & React
+
+- Installation d'`expo@~57.0.0` et mise à niveau des dépendances associées vers les versions supportées par le SDK 57 :
+  - `react` : passage de `19.1.0` à **`19.2.3`**
+  - `react-dom` : passage de `19.1.0` à **`19.2.3`**
+  - `react-native` : passage de `0.81.5` à **`0.86.3`**
+
+---
+
+## 3. Mise à niveau des modules et librairies Expo / React Native
+
+Mise à jour des packages vers les versions SDK 57 requises :
+
+- `expo-document-picker` : `~14.0.8` ➔ **`~57.0.1`**
+- `expo-image-picker` : `~17.0.11` ➔ **`~57.0.16`**
+- `expo-status-bar` : `~3.0.9` ➔ **`~57.0.1`**
+- `expo-web-browser` : `~15.0.11` ➔ **`~57.0.2`**
+- `react-native-gesture-handler` : `~2.28.0` ➔ **`~2.32.0`**
+- `react-native-safe-area-context` : `~5.6.0` ➔ **`~5.7.0`**
+- `react-native-screens` : `~4.16.0` ➔ **`~4.26.0`**
+- `expo-font` : Ajout de la dépendance manquante requise par `@expo/vector-icons`.
+
+---
+
+## 4. Nettoyage du fichier de configuration (`app.json`)
+
+Correction des propriétés dépréciées / incompatibles avec le schéma Expo SDK 57 :
+
+- Suppression de la propriété `newArchEnabled` (gérée automatiquement / activée par défaut).
+- Suppression de la propriété dépréciée `splash` au niveau racine.
+- Suppression de la propriété dépréciée `android.edgeToEdgeEnabled`.
+- Ajout automatique des plugins Expo nécessaires : `expo-status-bar`, `expo-font`, `expo-web-browser`.
+
+---
+
+## 5. Validation avec Expo Doctor
+
+- Exécution de `npx expo-doctor` dans le dossier `sweeted-frontend`.
+- Résultat : **21/21 vérifications validées avec succès** (aucun conflit de dépendance ni d'incompatibilité détecté).
+
+---
+
+## 6. Procédure pour lancer l'application
+
+Dans le dossier `sweeted-frontend` :
+
+```bash
+npx expo start -c
+```
+
+Puis scanner le QR code avec l'application **Expo Go** (SDK 57) sur votre téléphone.
