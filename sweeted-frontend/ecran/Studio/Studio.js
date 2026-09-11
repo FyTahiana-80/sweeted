@@ -41,6 +41,8 @@ const Studio = forwardRef((props, ref) => {
   const [createContent, setCreateContent] = useState('');
   const [creating, setCreating] = useState(false);
   const [createFeedback, setCreateFeedback] = useState({ type: '', message: '' });
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchFiles = useCallback(async () => {
     setLoading(true);
@@ -99,25 +101,27 @@ const Studio = forwardRef((props, ref) => {
   }, [initialFileId, openFile, onInitialHandled]);
 
   const confirmDeleteFile = (file, isCode) => {
-    Alert.alert('Supprimer', `Voulez-vous vraiment supprimer « ${file.name} » ?`, [
-      { text: 'Annuler', style: 'cancel' },
-      {
-        text: 'Supprimer',
-        style: 'destructive',
-        onPress: async () => {
-          if (isCode && editorFile?.id === file.id) {
-            setEditorVisible(false);
-            setEditorFile(null);
-          }
-          const result = await apiFetch(`/files/${file.id}`, { method: 'DELETE' });
-          if (result.ok) {
-            fetchFiles();
-          } else {
-            Alert.alert('Erreur', result.data?.message || 'Impossible de supprimer le fichier.');
-          }
-        },
-      },
-    ]);
+    setDeleteTarget({ file, isCode });
+  };
+
+  const doDeleteFile = async () => {
+    if (!deleteTarget) return;
+    const targetFile = deleteTarget.file;
+    const targetIsCode = deleteTarget.isCode;
+    setIsDeleting(true);
+    if (targetIsCode && editorFile && editorFile.id === targetFile.id) {
+      setEditorVisible(false);
+      setEditorFile(null);
+    }
+    const result = await apiFetch(`/files/${targetFile.id}`, { method: 'DELETE' });
+    setIsDeleting(false);
+    if (result.ok) {
+      setDeleteTarget(null);
+      fetchFiles();
+    } else {
+      setDeleteTarget(null);
+      setFeedback({ type: 'error', message: result.data && result.data.message ? result.data.message : 'Impossible de supprimer le fichier.' });
+    }
   };
 
   const saveEditor = async () => {
@@ -478,6 +482,43 @@ const Studio = forwardRef((props, ref) => {
               ) : (
                 <Text style={styles.saveButtonText}>Créer</Text>
               )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={deleteTarget !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => { if (!isDeleting) setDeleteTarget(null); }}
+      >
+        <View style={styles.createModalOverlay}>
+          <View style={styles.createModal}>
+            <View style={styles.editorHeader}>
+              <Text style={styles.editorTitle}>Confirmer la suppression</Text>
+              <TouchableOpacity onPress={() => setDeleteTarget(null)} disabled={isDeleting}>
+                <Icon name="close" size={28} color={COLORS.textDark} />
+              </TouchableOpacity>
+            </View>
+            <Text style={{ color: COLORS.textDark, fontSize: 14, marginVertical: 12 }}>Voulez-vous vraiment supprimer ce fichier ?</Text>
+            <TouchableOpacity
+              style={[styles.saveButton, { backgroundColor: COLORS.danger }, isDeleting && styles.disabled]}
+              onPress={doDeleteFile}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                <Text style={styles.saveButtonText}>Supprimer</Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.saveButton, { backgroundColor: COLORS.inputBackground, marginTop: 10 }]}
+              onPress={() => setDeleteTarget(null)}
+              disabled={isDeleting}
+            >
+              <Text style={[styles.saveButtonText, { color: COLORS.textDark }]}>Annuler</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
-import { FlatList, View, StyleSheet, StatusBar, TouchableOpacity, Text, RefreshControl, Alert, Modal, TextInput, ActivityIndicator } from 'react-native';
+import { FlatList, View, StyleSheet, StatusBar, TouchableOpacity, Text, RefreshControl, Alert, Modal, TextInput, ActivityIndicator, Platform } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import Post from '../../components/Post';
@@ -7,9 +7,19 @@ import { apiFetch } from '../../config/apiClient';
 import { API_BASE_URL } from '../../config/api';
 import { openPdf } from '../../config/openPdf';
 import { COLORS, SPACING } from '../../config/theme';
+import ScrollProgress from '../../components/ScrollProgress';
 
 const POSTS_PER_PAGE = 20;
 
+
+const hideFeedScrollbar = () => {
+  if (Platform.OS !== 'web' || typeof document === 'undefined') return;
+  if (document.getElementById('hide-feed-scrollbar')) return;
+  const style = document.createElement('style');
+  style.id = 'hide-feed-scrollbar';
+  style.textContent = '[data-testid="home-feed"]{scrollbar-width:none;-ms-overflow-style:none;}[data-testid="home-feed"]::-webkit-scrollbar{display:none;width:0 !important;height:0 !important;}';
+  document.head.appendChild(style);
+};
 const Home = forwardRef((props, ref) => {
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
@@ -25,9 +35,14 @@ const Home = forwardRef((props, ref) => {
   const [editingPost, setEditingPost] = useState(null);
   const [editContent, setEditContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     fetchCurrentUser();
+  }, []);
+
+  useEffect(() => {
+    hideFeedScrollbar();
   }, []);
 
   useFocusEffect(
@@ -88,6 +103,13 @@ const Home = forwardRef((props, ref) => {
     }
 
     setLoading(false);
+  };
+
+  const handleFeedScroll = (e) => {
+    const n = (e && e.nativeEvent) || {};
+    if (!n.contentOffset || !n.contentSize || !n.layoutMeasurement) return;
+    const max = n.contentSize.height - n.layoutMeasurement.height;
+    setScrollProgress(max > 0 ? Math.min(1, Math.max(0, n.contentOffset.y / max)) : 0);
   };
 
   const handleRefresh = useCallback(() => {
@@ -199,7 +221,7 @@ const Home = forwardRef((props, ref) => {
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id.toString()}
-        style={{ flex: 1 }}
+        style={{ flex: 1, width: '100%', maxWidth: 770, alignSelf: 'center' }}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
           <View style={styles.postCard}>
@@ -232,7 +254,10 @@ const Home = forwardRef((props, ref) => {
             </View>
           </View>
         )}
-        showsVerticalScrollIndicator={true}
+        showsVerticalScrollIndicator={false}
+        testID="home-feed"
+        onScroll={handleFeedScroll}
+        scrollEventThrottle={16}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -251,6 +276,10 @@ const Home = forwardRef((props, ref) => {
           ) : null
         }
       />
+
+      <View style={styles.progressRing} pointerEvents="none">
+        <ScrollProgress progress={scrollProgress} />
+      </View>
 
       <Modal
         visible={editModalVisible}
@@ -410,5 +439,16 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  progressRing: {
+    position: 'absolute',
+    right: 18,
+    bottom: Platform.OS === 'web' ? 24 : 96,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: COLORS.white,
+    elevation: 5,
+    zIndex: 10,
   },
 });

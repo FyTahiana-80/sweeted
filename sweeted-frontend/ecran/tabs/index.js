@@ -23,6 +23,7 @@ import Fichiers from "../Fichiers/Fichiers";
 import Studio from "../Studio/Studio";
 import DesktopLayout from '../../components/Layout/DesktopLayout';
 import { apiFetch } from '../../config/apiClient';
+import { appendFilePart, cleanUri, imageMime } from '../../config/fileUpload';
 import { API_BASE_URL } from '../../config/api';
 import { COLORS, SPACING, RADIUS, SHADOWS, FONTS, BREAKPOINTS } from '../../config/theme';
 
@@ -121,18 +122,22 @@ const HomeScreen = () => {
     formData.append('content', postContent.trim());
 
     if (selectedImage) {
-      const filename = selectedImage.split('/').pop();
-      const match = /\.(\w+)$/.exec(filename);
-      const type = match ? `image/${match[1]}` : 'image/jpeg';
-      formData.append('image', { uri: selectedImage, name: filename, type });
+      const rawName = String(selectedImage).split('?')[0].split('/').pop() || 'photo.jpg';
+      const upImg = await appendFilePart(formData, 'image', cleanUri(selectedImage), rawName, imageMime(rawName));
+      if (!upImg.ok) {
+        setIsCreating(false);
+        setCreateFeedback({ type: 'error', message: 'Lecture image impossible : ' + upImg.debug });
+        return;
+      }
     }
 
     if (selectedPdf) {
-      formData.append('file', {
-        uri: selectedPdf.uri,
-        name: selectedPdf.name || 'piece-jointe.pdf',
-        type: selectedPdf.mimeType || 'application/pdf',
-      });
+      const upPdf = await appendFilePart(formData, 'file', cleanUri(selectedPdf.uri), selectedPdf.name || 'piece-jointe.pdf', selectedPdf.mimeType || 'application/pdf');
+      if (!upPdf.ok) {
+        setIsCreating(false);
+        setCreateFeedback({ type: 'error', message: 'Lecture PDF impossible : ' + upPdf.debug });
+        return;
+      }
     }
 
     const result = await apiFetch('/posts', {
@@ -162,6 +167,9 @@ const HomeScreen = () => {
       message = 'Le serveur a rencontré une erreur lors de la publication.';
     } else {
       message = result.data?.message || 'Impossible de créer le post.';
+    if (result.data?.details) {
+      message = `${message} (${result.data.details})`;
+    }
     }
 
     setCreateFeedback({ type: 'error', message });
@@ -388,7 +396,7 @@ const HomeScreen = () => {
             style={[styles.navItem, mode === OFFICIEL && styles.navItemActive]}
             onPress={() => setMode(OFFICIEL)}
           >
-            <Feather name="megaphone" size={24} color={COLORS.white} />
+            <Feather name="flag" size={24} color={COLORS.white} />
             <Text style={mode === OFFICIEL ? styles.navLabelActive : styles.navLabel}>Officiels</Text>
           </TouchableOpacity>
 
@@ -436,6 +444,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: COLORS.screenBackground,
+    ...(Platform.OS === 'web' && { height: '100vh', maxHeight: '100vh', overflow: 'hidden' }),
   },
   container: {
     flex: 1,

@@ -1,8 +1,9 @@
 import { Platform } from 'react-native';
 
 const getApiUrl = () => {
-  if (process.env.EXPO_PUBLIC_API_URL) {
-    return process.env.EXPO_PUBLIC_API_URL;
+  const fromEnv = (process.env.EXPO_PUBLIC_API_URL || '').trim().replace(/\/+$/,'');
+  if (fromEnv) {
+    return fromEnv;
   }
   if (__DEV__) {
     // Android emulator: http://10.0.2.2:3000/api

@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator,
-  RefreshControl, Alert
+  RefreshControl, Alert, Modal
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
 import { apiFetch } from '../../config/apiClient';
+import { appendFilePart } from '../../config/fileUpload';
 import { API_BASE_URL, fileUrl } from '../../config/api';
 import { openPdf, downloadFileUrl } from '../../config/openPdf';
 import { formatRelativeTime } from '../../components/formatTime';
@@ -34,6 +35,8 @@ export default function Fichiers({ onOpenInStudio }) {
   const [refreshing, setRefreshing] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [feedback, setFeedback] = useState({ type: '', message: '' });
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchFiles = useCallback(async () => {
     setLoading(true);
@@ -72,11 +75,12 @@ export default function Fichiers({ onOpenInStudio }) {
       setFeedback({ type: '', message: '' });
 
       const formData = new FormData();
-      formData.append('file', {
-        uri: asset.uri,
-        name: asset.name || 'fichier',
-        type: asset.mimeType || 'application/pdf',
-      });
+      const upFile = await appendFilePart(formData, 'file', asset.uri, asset.name || 'fichier', asset.mimeType || 'application/pdf');
+      if (!upFile.ok) {
+        setUploading(false);
+        setFeedback({ type: 'error', message: 'Lecture fichier impossible : ' + upFile.debug });
+        return;
+      }
 
       const uploadResult = await apiFetch('/files', { method: 'POST', body: formData });
       setUploading(false);
@@ -113,25 +117,22 @@ export default function Fichiers({ onOpenInStudio }) {
   };
 
   const confirmDelete = (file) => {
-    Alert.alert('Supprimer', `Voulez-vous vraiment supprimer « ${file.name} » ?`, [
-      { text: 'Annuler', style: 'cancel' },
-      {
-        text: 'Supprimer',
-        style: 'destructive',
-        onPress: async () => {
-          const result = await apiFetch(`/files/${file.id}`, { method: 'DELETE' });
-          if (result.ok) {
-            setFiles(prev => prev.filter(f => f.id !== file.id));
-            setFeedback({ type: 'success', message: 'Fichier supprimé.' });
-          } else {
-            setFeedback({
-              type: 'error',
-              message: result.data?.message || 'Impossible de supprimer le fichier.',
-            });
-          }
-        },
-      },
-    ]);
+    setDeleteTarget(file);
+  };
+
+  const doDeleteFile = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    const result = await apiFetch(`/files/${deleteTarget.id}`, { method: 'DELETE' });
+    setIsDeleting(false);
+    if (result.ok) {
+      setFiles(prev => prev.filter(f => f.id !== deleteTarget.id));
+      setDeleteTarget(null);
+      setFeedback({ type: 'success', message: 'Fichier supprimé.' });
+    } else {
+      setDeleteTarget(null);
+      setFeedback({ type: 'error', message: result.data?.message || 'Impossible de supprimer le fichier.' });
+    }
   };
 
   const renderFile = ({ item }) => (
@@ -249,6 +250,32 @@ export default function Fichiers({ onOpenInStudio }) {
           }
         />
       )}
+
+      <Modal
+        visible={deleteTarget !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => { if (!isDeleting) setDeleteTarget(null); }}
+      >
+        <View style={styles.confirmOverlay}>
+          <View style={styles.confirmBox}>
+            <Text style={styles.confirmTitle}>Confirmer la suppression</Text>
+            <Text style={styles.confirmText}>Voulez-vous vraiment supprimer ce fichier ?</Text>
+            <View style={styles.confirmActions}>
+              <TouchableOpacity style={styles.confirmCancelBtn} onPress={() => setDeleteTarget(null)} disabled={isDeleting}>
+                <Text style={styles.confirmCancelText}>Annuler</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.confirmDeleteBtn} onPress={doDeleteFile} disabled={isDeleting}>
+                {isDeleting ? (
+                  <ActivityIndicator color={COLORS.white} />
+                ) : (
+                  <Text style={styles.confirmDeleteText}>Supprimer</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -418,5 +445,56 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     paddingHorizontal: SPACING.xl,
+  },
+  confirmOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  confirmBox: {
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    padding: 20,
+    width: '100%',
+    maxWidth: 360,
+  },
+  confirmTitle: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    marginBottom: 8,
+  },
+  confirmText: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    marginBottom: 18,
+  },
+  confirmActions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  confirmCancelBtn: {
+    flex: 1,
+    paddingVertical: 11,
+    borderRadius: 10,
+    backgroundColor: COLORS.inputBackground,
+    alignItems: 'center',
+  },
+  confirmCancelText: {
+    fontWeight: '600',
+    color: COLORS.textDark,
+  },
+  confirmDeleteBtn: {
+    flex: 1,
+    paddingVertical: 11,
+    borderRadius: 10,
+    backgroundColor: COLORS.danger,
+    alignItems: 'center',
+  },
+  confirmDeleteText: {
+    fontWeight: 'bold',
+    color: COLORS.white,
   },
 });

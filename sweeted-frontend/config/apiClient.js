@@ -34,13 +34,17 @@ export async function apiFetch(path, options = {}) {
   }
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000);
     const response = await fetch(`${API_BASE_URL}${path}`, {
       ...options,
+      signal: controller.signal,
       headers: {
         ...headers,
         ...options.headers,
       },
     });
+    clearTimeout(timeoutId);
 
     let data = null;
     const contentType = response.headers.get('content-type');
@@ -75,7 +79,7 @@ export async function apiFetch(path, options = {}) {
     return {
       ok: false,
       status: null,
-      data: { message: 'Impossible de joindre le serveur. Vérifiez votre connexion.' },
+      data: { message: 'Impossible de joindre le serveur. Vérifiez votre connexion.', details: (error && error.message) || String(error) },
       errorType: 'network',
     };
   }

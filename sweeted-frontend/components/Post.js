@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import { Entypo, Ionicons, MaterialCommunityIcons as MIcon } from '@expo/vector-icons';
 import ReactionButton from './ReactionButton';
 import { formatRelativeTime } from './formatTime';
@@ -195,7 +195,8 @@ const styles = StyleSheet.create({
   },
   postImage: {
     width: '100%',
-    height: 200,
+    height: Platform.OS === 'web' ? 420 : 200,
+    resizeMode: Platform.OS === 'web' ? 'contain' : 'cover',
     borderRadius: 10,
     marginBottom: 10,
     backgroundColor: '#eee',
@@ -244,6 +245,7 @@ const styles = StyleSheet.create({
   },
   optionsButton: {
     padding: 8,
+    marginRight: Platform.OS === 'android' ? '5%' : 0,
     borderRadius: 20,
   },
   dropdownOverlay: {

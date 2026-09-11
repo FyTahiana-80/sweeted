@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity, Image, RefreshControl,
-  Modal, TextInput, ActivityIndicator, Alert
+  Modal, TextInput, ActivityIndicator, Alert, Platform
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiFetch } from '../../config/apiClient';
+import { appendFilePart, cleanUri, imageMime } from '../../config/fileUpload';
 import { API_BASE_URL, fileUrl } from '../../config/api';
 import { openPdf, downloadFileUrl } from '../../config/openPdf';
 import { formatRelativeTime } from '../../components/formatTime';
@@ -32,6 +33,8 @@ export default function Officiels() {
   const [editContent, setEditContent] = useState('');
   const [editBusy, setEditBusy] = useState(false);
   const [editFeedback, setEditFeedback] = useState({ type: '', message: '' });
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -112,10 +115,13 @@ export default function Officiels() {
     formData.append('content', officialContent.trim());
 
     if (selectedImage) {
-      const filename = selectedImage.split('/').pop();
-      const match = /\.(\w+)$/.exec(filename);
-      const type = match ? `image/${match[1]}` : 'image/jpeg';
-      formData.append('image', { uri: selectedImage, name: filename, type });
+      const rawName = String(selectedImage).split('?')[0].split('/').pop() || 'photo.jpg';
+      const imgOk = await appendFilePart(formData, 'image', cleanUri(selectedImage), rawName, imageMime(rawName));
+      if (!imgOk.ok) {
+        setIsPublishing(false);
+        setPublishFeedback({ type: 'error', message: 'Lecture image impossible : ' + imgOk.debug });
+        return;
+      }
     }
 
     const result = await apiFetch('/official', { method: 'POST', body: formData });
@@ -193,25 +199,21 @@ export default function Officiels() {
 
   const confirmDelete = (official) => {
     setMenuOpenId(null);
-    Alert.alert(
-      'Supprimer',
-      'Voulez-vous vraiment supprimer cette publication officielle ?',
-      [
-        { text: 'Annuler', style: 'cancel' },
-        {
-          text: 'Supprimer',
-          style: 'destructive',
-          onPress: async () => {
-            const result = await apiFetch(`/official/${official.id}`, { method: 'DELETE' });
-            if (result.ok) {
-              fetchOfficials();
-            } else {
-              Alert.alert('Erreur', result.data?.message || 'Impossible de supprimer la publication.');
-            }
-          },
-        },
-      ]
-    );
+    setDeleteTarget(official);
+  };
+
+  const doDeleteOfficial = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    const result = await apiFetch(`/official/${deleteTarget.id}`, { method: 'DELETE' });
+    setIsDeleting(false);
+    if (result.ok) {
+      setDeleteTarget(null);
+      fetchOfficials();
+    } else {
+      setDeleteTarget(null);
+      Alert.alert('Erreur', result.data?.message || 'Impossible de supprimer la publication.');
+    }
   };
 
   const renderOfficial = ({ item }) => (
@@ -474,6 +476,38 @@ export default function Officiels() {
           </View>
         </View>
       </Modal>
+
+      <Modal
+        visible={deleteTarget !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => { if (!isDeleting) setDeleteTarget(null); }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Confirmer la suppression</Text>
+            <Text style={{ marginVertical: 14, color: COLORS.textSecondary }}>Voulez-vous vraiment supprimer cette publication officielle ?</Text>
+            <TouchableOpacity
+              style={[styles.submitButton, { backgroundColor: COLORS.danger }, isDeleting && styles.submitButtonDisabled]}
+              onPress={doDeleteOfficial}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                <Text style={styles.submitButtonText}>Supprimer</Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.submitButton, { backgroundColor: COLORS.inputBackground, marginTop: 10 }]}
+              onPress={() => setDeleteTarget(null)}
+              disabled={isDeleting}
+            >
+              <Text style={[styles.submitButtonText, { color: COLORS.textDark }]}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -633,7 +667,8 @@ const styles = StyleSheet.create({
   },
   officialImage: {
     width: '100%',
-    height: 200,
+    height: Platform.OS === 'web' ? 420 : 200,
+    resizeMode: Platform.OS === 'web' ? 'contain' : 'cover',
     borderRadius: RADIUS.lg,
     backgroundColor: '#eee',
     marginBottom: SPACING.md,

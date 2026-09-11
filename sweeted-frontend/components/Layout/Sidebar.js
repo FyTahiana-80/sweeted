@@ -35,7 +35,7 @@ const Sidebar = ({
     },
     {
       id: CODE,
-      label: 'Sweet Studio',
+      label: 'Studio',
       icon: 'code',
       badge: 0,
     },
@@ -139,7 +139,7 @@ export default Sidebar;
 
 const styles = StyleSheet.create({
   sidebarContainer: {
-    width: 260,
+    width: 300,
     backgroundColor: COLORS.cardBackground,
     borderRightWidth: 1,
     borderRightColor: COLORS.divider,
