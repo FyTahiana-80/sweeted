@@ -26,3 +26,55 @@ sweeted-frontend/
 Bug: SSL Aiven non configuré dans db.js
 visible pendant le dev front: TOUT OU RIEN : si le backend ne se connecte pas, rien ne marche
 Peut attendre ?: ⛔ À vérifier maintenant (30 s) : lance le backend et appelle GET /api/posts. Si ça répond → rien à faire, passe au front. Si erreur SSL → à corriger avant tout
+
+
+
+Console Warning
+
+"megaphone" is not a valid icon name for family "feather"
+
+Source:
+D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\Data\LogBoxData.js (235:38)
+
+Call Stack:
+addLog (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\Data\LogBoxData.js:235)
+registerWarning (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:255)
+console.warn (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:113)
+Icon#render (D:\sweeted\sweeted-frontend\node_modules\@expo\vector-icons\build\createIconSet.js:76)
+callRender.react_stack_bottom_frame (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:17143)
+finishClassComponent (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:8389)
+updateClassComponent (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:8346)
+beginWork (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:9354)
+runWithFiberInDEV (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:697)
+performUnitOfWork (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:14134)
+workLoopSync (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:13966)
+renderRootSync (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:13947)
+performWorkOnRoot (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:13087)
+performSyncWorkOnRoot (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:3688)
+flushSyncWorkAcrossRoots_impl (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:3538)
+processRootScheduleInMicrotask (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:3570)
+scheduleMicrotask$argument_0 (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:3708)
+
+
+
+Console Warning
+
+Cannot connect to Expo CLI.
+
+Try the following to fix the issue:
+- Ensure that Expo dev server is running and available on the same network
+- Ensure that your device/emulator is connected to your machine and has USB debugging enabled - run 'adb devices' to see a list of connected devices
+- If you're on a physical device connected to the same machine, run 'adb reverse tcp:8081 tcp:8081' to forward requests from your device
+
+URL: 192.168.0.160:8081
+
+Error: undefined
+
+Source:
+D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\Data\LogBoxData.js (235:38)
+
+Call Stack:
+addLog (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\Data\LogBoxData.js:235)
+registerWarning (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:255)
+console.warn (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:113)
+setTimeout$argument_0 (D:\sweeted\sweeted-frontend\node_modules\expo\src\async-require\hmr.ts:312)
