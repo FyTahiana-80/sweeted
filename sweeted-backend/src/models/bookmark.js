@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const PostImage = require('./postImage');
 
 class Bookmark {
     static async add(userId, postId) {
@@ -30,10 +31,11 @@ class Bookmark {
              JOIN Posts ON enregistrer.id_post = Posts.id
              JOIN Users ON Posts.id_user = Users.id
              WHERE enregistrer.id_user = ?
-             ORDER BY enregistrer.created_at DESC`,
+              ORDER BY enregistrer.created_at DESC`,
             [userId, userId, userId]
         );
-        return rows;
+        const imagesByPost = await PostImage.findByPostIds(rows.map(p => p.id));
+        return rows.map(p => ({ ...p, images: imagesByPost[p.id] || [] }));
     }
 
     static async exists(userId, postId) {

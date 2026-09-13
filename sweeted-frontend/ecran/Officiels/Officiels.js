@@ -7,12 +7,14 @@ import {
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiFetch } from '../../config/apiClient';
 import { appendFilePart, cleanUri, imageMime } from '../../config/fileUpload';
 import { API_BASE_URL, fileUrl } from '../../config/api';
 import { openPdf, downloadFileUrl } from '../../config/openPdf';
 import { formatRelativeTime } from '../../components/formatTime';
+import OfficialCarousel from '../../components/OfficialCarousel';
 import { SPACING, RADIUS } from '../../config/theme';
 
 export default function Officiels() {
@@ -27,7 +29,8 @@ export default function Officiels() {
 
   const [showPublish, setShowPublish] = useState(false);
   const [officialContent, setOfficialContent] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState(null);
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishFeedback, setPublishFeedback] = useState({ type: '', message: '' });
 
@@ -88,6 +91,8 @@ export default function Officiels() {
     fetchOfficials().then(() => setRefreshing(false));
   }, []);
 
+  const MAX_OFFICIAL_IMAGES = 20;
+
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -97,19 +102,47 @@ export default function Officiels() {
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
-      allowsEditing: true,
-      aspect: [4, 3],
+      allowsMultipleSelection: true,
       quality: 0.8,
     });
 
-    if (!result.canceled && result.assets?.[0]) {
-      setSelectedImage(result.assets[0].uri);
+    if (!result.canceled && result.assets?.length > 0) {
+      const uris = result.assets.map(a => a.uri).filter(Boolean);
+      setSelectedImages(prev => {
+        const merged = [...prev];
+        for (const uri of uris) {
+          if (!merged.includes(uri)) merged.push(uri);
+        }
+        if (merged.length > MAX_OFFICIAL_IMAGES) {
+          setPublishFeedback({ type: 'error', message: `Maximum ${MAX_OFFICIAL_IMAGES} images par publication.` });
+        }
+        return merged.slice(0, MAX_OFFICIAL_IMAGES);
+      });
+    }
+  };
+
+  const pickPdf = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'application/pdf',
+        copyToCacheDirectory: true,
+      });
+      if (!result.canceled && result.assets?.[0]) {
+        const asset = result.assets[0];
+        if (asset.size && asset.size > 10 * 1024 * 1024) {
+          setPublishFeedback({ type: 'error', message: 'Le PDF ne peut pas dépasser 10 Mo.' });
+          return;
+        }
+        setSelectedPdf({ uri: asset.uri, name: asset.name || 'document.pdf' });
+      }
+    } catch (e) {
+      setPublishFeedback({ type: 'error', message: 'Impossible de sélectionner le PDF.' });
     }
   };
 
   const publishOfficial = async () => {
-    if (!officialContent.trim() && !selectedImage) {
-      setPublishFeedback({ type: 'error', message: 'Veuillez écrire un contenu ou ajouter une image.' });
+    if (!officialContent.trim() && selectedImages.length === 0 && !selectedPdf) {
+      setPublishFeedback({ type: 'error', message: 'Veuillez écrire un contenu, ajouter des images ou un PDF.' });
       return;
     }
 
@@ -119,12 +152,21 @@ export default function Officiels() {
     const formData = new FormData();
     formData.append('content', officialContent.trim());
 
-    if (selectedImage) {
-      const rawName = String(selectedImage).split('?')[0].split('/').pop() || 'photo.jpg';
-      const imgOk = await appendFilePart(formData, 'image', cleanUri(selectedImage), rawName, imageMime(rawName));
+    for (const uri of selectedImages) {
+      const rawName = String(uri).split('?')[0].split('/').pop() || 'photo.jpg';
+      const imgOk = await appendFilePart(formData, 'image', cleanUri(uri), rawName, imageMime(rawName));
       if (!imgOk.ok) {
         setIsPublishing(false);
         setPublishFeedback({ type: 'error', message: 'Lecture image impossible : ' + imgOk.debug });
+        return;
+      }
+    }
+
+    if (selectedPdf) {
+      const pdfOk = await appendFilePart(formData, 'pdf', cleanUri(selectedPdf.uri), selectedPdf.name, 'application/pdf');
+      if (!pdfOk.ok) {
+        setIsPublishing(false);
+        setPublishFeedback({ type: 'error', message: 'Lecture PDF impossible : ' + pdfOk.debug });
         return;
       }
     }
@@ -135,7 +177,8 @@ export default function Officiels() {
     if (result.ok) {
       setShowPublish(false);
       setOfficialContent('');
-      setSelectedImage(null);
+      setSelectedImages([]);
+      setSelectedPdf(null);
       setPublishFeedback({ type: '', message: '' });
       fetchOfficials();
       return;
@@ -221,12 +264,29 @@ export default function Officiels() {
     }
   };
 
+  // URLs complètes des images : tableau `images` (multi) puis repli `image` / `image_url` (ancien format)
+  const officialImageUrls = (official) => {
+    const root = API_BASE_URL.replace('/api', '');
+    if (official.images && official.images.length > 0) {
+      return official.images.map(im => `${root}${im.image_url}`);
+    }
+    if (official.image) return [official.image];
+    if (official.image_url) return [`${root}${official.image_url}`];
+    return [];
+  };
+
   const renderOfficial = ({ item }) => (
     <View style={styles.card}>
+
+  return (
       <View style={styles.cardHeader}>
         <View style={styles.authorRow}>
           <View style={styles.authorAvatar}>
-            <Icon name="school" size={22} color={colors.primary} />
+            <Image
+              source={require('../../assets/ispm1.png')}
+              style={styles.authorLogo}
+              resizeMode="contain"
+            />
           </View>
           <View style={styles.authorInfo}>
             <Text style={styles.authorName}>{item.authorName}</Text>
@@ -280,14 +340,10 @@ export default function Officiels() {
 
       {item.content ? <Text style={styles.content}>{item.content}</Text> : null}
 
-      {item.image ? (
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => navigation.navigate('OfficialDetails', { official: item })}
-        >
-          <Image source={{ uri: item.image }} style={styles.officialImage} resizeMode={Platform.OS === 'web' ? 'contain' : 'cover'} />
-        </TouchableOpacity>
-      ) : null}
+      <OfficialCarousel
+        images={officialImageUrls(item)}
+        onPressImage={() => navigation.navigate('OfficialDetails', { official: item })}
+      />
 
       {item.files && item.files.length > 0 ? (
         <View style={styles.filesContainer}>
@@ -367,7 +423,8 @@ export default function Officiels() {
         onRequestClose={() => {
           if (!isPublishing) {
             setShowPublish(false);
-            setSelectedImage(null);
+            setSelectedImages([]);
+            setSelectedPdf(null);
             setOfficialContent('');
             setPublishFeedback({ type: '', message: '' });
           }
@@ -378,7 +435,7 @@ export default function Officiels() {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Publier un avis officiel</Text>
               <TouchableOpacity
-                onPress={() => { setShowPublish(false); setOfficialContent(''); setSelectedImage(null); setPublishFeedback({ type: '', message: '' }); }}
+                onPress={() => { setShowPublish(false); setOfficialContent(''); setSelectedImages([]); setSelectedPdf(null); setPublishFeedback({ type: '', message: '' }); }}
                 disabled={isPublishing}
               >
                 <Icon name="close" size={28} color={colors.textDark} />
@@ -396,19 +453,44 @@ export default function Officiels() {
               maxLength={2000}
             />
 
-            {selectedImage ? (
-              <View style={styles.imagePreviewContainer}>
-                <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
-                <TouchableOpacity style={styles.removeImageButton} onPress={() => setSelectedImage(null)} disabled={isPublishing}>
-                  <Icon name="close-circle" size={28} color={colors.onPrimary} />
-                </TouchableOpacity>
+            {selectedImages.length > 0 ? (
+              <View style={styles.multiPreviewRow}>
+                {selectedImages.map(uri => (
+                  <View key={uri} style={styles.thumbContainer}>
+                    <Image source={{ uri }} style={styles.thumbPreview} />
+                    <TouchableOpacity
+                      style={styles.removeThumbButton}
+                      onPress={() => setSelectedImages(prev => prev.filter(u => u !== uri))}
+                      disabled={isPublishing}
+                    >
+                      <Icon name="close-circle" size={22} color={colors.onPrimary} />
+                    </TouchableOpacity>
+                  </View>
+                ))}
               </View>
             ) : null}
 
             <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage} disabled={isPublishing}>
               <Icon name="image-outline" size={24} color={colors.primary} />
-              <Text style={styles.imagePickerText}>Ajouter une image (EDT, affiche...)</Text>
+              <Text style={styles.imagePickerText}>
+                {selectedImages.length > 0 ? `Ajouter d'autres images (${selectedImages.length}/20)` : 'Ajouter des images (EDT, affiches...)'}
+              </Text>
             </TouchableOpacity>
+
+            <TouchableOpacity style={styles.imagePickerButton} onPress={pickPdf} disabled={isPublishing}>
+              <Icon name="file-pdf-box" size={24} color={colors.primary} />
+              <Text style={styles.imagePickerText}>Ajouter un PDF (règlement, note...)</Text>
+            </TouchableOpacity>
+
+            {selectedPdf ? (
+              <View style={styles.pdfPreviewRow}>
+                <Icon name="file-pdf-box" size={20} color={colors.danger} />
+                <Text style={styles.pdfPreviewName} numberOfLines={1}>{selectedPdf.name}</Text>
+                <TouchableOpacity onPress={() => setSelectedPdf(null)} disabled={isPublishing}>
+                  <Icon name="close-circle" size={22} color={colors.textMuted} />
+                </TouchableOpacity>
+              </View>
+            ) : null}
 
             {publishFeedback.message ? (
               <Text style={publishFeedback.type === 'error' ? styles.feedbackError : styles.feedbackSuccess}>
@@ -657,6 +739,11 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     alignItems: 'center',
     marginRight: SPACING.md,
   },
+  authorLogo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
   authorInfo: {
     flex: 1,
   },
@@ -688,13 +775,6 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     fontSize: 15,
     color: colors.textDark,
     lineHeight: 22,
-    marginBottom: SPACING.md,
-  },
-  officialImage: {
-    width: '100%',
-    height: Platform.OS === 'web' ? 420 : 200,
-    borderRadius: RADIUS.lg,
-    backgroundColor: colors.inputBackground,
     marginBottom: SPACING.md,
   },
   filesContainer: {
@@ -741,6 +821,8 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 24,
   },
   modalContent: {
     backgroundColor: colors.cardBackground,
@@ -748,7 +830,9 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     paddingHorizontal: SPACING.xl,
     paddingTop: SPACING.xl,
     paddingBottom: SPACING.xxl,
-    width: '88%',
+    width: Platform.OS === 'web' ? '92%' : '88%',
+    maxWidth: 560,
+    alignSelf: 'center',
     maxHeight: '82%',
   },
   modalHeader: {
@@ -775,21 +859,30 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     marginBottom: SPACING.md,
     textAlignVertical: 'top',
   },
-  imagePreviewContainer: {
-    position: 'relative',
+  multiPreviewRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
     marginBottom: SPACING.md,
-    borderRadius: RADIUS.md,
-    overflow: 'hidden',
   },
-  imagePreview: {
-    width: '100%',
-    height: 160,
+  thumbContainer: {
+    position: 'relative',
+    width: 84,
+    height: 84,
+    borderRadius: RADIUS.md,
+    overflow: 'visible',
+  },
+  thumbPreview: {
+    width: 84,
+    height: 84,
     borderRadius: RADIUS.md,
   },
-  removeImageButton: {
+  removeThumbButton: {
     position: 'absolute',
-    top: 5,
-    right: 5,
+    top: -8,
+    right: -8,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    borderRadius: 11,
   },
   imagePickerButton: {
     flexDirection: 'row',
@@ -802,6 +895,21 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     color: colors.primary,
     fontSize: 14,
     fontWeight: '600',
+  },
+  pdfPreviewRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.screenBackground,
+    borderRadius: RADIUS.md,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 8,
+    gap: 8,
+    marginBottom: SPACING.md,
+  },
+  pdfPreviewName: {
+    flex: 1,
+    fontSize: 13,
+    color: colors.textDark,
   },
   feedbackError: {
     color: colors.danger,

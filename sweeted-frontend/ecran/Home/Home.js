@@ -78,6 +78,9 @@ const Home = forwardRef((props, ref) => {
         has_reacted: !!post.has_reacted,
         is_bookmarked: !!post.is_bookmarked,
         image: post.image_url ? `${API_BASE_URL.replace('/api', '')}${post.image_url}` : null,
+        images: Array.isArray(post.images) && post.images.length > 0
+          ? post.images.map(im => `${API_BASE_URL.replace('/api', '')}${im.image_url}`)
+          : (post.image_url ? [`${API_BASE_URL.replace('/api', '')}${post.image_url}`] : []),
         file_id: post.file_id || null,
         file_name: post.file_name || null,
         file_type: post.file_type || null,

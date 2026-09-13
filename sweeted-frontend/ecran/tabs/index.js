@@ -51,7 +51,7 @@ const HomeScreen = () => {
   const [postContent, setPostContent] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [createFeedback, setCreateFeedback] = useState({ type: '', message: '' });
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]);
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState(null);
@@ -79,6 +79,8 @@ const HomeScreen = () => {
     }, [fetchHeaderData])
   );
 
+  const MAX_POST_IMAGES = 20;
+
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -88,17 +90,26 @@ const HomeScreen = () => {
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
-      allowsEditing: true,
-      aspect: [4, 3],
+      allowsMultipleSelection: true,
       quality: 0.8,
     });
 
-    if (!result.canceled && result.assets?.[0]) {
-      setSelectedImage(result.assets[0].uri);
+    if (!result.canceled && result.assets?.length > 0) {
+      const uris = result.assets.map(a => a.uri).filter(Boolean);
+      setSelectedImages(prev => {
+        const merged = [...prev];
+        for (const uri of uris) {
+          if (!merged.includes(uri)) merged.push(uri);
+        }
+        if (merged.length > MAX_POST_IMAGES) {
+          setCreateFeedback({ type: 'error', message: `Maximum ${MAX_POST_IMAGES} images par post.` });
+        }
+        return merged.slice(0, MAX_POST_IMAGES);
+      });
     }
   };
 
-  const removeImage = () => setSelectedImage(null);
+  const removeImage = (uri) => setSelectedImages(prev => prev.filter(u => u !== uri));
 
   const pickPdf = async () => {
     const result = await DocumentPicker.getDocumentAsync({
@@ -113,8 +124,8 @@ const HomeScreen = () => {
   const removePdf = () => setSelectedPdf(null);
 
   const handleCreatePost = async () => {
-    if (!postContent.trim() && !selectedImage && !selectedPdf) {
-      setCreateFeedback({ type: 'error', message: 'Veuillez écrire quelque chose, ajouter une image ou un PDF.' });
+    if (!postContent.trim() && selectedImages.length === 0 && !selectedPdf) {
+      setCreateFeedback({ type: 'error', message: 'Veuillez écrire quelque chose, ajouter des images ou un PDF.' });
       return;
     }
 
@@ -124,9 +135,9 @@ const HomeScreen = () => {
     const formData = new FormData();
     formData.append('content', postContent.trim());
 
-    if (selectedImage) {
-      const rawName = String(selectedImage).split('?')[0].split('/').pop() || 'photo.jpg';
-      const upImg = await appendFilePart(formData, 'image', cleanUri(selectedImage), rawName, imageMime(rawName));
+    for (const uri of selectedImages) {
+      const rawName = String(uri).split('?')[0].split('/').pop() || 'photo.jpg';
+      const upImg = await appendFilePart(formData, 'image', cleanUri(uri), rawName, imageMime(rawName));
       if (!upImg.ok) {
         setIsCreating(false);
         setCreateFeedback({ type: 'error', message: 'Lecture image impossible : ' + upImg.debug });
@@ -152,7 +163,7 @@ const HomeScreen = () => {
 
     if (result.ok) {
       setPostContent('');
-      setSelectedImage(null);
+      setSelectedImages([]);
       setSelectedPdf(null);
       if (homeRef.current) {
         homeRef.current.refreshPosts();
@@ -219,7 +230,7 @@ const HomeScreen = () => {
         if (!isCreating) {
           setShowCreateModal(false);
           setPostContent('');
-          setSelectedImage(null);
+          setSelectedImages([]);
           setSelectedPdf(null);
           setCreateFeedback({ type: '', message: '' });
         }
@@ -234,7 +245,7 @@ const HomeScreen = () => {
                 onPress={() => {
                   setShowCreateModal(false);
                   setPostContent('');
-                  setSelectedImage(null);
+                  setSelectedImages([]);
                   setSelectedPdf(null);
                   setCreateFeedback({ type: '', message: '' });
                 }}
@@ -254,18 +265,24 @@ const HomeScreen = () => {
               editable={!isCreating}
             />
 
-            {selectedImage ? (
-              <View style={styles.imagePreviewContainer}>
-                <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
-                <TouchableOpacity style={styles.removeImageButton} onPress={removeImage} disabled={isCreating}>
-                  <Ionicons name="close-circle" size={28} color={colors.onPrimary} />
-                </TouchableOpacity>
+            {selectedImages.length > 0 ? (
+              <View style={styles.multiPreviewRow}>
+                {selectedImages.map(uri => (
+                  <View key={uri} style={styles.thumbContainer}>
+                    <Image source={{ uri }} style={styles.thumbPreview} />
+                    <TouchableOpacity style={styles.removeThumbButton} onPress={() => removeImage(uri)} disabled={isCreating}>
+                      <Ionicons name="close-circle" size={22} color={colors.onPrimary} />
+                    </TouchableOpacity>
+                  </View>
+                ))}
               </View>
             ) : null}
 
             <TouchableOpacity style={[styles.imagePickerButton, { borderColor: colors.divider, backgroundColor: colors.inputBackground }]} onPress={pickImage} disabled={isCreating}>
               <Ionicons name="image-outline" size={24} color={colors.primary} />
-              <Text style={[styles.imagePickerText, { color: colors.primary }]}>Ajouter une image</Text>
+              <Text style={[styles.imagePickerText, { color: colors.primary }]}>
+                {selectedImages.length > 0 ? `Ajouter d'autres images (${selectedImages.length}/20)` : 'Ajouter des images'}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={[styles.imagePickerButton, { borderColor: colors.divider, backgroundColor: colors.inputBackground }]} onPress={pickPdf} disabled={isCreating}>
@@ -335,11 +352,21 @@ const HomeScreen = () => {
     <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
       <View style={[styles.header, { paddingTop: insets.top + SPACING.sm, backgroundColor: isDark ? colors.cardBackground : colors.headerGreen, borderBottomColor: colors.divider }]}>
         <View style={styles.headerRow}>
-          <Image
-            source={require('../../sweeted_logo-no_background.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
+          {mode === OFFICIEL ? (
+            <View style={styles.logoBox}>
+              <Image
+                source={require('../../assets/ispm.png')}
+                style={styles.logoBoxImage}
+                resizeMode="contain"
+              />
+            </View>
+          ) : (
+            <Image
+              source={isDark ? require('../../sweeted_logo_no_background_white.png') : require('../../sweeted_logo-no_background.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          )}
 
           <View style={styles.headerRight}>
             <View style={styles.headerIcons}>
@@ -486,6 +513,21 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     width: 120,
     height: 95,
     marginRight: SPACING.md,
+    borderRadius: 35,
+  },
+  logoBox: {
+    width: 100,
+    height: 80,
+    marginRight: SPACING.md,
+    borderRadius: 35,
+    backgroundColor: '#FFFFFF',
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoBoxImage: {
+    width: 88,
+    height: 70,
   },
   headerRight: {
     flex: 1,
@@ -649,21 +691,29 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     marginBottom: SPACING.md,
     textAlignVertical: 'top',
   },
-  imagePreviewContainer: {
-    position: 'relative',
+  multiPreviewRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
     marginBottom: SPACING.md,
-    borderRadius: RADIUS.md,
-    overflow: 'hidden',
   },
-  imagePreview: {
-    width: '100%',
-    height: 180,
+  thumbContainer: {
+    position: 'relative',
+    width: 84,
+    height: 84,
     borderRadius: RADIUS.md,
   },
-  removeImageButton: {
+  thumbPreview: {
+    width: 84,
+    height: 84,
+    borderRadius: RADIUS.md,
+  },
+  removeThumbButton: {
     position: 'absolute',
-    top: 5,
-    right: 5,
+    top: -8,
+    right: -8,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    borderRadius: 11,
   },
   imagePickerButton: {
     flexDirection: 'row',

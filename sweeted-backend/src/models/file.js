@@ -32,6 +32,16 @@ class File {
         return rows.insertId;
     }
 
+    static async createOfficialAttachment(userId, { originalname, mimetype, size, path: filePath, officialId }) {
+        const type = mimetype.startsWith('image/') ? 'image' : 'file';
+        const [rows] = await pool.query(
+            `INSERT INTO \`file\` (type, name, path, size, visibility, id_user, download_count, id_official_post)
+             VALUES (?, ?, ?, ?, 'public', ?, 0, ?)`,
+            [type, originalname, filePath, size, userId, officialId]
+        );
+        return rows.insertId;
+    }
+
     static async deleteByPost(postId) {
         const [files] = await pool.query('SELECT * FROM \`file\` WHERE id_post = ?', [postId]);
         for (const file of files) {
@@ -41,6 +51,18 @@ class File {
             }
         }
         const [rows] = await pool.query('DELETE FROM \`file\` WHERE id_post = ?', [postId]);
+        return rows;
+    }
+
+    static async deleteByOfficial(officialId) {
+        const [files] = await pool.query('SELECT * FROM `file` WHERE id_official_post = ?', [officialId]);
+        for (const file of files) {
+            if (file.path) {
+                const fullPath = path.join(__dirname, '..', '..', file.path);
+                if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+            }
+        }
+        const [rows] = await pool.query('DELETE FROM `file` WHERE id_official_post = ?', [officialId]);
         return rows;
     }
 

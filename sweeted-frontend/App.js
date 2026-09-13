@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { 
   StyleSheet, Text, View, TextInput, TouchableOpacity, 
-  StatusBar, ActivityIndicator, Image, Platform, useWindowDimensions
+  StatusBar, ActivityIndicator, Image, Platform, useWindowDimensions,
+  Animated, Easing
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import ProfileScreen from './components/profil';
@@ -35,6 +36,30 @@ const LoginScreen = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState({ type: '', message: '' });
+
+  // Animation du toggle Connexion / Inscription (pastille coulissante + texte fondu)
+  const [toggleWidth, setToggleWidth] = useState(0);
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const labelOpacity = useRef(new Animated.Value(1)).current;
+  const [authLabel, setAuthLabel] = useState('Se connecter');
+  const firstModeRun = useRef(true);
+
+  useEffect(() => {
+    Animated.timing(slideAnim, {
+      toValue: isLoginView ? 0 : 1,
+      duration: 320,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
+    }).start();
+    if (firstModeRun.current) {
+      firstModeRun.current = false;
+      return;
+    }
+    Animated.timing(labelOpacity, { toValue: 0, duration: 150, useNativeDriver: true }).start(() => {
+      setAuthLabel(isLoginView ? 'Se connecter' : "S'inscrire");
+      Animated.timing(labelOpacity, { toValue: 1, duration: 150, useNativeDriver: true }).start();
+    });
+  }, [isLoginView]);
 
   const handleAuth = async () => {
     if (!matricule.trim() || !password.trim()) {
@@ -100,23 +125,40 @@ const LoginScreen = () => {
 
       <View style={[styles.contentContainer, isDesktop && styles.contentContainerDesktop]}>
         <View style={[styles.topSection, { backgroundColor: colors.headerGreen }]}>
+          {isDesktop ? (
+            <Image
+              source={require('./assets/ispm.png')}
+              style={styles.ispmCorner}
+              resizeMode="cover"
+            />
+          ) : null}
           <Image 
-            source={require('./sweeted_logo-no_background.png')} 
+            source={isDark ? require('./sweeted_logo_no_background_white.png') : require('./sweeted_logo-no_background.png')} 
             style={styles.loadingLogo} 
             resizeMode="contain"
           />
         </View>
 
         <View style={[styles.bottomSection, { backgroundColor: colors.formBackground }]}>
-          <View style={[styles.toggleContainer, { backgroundColor: colors.toggleBackground }]}>
+          <View
+            style={[styles.toggleContainer, { backgroundColor: colors.toggleBackground }]}
+            onLayout={(e) => setToggleWidth(e.nativeEvent.layout.width)}
+          >
+            <Animated.View
+              style={[
+                styles.toggleThumb,
+                { backgroundColor: colors.primaryDark },
+                { transform: [{ translateX: slideAnim.interpolate({ inputRange: [0, 1], outputRange: [0, toggleWidth / 2] }) }] },
+              ]}
+            />
             <TouchableOpacity 
-              style={[styles.toggleButton, isLoginView && [styles.activeToggle, { backgroundColor: colors.primaryDark }]]} 
+              style={styles.toggleButton} 
               onPress={() => setIsLoginView(true)}
             >
               <Text style={isLoginView ? styles.activeToggleText : styles.inactiveToggleText}>Connexion</Text>
             </TouchableOpacity>
             <TouchableOpacity 
-              style={[styles.toggleButton, !isLoginView && [styles.activeToggle, { backgroundColor: colors.primaryDark }]]} 
+              style={styles.toggleButton} 
               onPress={() => setIsLoginView(false)}
             >
               <Text style={!isLoginView ? styles.activeToggleText : styles.inactiveToggleText}>Inscription</Text>
@@ -160,6 +202,14 @@ const LoginScreen = () => {
             </Text>
           ) : null}
 
+          {!isDesktop ? (
+            <Image
+              source={require('./assets/ispm1.png')}
+              style={styles.ispmPhone}
+              resizeMode="contain"
+            />
+          ) : null}
+
           <TouchableOpacity 
             style={[styles.loginButton, { backgroundColor: colors.primary }, isSubmitting && styles.loginButtonDisabled]} 
             onPress={handleAuth}
@@ -168,9 +218,9 @@ const LoginScreen = () => {
             {isSubmitting ? (
               <ActivityIndicator size="small" color={colors.onPrimary} />
             ) : (
-              <Text style={styles.loginButtonText}>
-                {isLoginView ? 'Se connecter' : "S'inscrire"}
-              </Text>
+              <Animated.Text style={[styles.loginButtonText, { opacity: labelOpacity }]}>
+                {authLabel}
+              </Animated.Text>
             )}
           </TouchableOpacity>
         </View>
@@ -226,7 +276,7 @@ function AppRoot() {
     return (
       <View style={[styles.loadingContainer, { backgroundColor: colors.headerGreen }]}>
         <Image 
-          source={require('./sweeted_logo-no_background.png')} 
+          source={isDark ? require('./sweeted_logo_no_background_white.png') : require('./sweeted_logo-no_background.png')} 
           style={styles.loadingLogo} 
           resizeMode="contain"
         />
@@ -283,10 +333,27 @@ const getStyles = (colors) => StyleSheet.create({
     marginBottom: 24,
     ...SHADOWS.large,
   },
-  topSection: { backgroundColor: colors.headerGreen, padding: 30, alignItems: 'center' },
+  topSection: { backgroundColor: colors.headerGreen, padding: 30, alignItems: 'center', position: 'relative' },
+  ispmCorner: {
+    position: 'absolute',
+    top: 14,
+    left: 14,
+    width: 54,
+    height: 54,
+    borderRadius: 14,
+  },
+  ispmPhone: {
+    width: 168,
+    height: 168,
+    borderRadius: 42,
+    alignSelf: 'center',
+    marginBottom: 5,
+    opacity: 0.6,
+  },
   bottomSection: { flex: 1, backgroundColor: colors.formBackground, padding: 20 },
-  toggleContainer: { flexDirection: 'row', backgroundColor: colors.toggleBackground, borderRadius: 25, height: 50, marginBottom: 20 },
-  toggleButton: { flex: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 25 },
+  toggleContainer: { flexDirection: 'row', backgroundColor: colors.toggleBackground, borderRadius: 25, height: 50, marginBottom: 20, position: 'relative', overflow: 'hidden' },
+  toggleThumb: { position: 'absolute', top: 0, bottom: 0, left: 0, width: '50%', borderRadius: 25 },
+  toggleButton: { flex: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 25, zIndex: 1 },
   activeToggle: { backgroundColor: colors.primaryDark },
   activeToggleText: { color: colors.onPrimary, fontWeight: 'bold' },
   inactiveToggleText: { color: colors.onPrimary },

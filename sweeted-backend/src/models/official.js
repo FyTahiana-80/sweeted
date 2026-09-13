@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const OfficielImage = require('./officialImage');
 
 class Officiel {
     static async create(userId, content, imageUrl = null) {
@@ -28,7 +29,13 @@ class Officiel {
             if (!filesByOfficial[f.id_official_post]) filesByOfficial[f.id_official_post] = [];
             filesByOfficial[f.id_official_post].push(f);
         }
-        return rows.map(official => ({ ...official, files: filesByOfficial[official.id] || [] }));
+        const ids = rows.map(o => o.id);
+        const imagesByOfficial = await OfficielImage.findByOfficialIds(ids);
+        return rows.map(official => ({
+            ...official,
+            images: imagesByOfficial[official.id] || [],
+            files: filesByOfficial[official.id] || [],
+        }));
     }
 
     static async findById(id) {
@@ -44,6 +51,17 @@ class Officiel {
             [id]
         );
         return rows[0];
+    }
+
+    static async findByIdWithFiles(id) {
+        const official = await this.findById(id);
+        if (!official) return null;
+        const [files] = await pool.query(
+            'SELECT id, name, size, type, visibility, download_count, path, id_official_post FROM `file` WHERE id_official_post = ? ORDER BY name',
+            [id]
+        );
+        const images = await OfficielImage.findByOfficial(id);
+        return { ...official, images, files };
     }
 
     static async update(id, content, isPinned) {

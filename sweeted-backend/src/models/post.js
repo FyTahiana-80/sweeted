@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const PostImage = require('./postImage');
 
 class Post{
     static async create(userId, content, imageUrl = null){
@@ -28,10 +29,11 @@ class Post{
              FROM Posts
              JOIN Users ON Posts.id_user = Users.id
              ORDER BY Posts.created_at DESC
-             LIMIT ? OFFSET ?`,
+              LIMIT ? OFFSET ?`,
             params
         );
-        return rows;
+        const imagesByPost = await PostImage.findByPostIds(rows.map(p => p.id));
+        return rows.map(p => ({ ...p, images: imagesByPost[p.id] || [] }));
     }
 
     static async findById(id, userId = null){
@@ -55,7 +57,10 @@ class Post{
              WHERE Posts.id = ?`,
             params
         );
-        return rows[0];
+        const post = rows[0];
+        if (!post) return post;
+        post.images = await PostImage.findByPost(post.id);
+        return post;
     }
 
     static async update(id, content){

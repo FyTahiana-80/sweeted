@@ -76,6 +76,9 @@ export default function ProfileScreen() {
           has_reacted: !!b.has_reacted,
           is_bookmarked: true,
           image: b.image_url ? assetUrl(b.image_url) : null,
+          images: Array.isArray(b.images) && b.images.length > 0
+            ? b.images.map(im => assetUrl(im.image_url))
+            : (b.image_url ? [assetUrl(b.image_url)] : []),
         })));
       }
     } else {
@@ -269,13 +272,12 @@ export default function ProfileScreen() {
             </View>
           </View>
 
-          {/* Section Apparence & Thème */}
+          {/* Section Thème */}
           <View style={[styles.menuSection, { backgroundColor: colors.cardBackground }]}>
             <View style={styles.themeHeaderRow}>
               <View style={styles.themeHeaderLeft}>
-                <Ionicons name={isDark ? "moon" : "sunny"} size={20} color={colors.primary} />
-                <Text style={[styles.sectionTitle, { color: colors.textDark, marginBottom: 0, marginLeft: 8 }]}>
-                  Apparence & Thème
+                <Text style={[styles.sectionTitle, { color: colors.textDark, marginBottom: 0 }]}>
+                  Thème
                 </Text>
               </View>
               <TouchableOpacity
@@ -287,7 +289,7 @@ export default function ProfileScreen() {
                 activeOpacity={0.8}
               >
                 <Ionicons 
-                  name={isDark ? "moon" : "sunny-outline"} 
+                  name={isDark ? "moon" : "moon-outline"} 
                   size={15} 
                   color={colors.textDark} 
                 />
@@ -298,7 +300,7 @@ export default function ProfileScreen() {
             </View>
 
             <Text style={[styles.themeSubtitle, { color: colors.textSecondary }]}>
-              Palette active : <Text style={{ color: colors.primary, fontWeight: '700' }}>{palettes.find(p => p.id === palette)?.name || 'Emerald'}</Text>
+              Couleur : <Text style={{ color: colors.primary, fontWeight: '700' }}>{palettes.find(p => p.id === palette)?.name || 'sweeted'}</Text>
             </Text>
 
             <ScrollView 
@@ -333,7 +335,7 @@ export default function ProfileScreen() {
                       ]} 
                       numberOfLines={1}
                     >
-                      {p.name.replace('Sweeted ', '').replace('Polytech ', '')}
+                      {p.name}
                     </Text>
                     <Text 
                       style={[styles.paletteDesc, { color: paletteColors.textMuted }]} 
@@ -434,7 +436,7 @@ export default function ProfileScreen() {
                 value={filiere}
                 onChangeText={setFiliere}
                 maxLength={100}
-                placeholder="Ex : Génie Logiciel"
+                placeholder="Ex : GCA-12"
                 placeholderTextColor={colors.placeholder}
                 editable={!saving}
               />
@@ -446,7 +448,7 @@ export default function ProfileScreen() {
                 onChangeText={setBio}
                 maxLength={280}
                 multiline
-                placeholder="Quelques mots sur vous..."
+                placeholder="J'aime les Panini..."
                 placeholderTextColor={colors.placeholder}
                 editable={!saving}
               />

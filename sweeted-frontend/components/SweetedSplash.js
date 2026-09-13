@@ -3,6 +3,7 @@ import { View, Image, StyleSheet, Animated, Easing } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
 const LOGO = require('../sweeted_logo-no_background.png');
+const LOGO_WHITE = require('../sweeted_logo_no_background_white.png');
 
 const SIZE = 300;
 const BAND1 = 0.32;
@@ -13,8 +14,9 @@ const revealStyle = (v, length) => ({
 });
 
 export default function SweetedSplash({ onDone }) {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const styles = useMemo(() => getStyles(colors), [colors]);
+  const logoSource = isDark ? LOGO_WHITE : LOGO;
   const topW = useRef(new Animated.Value(0)).current;
   const topY = useRef(new Animated.Value(-26)).current;
   const textW = useRef(new Animated.Value(0)).current;
@@ -86,13 +88,13 @@ export default function SweetedSplash({ onDone }) {
     <View style={styles.container}>
       <Animated.View style={{ transform: [{ scale: pop }] }}>
         <Animated.View style={[styles.band, styles.bandTop, revealStyle(topW, SIZE), { transform: [{ translateY: topY }] }]}>
-          <Image source={LOGO} style={[styles.logoImg, { marginTop: 0 }]} />
+          <Image source={logoSource} style={[styles.logoImg, { marginTop: 0 }]} />
         </Animated.View>
         <Animated.View style={[styles.band, styles.bandText, revealStyle(textW, SIZE)]}>
-          <Image source={LOGO} style={[styles.logoImg, { marginTop: -SIZE * BAND1 }]} />
+          <Image source={logoSource} style={[styles.logoImg, { marginTop: -SIZE * BAND1 }]} />
         </Animated.View>
         <Animated.View style={[styles.band, styles.bandBottom, revealStyle(bottomW, SIZE), { transform: [{ translateY: bottomY }] }]}>
-          <Image source={LOGO} style={[styles.logoImg, { marginTop: -SIZE * (BAND1 + BAND2) }]} />
+          <Image source={logoSource} style={[styles.logoImg, { marginTop: -SIZE * (BAND1 + BAND2) }]} />
         </Animated.View>
       </Animated.View>
     </View>

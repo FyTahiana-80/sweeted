@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react
 import { Entypo, Ionicons, MaterialCommunityIcons as MIcon } from '@expo/vector-icons';
 import ReactionButton from './ReactionButton';
 import { formatRelativeTime } from './formatTime';
+import OfficialCarousel from './OfficialCarousel';
 import { useTheme } from '../context/ThemeContext';
 
 export default function Post({ post, onReact, currentUserId, role, onDelete, onEdit, onBookmark, onOpenFile }) {
@@ -58,9 +59,9 @@ export default function Post({ post, onReact, currentUserId, role, onDelete, onE
 
       <Text style={[styles.content, { color: colors.text }]}>{post.content}</Text>
 
-      {post.image && (
-        <Image source={{ uri: post.image }} style={styles.postImage} resizeMode={Platform.OS === 'web' ? 'contain' : 'cover'} />
-      )}
+      <OfficialCarousel
+        images={Array.isArray(post.images) && post.images.length > 0 ? post.images : (post.image ? [post.image] : [])}
+      />
 
       {hasAttachment && onOpenFile ? (
         <TouchableOpacity
@@ -194,13 +195,6 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     color: colors.text,
     lineHeight: 22,
     marginBottom: 10,
-  },
-  postImage: {
-    width: '100%',
-    height: Platform.OS === 'web' ? 420 : 200,
-    borderRadius: 10,
-    marginBottom: 10,
-    backgroundColor: colors.inputBackground,
   },
   attachmentChip: {
     flexDirection: 'row',

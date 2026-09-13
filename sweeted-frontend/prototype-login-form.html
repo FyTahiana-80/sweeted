@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sweeted — Connexion (copie exacte + logos)</title>
+<style>
+/* ============================================================
+   Copie exacte du formulaire de connexion actuel (App.js,
+   thème sweeted clair) + logo ISPM aux côtés du logo Sweeted.
+   Couleurs reprises de config/theme.js (emerald light).
+   ============================================================ */
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  background:#FFFFFF; min-height:100vh;
+  display:flex; justify-content:center; align-items:center; padding:24px;
+}
+/* carte desktop de l'app : maxWidth 460, radius 28, ombre */
+.phone{
+  width:100%; max-width:460px; max-height:860px; overflow:hidden;
+  border-radius:28px; margin:24px 0;
+  box-shadow:0 20px 60px -12px rgba(0,0,0,.35);
+  display:flex; flex-direction:column;
+}
+/* --- bandeau vert (topSection) : Sweeted centré, ISPM en coin haut-gauche --- */
+.top{
+  background:#00B43C; padding:30px 20px; position:relative;
+  display:grid; place-items:center;
+}
+.top .sweeted{width:140px; height:140px; object-fit:contain}
+/* logo ISPM : pastille blanche pour coexister avec le fond vert */
+.top .ispm{
+  position:absolute; top:14px; left:14px;
+  width:54px; height:54px; object-fit:cover;
+  border-radius:14px; background:#fff;
+  border:2px solid #fff; outline:1.5px solid rgba(255,255,255,.55);
+  box-shadow:0 6px 14px -4px rgba(0,0,0,.4);
+}
+/* --- zone formulaire (bottomSection) --- */
+.bottom{background:#F5F5F7; padding:20px; flex:1}
+/* toggle Connexion / Inscription : pastille coulissante */
+.toggle{
+  display:flex; background:#3BCC7C; border-radius:25px;
+  height:50px; margin-bottom:20px; overflow:hidden; position:relative;
+}
+.thumb{
+  position:absolute; top:0; bottom:0; left:0; width:50%;
+  background:#009A32; border-radius:25px;
+  transition:transform .38s cubic-bezier(.22,1,.36,1);
+}
+.toggle.right .thumb{transform:translateX(100%)}
+.toggle button{
+  flex:1; border:0; cursor:pointer; border-radius:25px; position:relative; z-index:1;
+  font-size:.9rem; font-weight:600; color:#fff; background:transparent;
+}
+.toggle button.on{font-weight:800}
+/* champs */
+.lab{font-weight:700; font-size:.85rem; margin:0 2px 5px; color:#121212}
+.inp{
+  display:flex; align-items:center; height:50px; padding:0 10px;
+  background:#F0F2F5; border-radius:10px; margin-bottom:15px;
+}
+.inp svg{width:22px; height:22px; color:#6A6A6A; flex-shrink:0}
+.inp input{
+  flex:1; min-width:0; border:0; outline:0; background:none; height:100%;
+  margin-left:10px; font-size:.95rem; color:#121212;
+}
+.inp input::placeholder{color:#999}
+.eye{border:0; background:none; cursor:pointer; padding:5px; color:#6A6A6A; display:grid; place-items:center}
+.eye svg{width:22px; height:22px}
+/* bouton */
+.login{
+  width:100%; height:55px; margin-top:10px; border:0; cursor:pointer;
+  border-radius:30px; background:#00B43C; color:#fff;
+  font-size:1.1rem; font-weight:800;
+}
+.login:hover{background:#009A32}
+.login span{display:inline-block; transition:opacity .18s ease, transform .18s ease}
+.login.swap span{opacity:0; transform:translateY(10px)}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="top">
+    <img class="ispm" src="assets/ispm.png" alt="ISPM"/>
+    <img class="sweeted" src="sweeted_logo-no_background.png" alt="Sweeted"/>
+  </div>
+
+  <div class="bottom">
+    <div class="toggle" role="tablist" id="toggle">
+      <span class="thumb"></span>
+      <button class="on" data-m="log" role="tab" aria-selected="true">Connexion</button>
+      <button data-m="reg" role="tab" aria-selected="false">Inscription</button>
+    </div>
+
+    <form onsubmit="return false">
+      <p class="lab">Numéro matricule :</p>
+      <div class="inp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <input type="text" placeholder="Ex: 37-40014/24" autocomplete="username"/>
+      </div>
+
+      <p class="lab">Mot de passe :</p>
+      <div class="inp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input id="pw" type="password" placeholder="••••••••••" autocomplete="current-password"/>
+        <button class="eye" type="button" id="eye" aria-label="Afficher le mot de passe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+
+      <button class="login" id="submit" type="submit"><span>Se connecter</span></button>
+    </form>
+  </div>
+</div>
+
+<script>
+const toggle = document.getElementById('toggle');
+const tabs = document.querySelectorAll('.toggle button');
+const submit = document.getElementById('submit');
+const label = submit.querySelector('span');
+tabs.forEach(t => t.addEventListener('click', () => {
+  if (t.classList.contains('on')) return;
+  tabs.forEach(x => { x.classList.toggle('on', x === t); x.setAttribute('aria-selected', x === t); });
+  toggle.classList.toggle('right', t.dataset.m === 'reg');
+  submit.classList.add('swap');
+  setTimeout(() => {
+    label.textContent = t.dataset.m === 'log' ? 'Se connecter' : "S'inscrire";
+    submit.classList.remove('swap');
+  }, 180);
+}));
+const eye = document.getElementById('eye'), pw = document.getElementById('pw');
+eye.addEventListener('click', () => {
+  pw.type = pw.type === 'password' ? 'text' : 'password';
+});
+</script>
+</body>
+</html>

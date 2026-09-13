@@ -55,11 +55,21 @@ const Sidebar = ({
     <View style={[styles.sidebarContainer, { backgroundColor: colors.cardBackground, borderRightColor: colors.divider }]}>
       {/* En-tête de la Sidebar avec Logo */}
       <View style={[styles.logoSection, { borderBottomColor: colors.divider }]}>
-        <Image
-          source={require('../../sweeted_logo-no_background.png')}
-          style={styles.logoImage}
-          resizeMode="contain"
-        />
+        {currentMode === OFFICIEL ? (
+          <View style={styles.logoBox}>
+            <Image
+              source={require('../../assets/ispm.png')}
+              style={styles.logoBoxImage}
+              resizeMode="contain"
+            />
+          </View>
+        ) : (
+          <Image
+            source={isDark ? require('../../sweeted_logo_no_background_white.png') : require('../../sweeted_logo-no_background.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
+        )}
       </View>
 
       {/* Navigation principale */}
@@ -158,13 +168,30 @@ const getStyles = (colors) => StyleSheet.create({
   logoSection: {
     alignItems: 'center',
     marginBottom: SPACING.xxl,
+    marginHorizontal: -SPACING.lg,
+    marginTop: -SPACING.xl,
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.xl,
     paddingBottom: SPACING.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
+    backgroundColor: colors.primary,
   },
   logoImage: {
-    width: 140,
-    height: 70,
+    width: 210,
+    height: 105,
+    borderRadius: 35,
+  },
+  logoBox: {
+    width: 170,
+    height: 90,
+    borderRadius: 35,
+    backgroundColor: '#FFFFFF',
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoBoxImage: {
+    width: 152,
+    height: 80,
   },
   tagline: {
     fontSize: FONTS.sizeSmall,

@@ -99,6 +99,19 @@ CREATE TABLE `Posts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------------------------
+-- 5b. Table : Post_images (plusieurs images par post étudiant)
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Post_images` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `id_post` INT NOT NULL,
+  `image_url` VARCHAR(255) NOT NULL,
+  `position` INT NOT NULL DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_post_images_post` FOREIGN KEY (`id_post`) REFERENCES `Posts` (`id`) ON DELETE CASCADE,
+  INDEX `idx_post_images_post` (`id_post`, `position`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------------------------
 -- 6. Table : Sweets (Likes / Réactions)
 -- ----------------------------------------------------------------------------
 DROP TABLE IF EXISTS `Sweets`;
@@ -142,6 +155,19 @@ CREATE TABLE `Officiel` (
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT `fk_officiel_user` FOREIGN KEY (`id_user`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
   INDEX `idx_officiel_pinned_created` (`is_pinned`, `created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------------------------
+-- 8b. Table : Officiel_images (plusieurs images par publication officielle)
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Officiel_images` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `id_official` INT NOT NULL,
+  `image_url` VARCHAR(255) NOT NULL,
+  `position` INT NOT NULL DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_officiel_images_official` FOREIGN KEY (`id_official`) REFERENCES `Officiel` (`id`) ON DELETE CASCADE,
+  INDEX `idx_officiel_images_official` (`id_official`, `position`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------------------------

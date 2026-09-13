@@ -39,7 +39,7 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 } // 10 Mo (images limitées à 5 Mo dans le contrôleur)
 });
 
-router.post('/', authMiddleware, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'file', maxCount: 1 }]), postController.createPost);
+router.post('/', authMiddleware, upload.fields([{ name: 'image', maxCount: 20 }, { name: 'images', maxCount: 20 }, { name: 'file', maxCount: 1 }]), postController.createPost);
 // Lecture publique autorisée ; token optionnel pour renvoyer has_reacted
 router.get('/', optionalAuthMiddleware, postController.getAllPosts);
 router.get('/:id', optionalAuthMiddleware, postController.getPostById);

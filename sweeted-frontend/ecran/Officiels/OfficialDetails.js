@@ -2,13 +2,15 @@ import React, { useMemo, useState, useRef, useEffect, useCallback } from 'react'
 import { useTheme } from '../../context/ThemeContext';
 import {
   View, Text, StyleSheet, Image, TouchableOpacity, ScrollView,
-  Modal, Animated, TextInput, Alert, ActivityIndicator
+  Modal, Animated, TextInput, Alert, ActivityIndicator, Platform
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { apiFetch } from '../../config/apiClient';
-import { API_BASE_URL } from '../../config/api';
+import { API_BASE_URL, fileUrl } from '../../config/api';
+import { openPdf, downloadFileUrl } from '../../config/openPdf';
+import OfficialCarousel from '../../components/OfficialCarousel';
 import { formatRelativeTime } from '../../components/formatTime';
 import { SPACING, RADIUS } from '../../config/theme';
 
@@ -25,6 +27,7 @@ export default function OfficialDetails({ route }) {
   const animatedScale = useRef(new Animated.Value(1)).current;
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [viewerIndex, setViewerIndex] = useState(0);
   const [editVisible, setEditVisible] = useState(false);
   const [editContent, setEditContent] = useState('');
   const [editBusy, setEditBusy] = useState(false);
@@ -42,13 +45,35 @@ export default function OfficialDetails({ route }) {
     return () => { active = false; };
   }, []);
 
-  const officialImage = data?.image_url
-    ? data?.image_url.startsWith('http')
-      ? data.image_url
-      : `${API_BASE_URL.replace('/api', '')}${data.image_url}`
-    : null;
+  // Recharge la publication (avec PDF joints) au cas où on arrive avec des données partielles
+  useEffect(() => {
+    let active = true;
+    const id = initialOfficial?.id;
+    if (!id) return () => { active = false; };
+    apiFetch(`/official/${id}`).then(result => {
+      if (active && result.ok && result.data) {
+        setData(prev => ({ ...prev, ...result.data }));
+      }
+    });
+    return () => { active = false; };
+  }, [initialOfficial?.id]);
 
-  const openViewer = () => {
+  const root = API_BASE_URL.replace('/api', '');
+  const officialImages = useMemo(() => {
+    if (data?.images && data.images.length > 0) {
+      return data.images.map(im => `${root}${im.image_url}`);
+    }
+    if (data?.image) return [data.image];
+    if (data?.image_url) {
+      return [data.image_url.startsWith('http') ? data.image_url : `${root}${data.image_url}`];
+    }
+    return [];
+  }, [data, root]);
+
+  const officialImage = officialImages.length > 0 ? officialImages[Math.min(viewerIndex, officialImages.length - 1)] : null;
+
+  const openViewer = (imageIndex = 0) => {
+    setViewerIndex(imageIndex);
     setScale(1);
     animatedScale.setValue(1);
     setViewerVisible(true);
@@ -183,7 +208,11 @@ export default function OfficialDetails({ route }) {
             <View style={styles.cardHeader}>
               <View style={styles.authorRow}>
                 <View style={styles.authorAvatar}>
-                  <Icon name="school" size={22} color={colors.primary} />
+                  <Image
+                    source={require('../../assets/ispm1.png')}
+                    style={styles.authorLogo}
+                    resizeMode="contain"
+                  />
                 </View>
                 <View>
                   <Text style={styles.authorName}>{authorName}</Text>
@@ -200,18 +229,35 @@ export default function OfficialDetails({ route }) {
 
             {data.content ? <Text style={styles.content}>{data.content}</Text> : null}
 
-            {officialImage ? (
-              <TouchableOpacity activeOpacity={0.9} onPress={openViewer}>
-                <Image
-                  source={{ uri: officialImage }}
-                  style={styles.officialImage}
-                  resizeMode="cover"
-                />
-                <View style={styles.zoomHint}>
-                  <Icon name="fullscreen" size={16} color={colors.onPrimary} />
-                  <Text style={styles.zoomHintText}>Toucher pour zoomer</Text>
-                </View>
-              </TouchableOpacity>
+            {officialImages.length > 0 ? (
+              <OfficialCarousel
+                images={officialImages}
+                height={300}
+                onPressImage={(i) => openViewer(i)}
+              />
+            ) : null}
+
+            {data?.files && data.files.length > 0 ? (
+              <View style={styles.filesContainer}>
+                {data.files.map(file => (
+                  <View key={file.id} style={styles.fileRow}>
+                    <Icon name="file-pdf-box" size={18} color={colors.danger} />
+                    <Text style={styles.fileName} numberOfLines={1}>{file.name}</Text>
+                    <TouchableOpacity
+                      style={styles.fileAction}
+                      onPress={() => { const url = fileUrl(file.path); if (url) openPdf(url); }}
+                    >
+                      <Text style={styles.fileActionText}>Lire</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.fileAction}
+                      onPress={async () => { const url = await downloadFileUrl(file.id); if (url) openPdf(url); }}
+                    >
+                      <Text style={styles.fileActionText}>Télécharger</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
             ) : null}
           </View>
         ) : (
@@ -424,6 +470,8 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 24,
   },
   modalContent: {
     backgroundColor: colors.cardBackground,
@@ -431,7 +479,9 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     paddingHorizontal: SPACING.xl,
     paddingTop: SPACING.xl,
     paddingBottom: SPACING.xxl,
-    width: '88%',
+    width: Platform.OS === 'web' ? '92%' : '88%',
+    maxWidth: 560,
+    alignSelf: 'center',
     maxHeight: '82%',
   },
   modalHeader: {
@@ -515,6 +565,11 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     alignItems: 'center',
     marginRight: SPACING.md,
   },
+  authorLogo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
   authorName: {
     fontWeight: 'bold',
     fontSize: 14,
@@ -545,28 +600,36 @@ const getStyles = (colors, isDark) => StyleSheet.create({
     lineHeight: 22,
     marginBottom: SPACING.md,
   },
-  officialImage: {
-    width: '100%',
-    height: 300,
-    borderRadius: RADIUS.lg,
-    backgroundColor: colors.inputBackground,
+  filesContainer: {
+    gap: 6,
+    marginTop: SPACING.md,
   },
-  zoomHint: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
+  fileRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.backdrop,
-    borderRadius: RADIUS.full,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    gap: 5,
+    backgroundColor: colors.screenBackground,
+    borderRadius: RADIUS.md,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 6,
+    gap: 6,
   },
-  zoomHintText: {
-    color: colors.onPrimary,
+  fileAction: {
+    backgroundColor: colors.cardBackground,
+    borderRadius: RADIUS.sm,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: colors.divider,
+  },
+  fileActionText: {
     fontSize: 11,
     fontWeight: '600',
+    color: colors.primary,
+  },
+  fileName: {
+    fontSize: 12,
+    color: colors.textMuted,
+    flex: 1,
   },
   emptyContainer: {
     paddingVertical: 40,

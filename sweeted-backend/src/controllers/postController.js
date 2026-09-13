@@ -1,43 +1,62 @@
 const Post = require('../models/post');
+const PostImage = require('../models/postImage');
 const File = require('../models/file');
 const path = require('path');
 const fs = require('fs');
 const xss = require('xss');
 
+const MAX_IMAGES = 20;
+
+function uploadedFiles(req) {
+    if (!req.files) return [];
+    if (Array.isArray(req.files)) return req.files;
+    return [...(req.files.image || []), ...(req.files.images || []), ...(req.files.file || [])];
+}
+
 exports.createPost = async (req, res) => {
     try {
         const { content } = req.body;
         const userId = req.user.id;
-        const imageFile = req.files && req.files.image ? req.files.image[0] : null;
+        const all = uploadedFiles(req);
+        const imageFiles = all.filter(f => f.mimetype && f.mimetype.startsWith('image/'));
         const attachment = req.files && req.files.file ? req.files.file[0] : null;
 
         const cleanup = () => {
-            [imageFile, attachment].forEach(file => {
+            all.forEach(file => {
                 if (file && fs.existsSync(file.path)) fs.unlinkSync(file.path);
             });
         };
 
-        if (!content?.trim() && !imageFile && !attachment) {
+        if (!content?.trim() && imageFiles.length === 0 && !attachment) {
             cleanup();
-            return res.status(400).json({ message: "Le post doit contenir du texte, une image ou un PDF." });
+            return res.status(400).json({ message: "Le post doit contenir du texte, des images ou un PDF." });
         }
         if (content && content.length > 2000) {
             cleanup();
             return res.status(400).json({ message: "Le contenu ne peut pas dépasser 2000 caractères." });
         }
-        if (imageFile && imageFile.size > 5 * 1024 * 1024) {
+        if (imageFiles.length > MAX_IMAGES) {
             cleanup();
-            return res.status(400).json({ message: "L'image ne peut pas dépasser 5 Mo." });
+            return res.status(400).json({ message: `Maximum ${MAX_IMAGES} images par post.` });
+        }
+        if (imageFiles.some(f => f.size > 5 * 1024 * 1024)) {
+            cleanup();
+            return res.status(400).json({ message: "Chaque image ne peut pas dépasser 5 Mo." });
         }
 
         const sanitizedContent = content ? xss(content.trim()) : '';
 
+        // Compat : la 1re image reste dans Posts.image_url, toutes vont en Post_images
         let imageUrl = null;
-        if (imageFile) {
-            imageUrl = `/uploads/${imageFile.filename}`;
+        if (imageFiles.length > 0) {
+            imageUrl = `/uploads/${imageFiles[0].filename}`;
         }
 
         const postResult = await Post.create(userId, sanitizedContent, imageUrl);
+
+        for (let i = 0; i < imageFiles.length; i++) {
+            await PostImage.create(postResult.insertId, `/uploads/${imageFiles[i].filename}`, i);
+        }
 
         if (attachment) {
             await File.createPostAttachment(userId, {
@@ -49,10 +68,10 @@ exports.createPost = async (req, res) => {
             });
         }
 
-        res.status(201).json({ message: "Post créé avec succès !" });
+        res.status(201).json({ message: "Post créé avec succès !", id: postResult.insertId });
     } catch (error) {
         if (req.files) {
-            Object.values(req.files).flat().forEach(file => {
+            uploadedFiles(req).forEach(file => {
                 if (file && fs.existsSync(file.path)) fs.unlinkSync(file.path);
             });
         }
@@ -131,6 +150,8 @@ exports.deletePost = async (req, res) => {
             }
         }
 
+        // Supprime les images multiples (disque + table Post_images)
+        await PostImage.deleteByPost(post.id);
         await File.deleteByPost(id);
         await Post.delete(id);
         res.status(200).json({ message: "Post supprimé avec succès !" });

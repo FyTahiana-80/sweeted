@@ -6,7 +6,7 @@ const officialController = require('../controllers/officialController');
 const authMiddleware = require('../middlewares/authMiddleware');
 const permissionMiddleware = require('../middlewares/verifierPermission');
 
-// Configuration multer pour l'upload des images officielles
+// Configuration multer pour l'upload officiel : images + PDF
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, '..', '..', 'uploads'));
@@ -19,23 +19,32 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
+    if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') {
         cb(null, true);
     } else {
-        cb(new Error('Seules les images sont acceptées.'), false);
+        cb(new Error('Seules les images et les PDF sont acceptés.'), false);
     }
 };
 
 const upload = multer({
     storage,
     fileFilter,
-    limits: { fileSize: 5 * 1024 * 1024 } // 5 Mo max
+    limits: { fileSize: 10 * 1024 * 1024 } // 10 Mo max (PDF)
 });
+
+// Accepte le champ historique 'image' (+ 'images') jusqu'à 20 images, et 'pdf' / 'file' (PDF)
+const uploadOfficial = upload.fields([
+    { name: 'image', maxCount: 20 },
+    { name: 'images', maxCount: 20 },
+    { name: 'pdf', maxCount: 1 },
+    { name: 'file', maxCount: 1 },
+]);
 
 // Flux officiel (auth requis)
 router.get('/', authMiddleware, officialController.getOfficials);
+router.get('/:id', authMiddleware, officialController.getOfficialById);
 // Publication officielle : permission publish_official (Admin uniquement)
-router.post('/', authMiddleware, permissionMiddleware('publish_official'), upload.single('image'), officialController.createOfficial);
+router.post('/', authMiddleware, permissionMiddleware('publish_official'), uploadOfficial, officialController.createOfficial);
 router.put('/:id', authMiddleware, permissionMiddleware('publish_official'), officialController.updateOfficial);
 router.delete('/:id', authMiddleware, permissionMiddleware('publish_official'), officialController.deleteOfficial);
 
@@ -46,11 +55,11 @@ router.use((err, req, res, next) => {
     }
     if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).json({ message: "L'image ne peut pas dépasser 5 Mo." });
+            return res.status(400).json({ message: "Le fichier ne peut pas dépasser 10 Mo." });
         }
         return res.status(400).json({ message: err.message });
     }
-    if (err && err.message === 'Seules les images sont acceptées.') {
+    if (err && err.message === 'Seules les images et les PDF sont acceptés.') {
         return res.status(400).json({ message: err.message });
     }
     next(err);

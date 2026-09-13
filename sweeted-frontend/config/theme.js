@@ -3,8 +3,8 @@
 export const PALETTES = {
   emerald: {
     id: 'emerald',
-    name: 'Sweeted Emerald',
-    description: 'Vert campus authentique',
+    name: 'sweeted',
+    description: 'par défaut',
     primaryColor: '#00B43C',
     light: {
       primary: '#00B43C',
@@ -70,8 +70,8 @@ export const PALETTES = {
   },
   ocean: {
     id: 'ocean',
-    name: 'Polytech Ocean',
-    description: 'Bleu ingénierie & Tech ISPM',
+    name: 'ocean indien',
+    description: 'Bleu nuit ?',
     primaryColor: '#0066CC',
     light: {
       primary: '#0066CC',
@@ -137,8 +137,8 @@ export const PALETTES = {
   },
   sunset: {
     id: 'sunset',
-    name: 'Sunset Flame',
-    description: 'Orange corail & Terre rouge',
+    name: 'sucré',
+    description: 'Orange...',
     primaryColor: '#FF6B35',
     light: {
       primary: '#FF6B35',
@@ -204,8 +204,8 @@ export const PALETTES = {
   },
   cyber: {
     id: 'cyber',
-    name: 'Cyber Studio',
-    description: 'Violet hacker & Dev vibes',
+    name: 'studio',
+    description: 'Hackera',
     primaryColor: '#7C3AED',
     light: {
       primary: '#7C3AED',
@@ -271,8 +271,8 @@ export const PALETTES = {
   },
   onyx: {
     id: 'onyx',
-    name: 'Minimalist Onyx',
-    description: 'Monochrome pur & AMOLED',
+    name: 'onyx',
+    description: 'inn zany ONYX ?',
     primaryColor: '#18181B',
     light: {
       primary: '#18181B',
