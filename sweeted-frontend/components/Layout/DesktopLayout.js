@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Sidebar from './Sidebar';
 import DesktopHeader from './DesktopHeader';
-import { COLORS } from '../../config/theme';
+import { useTheme } from '../../context/ThemeContext';
 
 /**
  * Conteneur global pour l'affichage Desktop (>= 768px).
@@ -18,8 +18,11 @@ const DesktopLayout = ({
   navigation,
   children,
 }) => {
+  const { colors } = useTheme();
+  const styles = useMemo(() => getStyles(colors), [colors]);
+
   return (
-    <View style={styles.desktopContainer}>
+    <View style={[styles.desktopContainer, { backgroundColor: colors.screenBackground }]}>
       {/* 1. Colonne de gauche : Sidebar fixe */}
       <Sidebar
         currentMode={currentMode}
@@ -41,7 +44,7 @@ const DesktopLayout = ({
           navigation={navigation}
         />
 
-        <View style={styles.contentArea}>
+        <View style={[styles.contentArea, { backgroundColor: colors.screenBackground }]}>
           {children}
         </View>
       </View>
@@ -51,11 +54,11 @@ const DesktopLayout = ({
 
 export default DesktopLayout;
 
-const styles = StyleSheet.create({
+const getStyles = (colors) => StyleSheet.create({
   desktopContainer: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
     height: '100%',
     width: '100%',
   },
@@ -68,6 +71,6 @@ const styles = StyleSheet.create({
   contentArea: {
     flex: 1,
     minHeight: 0,
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
   },
 });

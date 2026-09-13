@@ -14,6 +14,6 @@ module.exports = (req, res, next) => {
         req.user = decoded;
         next(); 
     }catch (error){
-        res.status(400).json({ message: "Token invalide." });
+        res.status(401).json({ message: "Token invalide ou expiré." });
     }
 };

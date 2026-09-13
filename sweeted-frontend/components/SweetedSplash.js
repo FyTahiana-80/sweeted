@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { View, Image, StyleSheet, Animated, Easing } from 'react-native';
-import { COLORS } from '../config/theme';
+import { useTheme } from '../context/ThemeContext';
 
 const LOGO = require('../sweeted_logo-no_background.png');
 
@@ -13,6 +13,8 @@ const revealStyle = (v, length) => ({
 });
 
 export default function SweetedSplash({ onDone }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => getStyles(colors), [colors]);
   const topW = useRef(new Animated.Value(0)).current;
   const topY = useRef(new Animated.Value(-26)).current;
   const textW = useRef(new Animated.Value(0)).current;
@@ -97,10 +99,10 @@ export default function SweetedSplash({ onDone }) {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },

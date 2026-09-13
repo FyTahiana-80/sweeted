@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import { useTheme } from '../context/ThemeContext';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator
 } from 'react-native';
@@ -7,9 +8,11 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { apiFetch } from '../config/apiClient';
 import { formatRelativeTime } from '../components/formatTime';
-import { COLORS, SPACING, RADIUS } from '../config/theme';
+import { SPACING, RADIUS } from '../config/theme';
 
 export default function NotificationsScreen() {
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => getStyles(colors, isDark), [colors, isDark]);
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const [notifications, setNotifications] = useState([]);
@@ -86,7 +89,7 @@ export default function NotificationsScreen() {
       activeOpacity={0.7}
     >
       <View style={[styles.notifIcon, item.is_read !== 1 && styles.notifIconUnread]}>
-        <Icon name="bullhorn-outline" size={22} color={COLORS.primary} />
+        <Icon name="bullhorn-outline" size={22} color={colors.primary} />
       </View>
       <View style={styles.notifContent}>
         <Text style={styles.notifMessage} numberOfLines={3}>{item.message}</Text>
@@ -100,7 +103,7 @@ export default function NotificationsScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.headerBar}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={24} color={COLORS.primary} />
+          <Icon name="arrow-left" size={24} color={colors.primary} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Notifications</Text>
         {unreadCount > 0 ? (
@@ -120,7 +123,7 @@ export default function NotificationsScreen() {
 
       {loading && notifications.length === 0 ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       ) : (
         <FlatList
@@ -131,7 +134,7 @@ export default function NotificationsScreen() {
           ListEmptyComponent={
             !loading ? (
               <View style={styles.emptyContainer}>
-                <Icon name="bell-outline" size={48} color={COLORS.textLight} />
+                <Icon name="bell-outline" size={48} color={colors.textLight} />
                 <Text style={styles.emptyText}>Aucune notification.</Text>
               </View>
             ) : null
@@ -142,10 +145,10 @@ export default function NotificationsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors, isDark) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
   },
   headerBar: {
     flexDirection: 'row',
@@ -154,8 +157,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.divider,
-    backgroundColor: COLORS.background,
+    borderBottomColor: colors.divider,
+    backgroundColor: colors.background,
   },
   backButton: {
     padding: SPACING.sm,
@@ -163,13 +166,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   markAllButton: {
     padding: SPACING.sm,
   },
   markAllText: {
-    color: COLORS.primary,
+    color: colors.primary,
     fontWeight: 'bold',
     fontSize: 13,
   },
@@ -177,12 +180,12 @@ const styles = StyleSheet.create({
     width: 68,
   },
   errorBanner: {
-    backgroundColor: '#FFF0F0',
+    backgroundColor: colors.danger + '1A',
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
   },
   errorText: {
-    color: COLORS.danger,
+    color: colors.danger,
     textAlign: 'center',
   },
   loadingContainer: {
@@ -200,41 +203,41 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.divider,
+    borderBottomColor: colors.divider,
   },
   notifItemUnread: {
-    backgroundColor: '#F2FAF5',
+    backgroundColor: colors.primary + '14',
   },
   notifIcon: {
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: SPACING.md,
   },
   notifIconUnread: {
-    backgroundColor: '#E8F5EC',
+    backgroundColor: colors.primary + '1F',
   },
   notifContent: {
     flex: 1,
   },
   notifMessage: {
     fontSize: 14,
-    color: COLORS.textDark,
+    color: colors.textDark,
     lineHeight: 19,
   },
   notifTime: {
     fontSize: 12,
-    color: COLORS.textLight,
+    color: colors.textLight,
     marginTop: 3,
   },
   unreadDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     marginLeft: SPACING.sm,
   },
   emptyContainer: {
@@ -245,7 +248,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   emptyText: {
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     fontSize: 14,
   },
 });

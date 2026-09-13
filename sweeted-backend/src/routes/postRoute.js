@@ -43,8 +43,8 @@ router.post('/', authMiddleware, upload.fields([{ name: 'image', maxCount: 1 }, 
 // Lecture publique autorisée ; token optionnel pour renvoyer has_reacted
 router.get('/', optionalAuthMiddleware, postController.getAllPosts);
 router.get('/:id', optionalAuthMiddleware, postController.getPostById);
-router.put('/:id', authMiddleware, permissionMiddleware('update_post'), postController.updatePost);
-router.delete('/:id', authMiddleware, permissionMiddleware('delete_post'), postController.deletePost);
+router.put('/:id', authMiddleware, postController.updatePost);
+router.delete('/:id', authMiddleware, postController.deletePost);
 
 // Erreurs multer (filtre type / taille) → réponse JSON propre
 router.use((err, req, res, next) => {

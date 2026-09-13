@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { apiFetch } from '../config/apiClient';
-import { COLORS } from '../config/theme';
+import { useTheme } from '../context/ThemeContext';
 
 export default function ReactionButton({ total, hasReacted: initialHasReacted = false, onReact, postId }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => getStyles(colors), [colors]);
   const [isReacting, setIsReacting] = useState(false);
   const [hasReacted, setHasReacted] = useState(initialHasReacted);
   const [reactionCount, setReactionCount] = useState(total);
   const [error, setError] = useState('');
+  useEffect(() => { setHasReacted(initialHasReacted); }, [initialHasReacted]);
+  useEffect(() => { if (typeof total === 'number') setReactionCount(total); }, [total]);
 
 const handleToggleReact = async (e) => {
-    if (e) e.stopPropagation();
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
     setIsReacting(true);
     setError('');
 
     const method = hasReacted ? 'DELETE' : 'POST';
     const result = await apiFetch(`/sweets/${postId}`, {
       method,
-      body: JSON.stringify({}),
+      ...(method === 'DELETE' ? {} : { body: JSON.stringify({}) }),
     });
 
     if (result.ok) {
@@ -43,7 +47,7 @@ const handleToggleReact = async (e) => {
     <View style={styles.container}>
       <View style={styles.row}>
         <View style={styles.totalContainer}>
-          <Icon name="heart" size={14} color={COLORS.reaction} />
+          <Icon name="heart" size={14} color={colors.reaction} />
           <Text style={styles.totalText}>{reactionCount}</Text>
         </View>
 
@@ -53,7 +57,7 @@ const handleToggleReact = async (e) => {
           style={[styles.mainButton, hasReacted && styles.mainButtonActive]}
           activeOpacity={0.7}
         >
-          <Icon name={hasReacted ? "heart" : "heart-outline"} size={24} color={hasReacted ? COLORS.danger : COLORS.reaction} />
+          <Icon name={hasReacted ? "heart" : "heart-outline"} size={24} color={hasReacted ? colors.danger : colors.reaction} />
           <Text style={[styles.reactText, hasReacted && styles.reactTextActive]}>
             {hasReacted ? "J'aime déjà" : "Aimer"}
           </Text>
@@ -65,7 +69,7 @@ const handleToggleReact = async (e) => {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors) => StyleSheet.create({
   container: {
     paddingVertical: 10,
   },
@@ -82,7 +86,7 @@ const styles = StyleSheet.create({
   totalText: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.reaction,
+    color: colors.reaction,
   },
   mainButton: {
     flexDirection: 'row',
@@ -90,23 +94,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: colors.inputBackground,
     gap: 8,
   },
   mainButtonActive: {
-    backgroundColor: '#FFE6E6',
+    backgroundColor: colors.danger + '1A',
   },
   reactText: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   reactTextActive: {
-    color: COLORS.danger,
+    color: colors.danger,
   },
   errorText: {
     marginTop: 6,
-    color: COLORS.danger,
+    color: colors.danger,
     fontSize: 12,
     textAlign: 'center',
   },

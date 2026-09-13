@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, RADIUS, SHADOWS, FONTS } from '../../config/theme';
+import { SPACING, RADIUS, SHADOWS, FONTS } from '../../config/theme';
+import { useTheme } from '../../context/ThemeContext';
 
 const ETUDIANT = 'etudiant';
 const OFFICIEL = 'officiel';
@@ -20,6 +21,9 @@ const Sidebar = ({
   navigation,
   avatarUrl,
 }) => {
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => getStyles(colors), [colors]);
+
   const navItems = [
     {
       id: ETUDIANT,
@@ -48,9 +52,9 @@ const Sidebar = ({
   ];
 
   return (
-    <View style={styles.sidebarContainer}>
+    <View style={[styles.sidebarContainer, { backgroundColor: colors.cardBackground, borderRightColor: colors.divider }]}>
       {/* En-tête de la Sidebar avec Logo */}
-      <View style={styles.logoSection}>
+      <View style={[styles.logoSection, { borderBottomColor: colors.divider }]}>
         <Image
           source={require('../../sweeted_logo-no_background.png')}
           style={styles.logoImage}
@@ -65,18 +69,21 @@ const Sidebar = ({
           return (
             <TouchableOpacity
               key={item.id}
-              style={[styles.navItem, isActive && styles.navItemActive]}
+              style={[
+                styles.navItem, 
+                isActive && [styles.navItemActive, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : colors.toggleActive }]
+              ]}
               onPress={() => onSelectMode(item.id)}
               activeOpacity={0.7}
             >
-              <View style={[styles.iconWrapper, isActive && styles.iconWrapperActive]}>
+              <View style={[styles.iconWrapper, { backgroundColor: colors.screenBackground }, isActive && [styles.iconWrapperActive, { backgroundColor: colors.primary }]]}>
                 <Feather
                   name={item.icon}
                   size={20}
-                  color={isActive ? COLORS.white : COLORS.textSecondary}
+                  color={isActive ? colors.onPrimary : colors.textSecondary}
                 />
               </View>
-              <Text style={[styles.navLabel, isActive && styles.navLabelActive]}>
+              <Text style={[styles.navLabel, { color: colors.textDark }, isActive && [styles.navLabelActive, { color: colors.primary }]]}>
                 {item.label}
               </Text>
             </TouchableOpacity>
@@ -87,11 +94,11 @@ const Sidebar = ({
       {/* Bouton d'action "Créer un post" (si mode étudiant ou officiel) */}
       {(currentMode === ETUDIANT || currentMode === OFFICIEL) && (
         <TouchableOpacity
-          style={styles.createPostButton}
+          style={[styles.createPostButton, { backgroundColor: colors.primary }]}
           onPress={onOpenCreatePost}
           activeOpacity={0.85}
         >
-          <Ionicons name="add-circle-outline" size={20} color={COLORS.white} />
+          <Ionicons name="add-circle-outline" size={20} color={colors.onPrimary} />
           <Text style={styles.createPostButtonText}>Nouveau post</Text>
         </TouchableOpacity>
       )}
@@ -99,21 +106,21 @@ const Sidebar = ({
       <View style={styles.spacer} />
 
       {/* Raccourcis rapides bas de Sidebar */}
-      <View style={styles.footerSection}>
+      <View style={[styles.footerSection, { borderTopColor: colors.divider }]}>
         <TouchableOpacity
           style={styles.footerItem}
           onPress={() => navigation?.navigate('Notifications')}
           activeOpacity={0.7}
         >
           <View style={styles.footerIconWrapper}>
-            <Feather name="bell" size={18} color={COLORS.textSecondary} />
+            <Feather name="bell" size={18} color={colors.textSecondary} />
             {unreadCount > 0 && (
-              <View style={styles.badge}>
+              <View style={[styles.badge, { backgroundColor: colors.danger }]}>
                 <Text style={styles.badgeText}>{unreadCount > 9 ? '9+' : unreadCount}</Text>
               </View>
             )}
           </View>
-          <Text style={styles.footerLabel}>Notifications</Text>
+          <Text style={[styles.footerLabel, { color: colors.textDark }]}>Notifications</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -122,13 +129,13 @@ const Sidebar = ({
           activeOpacity={0.7}
         >
           {avatarUrl ? (
-            <Image source={{ uri: avatarUrl }} style={styles.avatarImage} />
+            <Image source={{ uri: avatarUrl }} style={[styles.avatarImage, { backgroundColor: colors.screenBackground }]} />
           ) : (
             <View style={styles.footerIconWrapper}>
-              <Feather name="user" size={18} color={COLORS.textSecondary} />
+              <Feather name="user" size={18} color={colors.textSecondary} />
             </View>
           )}
-          <Text style={styles.footerLabel}>Mon Profil</Text>
+          <Text style={[styles.footerLabel, { color: colors.textDark }]}>Mon Profil</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -137,12 +144,12 @@ const Sidebar = ({
 
 export default Sidebar;
 
-const styles = StyleSheet.create({
+const getStyles = (colors) => StyleSheet.create({
   sidebarContainer: {
     width: 300,
-    backgroundColor: COLORS.cardBackground,
+    backgroundColor: colors.cardBackground,
     borderRightWidth: 1,
-    borderRightColor: COLORS.divider,
+    borderRightColor: colors.divider,
     paddingVertical: SPACING.xl,
     paddingHorizontal: SPACING.lg,
     flexDirection: 'column',
@@ -153,7 +160,7 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.xxl,
     paddingBottom: SPACING.md,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.divider,
+    borderBottomColor: colors.divider,
   },
   logoImage: {
     width: 140,
@@ -161,7 +168,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontSize: FONTS.sizeSmall,
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     fontWeight: '500',
     marginTop: -4,
   },
@@ -178,32 +185,32 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   navItemActive: {
-    backgroundColor: COLORS.toggleActive,
+    backgroundColor: colors.toggleActive,
   },
   iconWrapper: {
     width: 36,
     height: 36,
     borderRadius: RADIUS.md,
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
     alignItems: 'center',
     justifyContent: 'center',
   },
   iconWrapperActive: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
   },
   navLabel: {
     fontSize: FONTS.sizeBody,
-    color: COLORS.textDark,
+    color: colors.textDark,
     fontWeight: '500',
   },
   navLabelActive: {
     fontSize: FONTS.sizeBody,
-    color: COLORS.primaryDark,
+    color: colors.primaryDark,
     fontWeight: '700',
   },
   createPostButton: {
     marginTop: SPACING.xl,
-    backgroundColor: COLORS.headerGreen,
+    backgroundColor: colors.primary,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -214,7 +221,7 @@ const styles = StyleSheet.create({
     ...SHADOWS.medium,
   },
   createPostButtonText: {
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontSize: FONTS.sizeBody,
     fontWeight: '700',
   },
@@ -223,7 +230,7 @@ const styles = StyleSheet.create({
   },
   footerSection: {
     borderTopWidth: 1,
-    borderTopColor: COLORS.divider,
+    borderTopColor: colors.divider,
     paddingTop: SPACING.md,
     gap: SPACING.xs,
   },
@@ -246,18 +253,18 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
   },
   footerLabel: {
     fontSize: FONTS.sizeBody,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontWeight: '500',
   },
   badge: {
     position: 'absolute',
     top: -2,
     right: -2,
-    backgroundColor: COLORS.danger,
+    backgroundColor: colors.danger,
     borderRadius: RADIUS.full,
     minWidth: 16,
     height: 16,
@@ -266,7 +273,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   badgeText: {
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontSize: 9,
     fontWeight: 'bold',
   },

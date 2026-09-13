@@ -1,4 +1,5 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
+import { useTheme } from '../../context/ThemeContext';
 import {
   View, Text, StyleSheet, TouchableOpacity, ActivityIndicator,
   Modal, TextInput, RefreshControl, ScrollView, Alert
@@ -8,7 +9,7 @@ import { apiFetch } from '../../config/apiClient';
 import { fileUrl } from '../../config/api';
 import { openPdf, downloadFileUrl } from '../../config/openPdf';
 import { formatRelativeTime } from '../../components/formatTime';
-import { COLORS, SPACING, RADIUS } from '../../config/theme';
+import { SPACING, RADIUS } from '../../config/theme';
 
 const LANGUAGES = ['javascript', 'python', 'typescript', 'java', 'cpp', 'c', 'sql', 'html', 'css', 'json', 'bash', 'php', 'ruby', 'go', 'rust', 'markdown', 'text'];
 
@@ -20,6 +21,8 @@ const formatSize = (bytes) => {
 };
 
 const Studio = forwardRef((props, ref) => {
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => getStyles(colors, isDark), [colors, isDark]);
   const { initialFileId, onInitialHandled } = props;
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -189,43 +192,42 @@ const Studio = forwardRef((props, ref) => {
   const pdfFiles = files.filter(f => f.type !== 'code');
 
   const renderCodeRow = ({ item }) => (
-    <TouchableOpacity
-        style={styles.row}
+    <View style={styles.row}>
+      <TouchableOpacity
+        style={styles.rowMain}
         onPress={() => openFile(item.id)}
         activeOpacity={0.7}
       >
-      <View style={styles.rowIcon}>
-        <Icon name="code-tags" size={24} color={COLORS.primary} />
-      </View>
-      <View style={styles.rowInfo}>
-        <Text style={styles.rowName} numberOfLines={1}>{item.name}</Text>
-        <View style={styles.rowMeta}>
-          <Text style={styles.rowMetaText}>{item.language}</Text>
-          <Text style={styles.rowMetaText}>{formatSize(item.size)}</Text>
-          <Icon
-            name={item.visibility === 'public' ? 'earth' : 'lock-outline'}
-            size={12}
-            color={COLORS.textMuted}
-          />
+        <View style={styles.rowIcon}>
+          <Icon name="code-tags" size={24} color={colors.primary} />
         </View>
-      </View>
+        <View style={styles.rowInfo}>
+          <Text style={styles.rowName} numberOfLines={1}>{item.name}</Text>
+          <View style={styles.rowMeta}>
+            <Text style={styles.rowMetaText}>{item.language}</Text>
+            <Text style={styles.rowMetaText}>{formatSize(item.size)}</Text>
+            <Icon
+              name={item.visibility === 'public' ? 'earth' : 'lock-outline'}
+              size={12}
+              color={colors.textMuted}
+            />
+          </View>
+        </View>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.rowDeleteBtn}
-        onPress={(e) => {
-          e.stopPropagation();
-          confirmDeleteFile(item, true);
-        }}
+        onPress={() => confirmDeleteFile(item, true)}
       >
-        <Icon name="delete-outline" size={20} color={COLORS.danger} />
+        <Icon name="delete-outline" size={20} color={colors.danger} />
       </TouchableOpacity>
-      <Icon name="chevron-right" size={20} color={COLORS.textMuted} />
-    </TouchableOpacity>
+      <Icon name="chevron-right" size={20} color={colors.textMuted} />
+    </View>
   );
 
   const renderPdfRow = ({ item }) => (
     <View style={styles.row}>
       <View style={styles.rowIcon}>
-        <Icon name="file-pdf-box" size={24} color={COLORS.danger} />
+        <Icon name="file-pdf-box" size={24} color={colors.danger} />
       </View>
       <View style={styles.rowInfo}>
         <Text style={styles.rowName} numberOfLines={1}>{item.name}</Text>
@@ -245,7 +247,7 @@ const Studio = forwardRef((props, ref) => {
           style={[styles.rowAction, styles.rowDeleteAction]}
           onPress={() => confirmDeleteFile(item, false)}
         >
-          <Icon name="delete-outline" size={16} color={COLORS.danger} />
+          <Icon name="delete-outline" size={16} color={colors.danger} />
           <Text style={[styles.rowActionText, styles.deleteText]}>Supprimer</Text>
         </TouchableOpacity>
       </View>
@@ -260,7 +262,7 @@ const Studio = forwardRef((props, ref) => {
           style={[styles.createButton, creating && styles.disabled]}
           onPress={() => { setCreateVisible(true); setCreateFeedback({ type: '', message: '' }); }}
         >
-          <Icon name="plus" size={18} color={COLORS.white} />
+          <Icon name="plus" size={18} color={colors.onPrimary} />
           <Text style={styles.createButtonText}>Nouveau fichier</Text>
         </TouchableOpacity>
       </View>
@@ -273,7 +275,7 @@ const Studio = forwardRef((props, ref) => {
 
       {loading && files.length === 0 ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       ) : (
         <ScrollView
@@ -282,8 +284,8 @@ const Studio = forwardRef((props, ref) => {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={handleRefresh}
-              colors={[COLORS.primary]}
-              tintColor={COLORS.primary}
+              colors={[colors.primary]}
+              tintColor={colors.primary}
             />
           }
         >
@@ -310,15 +312,6 @@ const Studio = forwardRef((props, ref) => {
           )}
         </ScrollView>
       )}
-
-      {editorFeedback.message ? (
-        <View style={styles.inlineBanner}>
-          <Text style={editorFeedback.type === 'error' ? styles.errorText : styles.successText}>
-            {editorFeedback.message}
-          </Text>
-        </View>
-      ) : null}
-
       <Modal
         visible={editorVisible}
         transparent
@@ -334,9 +327,17 @@ const Studio = forwardRef((props, ref) => {
                 {editorFile ? `Éditeur — ${editorFile.name}` : 'Éditeur'}
               </Text>
               <TouchableOpacity onPress={() => setEditorVisible(false)} disabled={editorLoading}>
-                <Icon name="close" size={28} color={COLORS.textDark} />
+                <Icon name="close" size={28} color={colors.textDark} />
               </TouchableOpacity>
             </View>
+
+            {editorFeedback.message ? (
+              <View style={styles.inlineBanner}>
+                <Text style={editorFeedback.type === 'error' ? styles.errorText : styles.successText}>
+                  {editorFeedback.message}
+                </Text>
+              </View>
+            ) : null}
 
             <ScrollView style={styles.editorScroll} keyboardShouldPersistTaps="handled">
               <Text style={styles.inputLabel}>Nom du fichier</Text>
@@ -374,7 +375,7 @@ const Studio = forwardRef((props, ref) => {
                 autoCorrect={false}
                 editable={!editorLoading}
                 placeholder="// votre code ici"
-                placeholderTextColor={COLORS.placeholder}
+                placeholderTextColor={colors.placeholder}
               />
 
               <Text style={styles.inputLabel}>Visibilité</Text>
@@ -383,14 +384,14 @@ const Studio = forwardRef((props, ref) => {
                   style={[styles.visibilityChip, editorVisibility === 'prive' && styles.visibilityChipActive]}
                   onPress={() => setEditorVisibility('prive')}
                 >
-                  <Icon name="lock-outline" size={14} color={editorVisibility === 'prive' ? COLORS.white : COLORS.textMuted} />
+                  <Icon name="lock-outline" size={14} color={editorVisibility === 'prive' ? colors.onPrimary : colors.textMuted} />
                   <Text style={editorVisibility === 'prive' ? styles.visibilityTextActive : styles.visibilityText}>Privé</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.visibilityChip, editorVisibility === 'public' && styles.visibilityChipActive]}
                   onPress={() => setEditorVisibility('public')}
                 >
-                  <Icon name="earth" size={14} color={editorVisibility === 'public' ? COLORS.white : COLORS.textMuted} />
+                  <Icon name="earth" size={14} color={editorVisibility === 'public' ? colors.onPrimary : colors.textMuted} />
                   <Text style={editorVisibility === 'public' ? styles.visibilityTextActive : styles.visibilityText}>Public</Text>
                 </TouchableOpacity>
               </View>
@@ -401,7 +402,7 @@ const Studio = forwardRef((props, ref) => {
                 disabled={editorLoading}
               >
                 {editorLoading ? (
-                  <ActivityIndicator color={COLORS.white} />
+                  <ActivityIndicator color={colors.onPrimary} />
                 ) : (
                   <Text style={styles.saveButtonText}>Enregistrer</Text>
                 )}
@@ -424,7 +425,7 @@ const Studio = forwardRef((props, ref) => {
             <View style={styles.editorHeader}>
               <Text style={styles.editorTitle}>Nouveau fichier code</Text>
               <TouchableOpacity onPress={() => setCreateVisible(false)} disabled={creating}>
-                <Icon name="close" size={28} color={COLORS.textDark} />
+                <Icon name="close" size={28} color={colors.textDark} />
               </TouchableOpacity>
             </View>
 
@@ -463,7 +464,7 @@ const Studio = forwardRef((props, ref) => {
               autoCorrect={false}
               editable={!creating}
               placeholder="// votre code ici"
-              placeholderTextColor={COLORS.placeholder}
+              placeholderTextColor={colors.placeholder}
             />
 
             {createFeedback.message ? (
@@ -478,7 +479,7 @@ const Studio = forwardRef((props, ref) => {
               disabled={creating}
             >
               {creating ? (
-                <ActivityIndicator color={COLORS.white} />
+                <ActivityIndicator color={colors.onPrimary} />
               ) : (
                 <Text style={styles.saveButtonText}>Créer</Text>
               )}
@@ -498,27 +499,27 @@ const Studio = forwardRef((props, ref) => {
             <View style={styles.editorHeader}>
               <Text style={styles.editorTitle}>Confirmer la suppression</Text>
               <TouchableOpacity onPress={() => setDeleteTarget(null)} disabled={isDeleting}>
-                <Icon name="close" size={28} color={COLORS.textDark} />
+                <Icon name="close" size={28} color={colors.textDark} />
               </TouchableOpacity>
             </View>
-            <Text style={{ color: COLORS.textDark, fontSize: 14, marginVertical: 12 }}>Voulez-vous vraiment supprimer ce fichier ?</Text>
+            <Text style={{ color: colors.textDark, fontSize: 14, marginVertical: 12 }}>Voulez-vous vraiment supprimer ce fichier ?</Text>
             <TouchableOpacity
-              style={[styles.saveButton, { backgroundColor: COLORS.danger }, isDeleting && styles.disabled]}
+              style={[styles.saveButton, { backgroundColor: colors.danger }, isDeleting && styles.disabled]}
               onPress={doDeleteFile}
               disabled={isDeleting}
             >
               {isDeleting ? (
-                <ActivityIndicator color={COLORS.white} />
+                <ActivityIndicator color={colors.onPrimary} />
               ) : (
                 <Text style={styles.saveButtonText}>Supprimer</Text>
               )}
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.saveButton, { backgroundColor: COLORS.inputBackground, marginTop: 10 }]}
+              style={[styles.saveButton, { backgroundColor: colors.inputBackground, marginTop: 10 }]}
               onPress={() => setDeleteTarget(null)}
               disabled={isDeleting}
             >
-              <Text style={[styles.saveButtonText, { color: COLORS.textDark }]}>Annuler</Text>
+              <Text style={[styles.saveButtonText, { color: colors.textDark }]}>Annuler</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -531,10 +532,10 @@ Studio.displayName = 'Studio';
 
 export default Studio;
 
-const styles = StyleSheet.create({
+const getStyles = (colors, isDark) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -546,19 +547,19 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   createButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     borderRadius: RADIUS.full,
     gap: 5,
   },
   createButtonText: {
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontWeight: 'bold',
     fontSize: 13,
   },
@@ -566,17 +567,17 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   errorBanner: {
-    backgroundColor: '#FFF0F0',
+    backgroundColor: colors.danger + '1A',
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
     marginBottom: SPACING.sm,
   },
   errorText: {
-    color: COLORS.danger,
+    color: colors.danger,
     textAlign: 'center',
   },
   successText: {
-    color: COLORS.primary,
+    color: colors.primary,
     textAlign: 'center',
   },
   inlineBanner: {
@@ -595,13 +596,13 @@ const styles = StyleSheet.create({
   groupTitle: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     marginTop: SPACING.md,
     marginBottom: SPACING.sm,
     paddingHorizontal: SPACING.xs,
   },
   emptyText: {
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     fontSize: 13,
     paddingHorizontal: SPACING.xs,
     marginBottom: SPACING.md,
@@ -609,12 +610,12 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.cardBackground,
     borderRadius: RADIUS.xl,
     padding: SPACING.md,
     marginBottom: SPACING.sm,
     elevation: 1,
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 2,
@@ -623,7 +624,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: RADIUS.md,
-    backgroundColor: '#E8F5EC',
+    backgroundColor: colors.primary + '1F',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: SPACING.md,
@@ -635,7 +636,7 @@ const styles = StyleSheet.create({
   rowName: {
     fontWeight: 'bold',
     fontSize: 14,
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   rowMeta: {
     flexDirection: 'row',
@@ -645,7 +646,7 @@ const styles = StyleSheet.create({
   },
   rowMetaText: {
     fontSize: 11,
-    color: COLORS.textMuted,
+    color: colors.textMuted,
   },
   rowActions: {
     flexDirection: 'row',
@@ -657,32 +658,37 @@ const styles = StyleSheet.create({
     gap: 3,
     paddingHorizontal: SPACING.sm,
     paddingVertical: 6,
-    backgroundColor: COLORS.inputBackground,
+    backgroundColor: colors.inputBackground,
     borderRadius: RADIUS.md,
+  },
+  rowMain: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   rowDeleteBtn: {
     padding: 6,
   },
   rowDeleteAction: {
-    backgroundColor: '#FFF0F0',
+    backgroundColor: colors.danger + '1A',
   },
   deleteText: {
-    color: COLORS.danger,
+    color: colors.danger,
   },
   rowActionText: {
-    color: COLORS.primary,
+    color: colors.primary,
     fontSize: 12,
     fontWeight: '600',
   },
   editorModalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 14,
   },
   editorModal: {
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.cardBackground,
     borderRadius: RADIUS.xl,
     padding: SPACING.xl,
     width: '94%',
@@ -697,7 +703,7 @@ const styles = StyleSheet.create({
   editorTitle: {
     fontSize: 17,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
     flex: 1,
     marginRight: SPACING.sm,
   },
@@ -707,17 +713,17 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontWeight: 'bold',
     fontSize: 13,
-    color: COLORS.textDark,
+    color: colors.textDark,
     marginTop: SPACING.sm,
     marginBottom: 5,
   },
   nameInput: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.divider,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     fontSize: 14,
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   languageRow: {
     flexGrow: 0,
@@ -727,32 +733,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: 6,
     borderRadius: RADIUS.full,
-    backgroundColor: COLORS.inputBackground,
+    backgroundColor: colors.inputBackground,
     marginRight: 6,
     borderWidth: 1,
-    borderColor: COLORS.divider,
+    borderColor: colors.divider,
   },
   languageChipActive: {
-    backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   languageChipText: {
     fontSize: 12,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
   },
   languageChipTextActive: {
     fontSize: 12,
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontWeight: '600',
   },
   codeInput: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.divider,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     fontSize: 13,
     fontFamily: 'monospace',
-    color: COLORS.textDark,
+    color: colors.textDark,
     minHeight: 180,
   },
   visibilityRow: {
@@ -767,25 +773,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: 6,
     borderRadius: RADIUS.full,
-    backgroundColor: COLORS.inputBackground,
+    backgroundColor: colors.inputBackground,
     borderWidth: 1,
-    borderColor: COLORS.divider,
+    borderColor: colors.divider,
   },
   visibilityChipActive: {
-    backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   visibilityText: {
     fontSize: 12,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
   },
   visibilityTextActive: {
     fontSize: 12,
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontWeight: '600',
   },
   saveButton: {
-    backgroundColor: COLORS.headerGreen,
+    backgroundColor: colors.headerGreen,
     paddingVertical: SPACING.md,
     borderRadius: RADIUS.lg,
     alignItems: 'center',
@@ -793,19 +799,19 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.md,
   },
   saveButtonText: {
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontSize: 16,
     fontWeight: 'bold',
   },
   createModalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 14,
   },
   createModal: {
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.cardBackground,
     borderRadius: RADIUS.xl,
     padding: SPACING.xl,
     width: '94%',

@@ -1,0 +1,104 @@
+ npm start
+
+> start
+> expo start
+
+env: load .env
+env: export EXPO_PUBLIC_API_URL
+Starting project at D:\Sweeted\sweeted-frontend
+Starting Metro Bundler
+
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+█ ▄▄▄▄▄ █ ██▀▀ █▄██ ▄▄▄▄▄ █
+█ █   █ █  ▀█ ▀▄█▀█ █   █ █
+█ █▄▄▄█ █▀  █▄▄█▄██ █▄▄▄█ █
+█▄▄▄▄▄▄▄█▄█ ▀▄█ ▀ █▄▄▄▄▄▄▄█
+█▄▄█▀▄▄▄▀██▄█▄█▄ ▄██ ▀▄▄ ▄█
+█▄▀   █▄▄  ▄█▀▄█  ▀ █▄  ▀██
+█▀██▀▄▄▄▀ ▀▀▄▀█▄ ▄▀▄▀▀▄ ▀██
+███▄ ▀ ▄▀▄█  ▄██▄▄▄█▄▀ ▀███
+█▄▄██▄█▄▄  ██▄▀▄▄ ▄▄▄ ▀ ▄▄█
+█ ▄▄▄▄▄ █▀ ██▀██▀ █▄█ ▀▀▀██
+█ █   █ █▄▀ ▄ █▄█▄▄ ▄▄▀ ▀▀█
+█ █▄▄▄█ █▀▀▀ ▄██▄██▄▀█▀▀ ██
+█▄▄▄▄▄▄▄█▄█▄███▄████▄▄▄▄▄▄█
+
+› Scan the QR code above to open in Expo Go.
+› Metro: exp://192.168.88.57:8081
+› Web: http://localhost:8081
+
+› Using Expo Go
+› Press s │ switch to development build
+
+› Press a │ open Android
+› Press w │ open web
+
+› Press j │ open debugger
+› Press r │ reload app
+› Press m │ toggle menu
+› shift+m │ more tools
+› Press o │ open project code in your editor
+
+› Press ? │ show all commands
+
+Logs for your project will appear below. Press Ctrl+C to exit.
+Android Bundling failed 3664ms index.js (1285 modules)
+ ERROR  SyntaxError: D:\Sweeted\sweeted-frontend\ecran\Search.js: Unexpected token, expected "," (145:2)
+
+  143 |         ) : null}
+  144 |     </View>
+> 145 |   };
+      |   ^
+  146 |
+  147 |   return (
+  148 |     <View style={[styles.safeContainer, { paddingTop: insets.top }]}>
+    at constructor (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:369:19)
+    at FlowParserMixin.raise (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:6620:19)
+    at FlowParserMixin.unexpected (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:6640:16)
+    at FlowParserMixin.expect (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:6920:12)
+    at FlowParserMixin.parseParenAndDistinguishExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11687:14)
+    at FlowParserMixin.parseParenAndDistinguishExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:3607:18)
+    at FlowParserMixin.parseExprAtom (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11357:23)
+    at FlowParserMixin.parseExprAtom (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+    at FlowParserMixin.parseExprSubscripts (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+    at FlowParserMixin.parseUpdate (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+    at FlowParserMixin.parseMaybeUnary (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+    at FlowParserMixin.parseExprOps (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+    at FlowParserMixin.parseMaybeConditional (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+    at FlowParserMixin.parseMaybeAssign (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+    at FlowParserMixin.parseMaybeAssign (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:3565:18)
+    at FlowParserMixin.parseExpressionBase (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10805:23)
+    at D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10801:39
+    at FlowParserMixin.allowInAnd (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12450:16)
+    at FlowParserMixin.parseExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10801:17)
+    at FlowParserMixin.parseReturnStatement (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13171:28)
+    at FlowParserMixin.parseStatementContent (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12827:21)
+    at FlowParserMixin.parseStatementLike (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12796:17)
+    at FlowParserMixin.parseStatementLike (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:2934:24)
+    at FlowParserMixin.parseStatementListItem (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12776:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13345:61)
+    at FlowParserMixin.parseBlockBody (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13338:10)
+    at FlowParserMixin.parseBlock (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13326:10)
+    at FlowParserMixin.parseFunctionBody (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12129:24)
+    at D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:2908:63
+    at FlowParserMixin.forwardNoArrowParamsConversionAt (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:3084:16)
+    at FlowParserMixin.parseFunctionBody (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:2908:12)
+    at FlowParserMixin.parseArrowExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12104:10)
+    at FlowParserMixin.parseParenAndDistinguishExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11713:12)
+    at FlowParserMixin.parseParenAndDistinguishExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:3607:18)
+    at FlowParserMixin.parseExprAtom (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11357:23)
+    at FlowParserMixin.parseExprAtom (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+    at FlowParserMixin.parseExprSubscripts (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+    at FlowParserMixin.parseUpdate (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+    at FlowParserMixin.parseMaybeUnary (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+    at FlowParserMixin.parseExprOps (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+    at FlowParserMixin.parseMaybeConditional (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+    at FlowParserMixin.parseMaybeAssign (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+    at FlowParserMixin.parseMaybeAssign (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:3565:18)
+    at D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10821:39
+    at FlowParserMixin.allowInAnd (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12450:16)
+    at FlowParserMixin.parseMaybeAssignAllowIn (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10821:17)
+    at FlowParserMixin.parseVar (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13413:91)
+    at FlowParserMixin.parseVarStatement (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13259:10)

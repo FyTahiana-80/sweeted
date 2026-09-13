@@ -62,7 +62,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
     res.on('finish', () => {
         const bodyPreview = req.method === 'POST' && req.body ? JSON.stringify(req.body).slice(0, 200) : '';
-        console.log(`[REQ] ${new Date().toISOString()} ${req.method} ${req.originalUrl} => ${res.statusCode} ${bodyPreview}`);
+        console.log(`[REQ] ${new Date().toISOString()} ${req.ip} ${req.method} ${req.originalUrl} => ${res.statusCode} ${(req.headers['user-agent'] || '').slice(0, 50)} ${bodyPreview}`);
     });
     next();
 });

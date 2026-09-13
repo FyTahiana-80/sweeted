@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import { useTheme } from '../../context/ThemeContext';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator,
   RefreshControl, Alert, Modal
@@ -10,7 +11,7 @@ import { appendFilePart } from '../../config/fileUpload';
 import { API_BASE_URL, fileUrl } from '../../config/api';
 import { openPdf, downloadFileUrl } from '../../config/openPdf';
 import { formatRelativeTime } from '../../components/formatTime';
-import { COLORS, SPACING, RADIUS } from '../../config/theme';
+import { SPACING, RADIUS } from '../../config/theme';
 
 const MINE = 'mine';
 const PUBLIC = 'public';
@@ -29,6 +30,8 @@ const formatSize = (bytes) => {
 };
 
 export default function Fichiers({ onOpenInStudio }) {
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => getStyles(colors, isDark), [colors, isDark]);
   const [scope, setScope] = useState(MINE);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -138,7 +141,7 @@ export default function Fichiers({ onOpenInStudio }) {
   const renderFile = ({ item }) => (
     <View style={styles.row}>
       <View style={styles.fileIconContainer}>
-        <Icon name={fileIcon(item.type)} size={28} color={COLORS.primary} />
+        <Icon name={fileIcon(item.type)} size={28} color={colors.primary} />
       </View>
       <View style={styles.fileInfo}>
         <Text style={styles.fileName} numberOfLines={1}>{item.name}</Text>
@@ -159,16 +162,16 @@ export default function Fichiers({ onOpenInStudio }) {
       </View>
       <View style={styles.actions}>
         <TouchableOpacity style={styles.actionBtn} onPress={() => handleRead(item)}>
-          <Icon name="book-open-variant" size={18} color={COLORS.primary} />
+          <Icon name="book-open-variant" size={18} color={colors.primary} />
           <Text style={styles.actionText}>Lire</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionBtn} onPress={() => handleDownload(item)}>
-          <Icon name="download" size={18} color={COLORS.primary} />
+          <Icon name="download" size={18} color={colors.primary} />
           <Text style={styles.actionText}>Télécharger</Text>
         </TouchableOpacity>
         {scope === MINE ? (
           <TouchableOpacity style={styles.actionBtn} onPress={() => confirmDelete(item)}>
-            <Icon name="delete-outline" size={18} color={COLORS.danger} />
+            <Icon name="delete-outline" size={18} color={colors.danger} />
             <Text style={[styles.actionText, styles.deleteText]}>Supprimer</Text>
           </TouchableOpacity>
         ) : null}
@@ -186,10 +189,10 @@ export default function Fichiers({ onOpenInStudio }) {
           disabled={uploading}
         >
           {uploading ? (
-            <ActivityIndicator size="small" color={COLORS.white} />
+            <ActivityIndicator size="small" color={colors.onPrimary} />
           ) : (
             <>
-              <Icon name="upload" size={18} color={COLORS.white} />
+              <Icon name="upload" size={18} color={colors.onPrimary} />
               <Text style={styles.uploadButtonText}>Upload</Text>
             </>
           )}
@@ -221,7 +224,7 @@ export default function Fichiers({ onOpenInStudio }) {
 
       {loading && files.length === 0 ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       ) : (
         <FlatList
@@ -233,8 +236,8 @@ export default function Fichiers({ onOpenInStudio }) {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={handleRefresh}
-              colors={[COLORS.primary]}
-              tintColor={COLORS.primary}
+              colors={[colors.primary]}
+              tintColor={colors.primary}
             />
           }
           ListEmptyComponent={
@@ -267,7 +270,7 @@ export default function Fichiers({ onOpenInStudio }) {
               </TouchableOpacity>
               <TouchableOpacity style={styles.confirmDeleteBtn} onPress={doDeleteFile} disabled={isDeleting}>
                 {isDeleting ? (
-                  <ActivityIndicator color={COLORS.white} />
+                  <ActivityIndicator color={colors.onPrimary} />
                 ) : (
                   <Text style={styles.confirmDeleteText}>Supprimer</Text>
                 )}
@@ -280,10 +283,10 @@ export default function Fichiers({ onOpenInStudio }) {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors, isDark) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -295,12 +298,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   uploadButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     borderRadius: RADIUS.full,
@@ -312,7 +315,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   uploadButtonText: {
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontWeight: 'bold',
     fontSize: 13,
   },
@@ -326,26 +329,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.sm,
     borderRadius: RADIUS.full,
-    backgroundColor: COLORS.inputBackground,
+    backgroundColor: colors.inputBackground,
     borderWidth: 1,
-    borderColor: COLORS.divider,
+    borderColor: colors.divider,
   },
   chipActive: {
-    backgroundColor: COLORS.toggleActive,
-    borderColor: COLORS.primary,
+    backgroundColor: colors.toggleActive,
+    borderColor: colors.primary,
   },
   chipText: {
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontSize: 13,
     fontWeight: '600',
   },
   chipTextActive: {
-    color: COLORS.primary,
+    color: colors.primary,
     fontSize: 13,
     fontWeight: 'bold',
   },
   errorBanner: {
-    backgroundColor: '#FFF0F0',
+    backgroundColor: colors.danger + '1A',
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
     marginBottom: SPACING.sm,
@@ -357,11 +360,11 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.sm,
   },
   errorText: {
-    color: COLORS.danger,
+    color: colors.danger,
     textAlign: 'center',
   },
   successText: {
-    color: COLORS.primary,
+    color: colors.primary,
     textAlign: 'center',
   },
   loadingContainer: {
@@ -376,12 +379,12 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.cardBackground,
     borderRadius: RADIUS.xl,
     padding: SPACING.md,
     marginBottom: SPACING.sm,
     elevation: 1,
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 2,
@@ -390,7 +393,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: RADIUS.md,
-    backgroundColor: '#E8F5EC',
+    backgroundColor: colors.primary + '1F',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: SPACING.md,
@@ -402,7 +405,7 @@ const styles = StyleSheet.create({
   fileName: {
     fontWeight: 'bold',
     fontSize: 14,
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   fileMetaRow: {
     flexDirection: 'row',
@@ -413,11 +416,11 @@ const styles = StyleSheet.create({
   },
   fileMeta: {
     fontSize: 11,
-    color: COLORS.textMuted,
+    color: colors.textMuted,
   },
   fileTime: {
     fontSize: 11,
-    color: COLORS.textLight,
+    color: colors.textLight,
     marginTop: 2,
   },
   actions: {
@@ -429,32 +432,32 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   actionText: {
-    color: COLORS.primary,
+    color: colors.primary,
     fontSize: 12,
     fontWeight: '600',
   },
   deleteText: {
-    color: COLORS.danger,
+    color: colors.danger,
   },
   emptyContainer: {
     paddingVertical: 40,
     alignItems: 'center',
   },
   emptyText: {
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     fontSize: 14,
     textAlign: 'center',
     paddingHorizontal: SPACING.xl,
   },
   confirmOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   confirmBox: {
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.cardBackground,
     borderRadius: 16,
     padding: 20,
     width: '100%',
@@ -463,12 +466,12 @@ const styles = StyleSheet.create({
   confirmTitle: {
     fontSize: 17,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
     marginBottom: 8,
   },
   confirmText: {
     fontSize: 14,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     marginBottom: 18,
   },
   confirmActions: {
@@ -479,22 +482,22 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 11,
     borderRadius: 10,
-    backgroundColor: COLORS.inputBackground,
+    backgroundColor: colors.inputBackground,
     alignItems: 'center',
   },
   confirmCancelText: {
     fontWeight: '600',
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   confirmDeleteBtn: {
     flex: 1,
     paddingVertical: 11,
     borderRadius: 10,
-    backgroundColor: COLORS.danger,
+    backgroundColor: colors.danger,
     alignItems: 'center',
   },
   confirmDeleteText: {
     fontWeight: 'bold',
-    color: COLORS.white,
+    color: colors.onPrimary,
   },
 });

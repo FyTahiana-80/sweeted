@@ -19,8 +19,10 @@ function xhrToBlob(uri) {
   return new Promise(function (resolve, reject) {
     try {
       var xhr = new XMLHttpRequest();
-      xhr.onload = function () { resolve({ response: xhr.response, status: xhr.status }); };
-      xhr.onerror = function () { reject(new Error('xhr status=' + xhr.status)); };
+      var timedOut = false;
+      var timer = setTimeout(function () { timedOut = true; try { xhr.abort(); } catch (e2) {} reject(new Error('xhr timeout')); }, 30000);
+      xhr.onload = function () { clearTimeout(timer); resolve({ response: xhr.response, status: xhr.status }); };
+      xhr.onerror = function () { clearTimeout(timer); if (!timedOut) reject(new Error('xhr status=' + xhr.status)); };
       xhr.responseType = 'blob';
       xhr.open('GET', uri, true);
       xhr.send(null);
@@ -35,7 +37,7 @@ function errMsg(e) {
 }
 
 function logDebug(msg) {
-  try { console.log('[upload-debug] ' + msg); } catch (ignored) {}
+function logDebug(msg) {}
 }
 
 export async function appendFilePart(formData, field, uri, name, mime) {
@@ -58,7 +60,15 @@ export async function appendFilePart(formData, field, uri, name, mime) {
 
   if (!part) {
     try {
-      const response = await fetch(uri);
+      const upController = new AbortController();
+      const upTimeout = setTimeout(() => upController.abort(), 30000);
+      let upResponse = null;
+      try {
+        upResponse = await fetch(uri, { signal: upController.signal });
+      } finally {
+        clearTimeout(upTimeout);
+      }
+      const response = upResponse;
       const b = await response.blob();
       if (b && b.size >= 64) {
         part = (b.type === mime) ? b : b.slice(0, b.size, mime);

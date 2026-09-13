@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "For the faith in sweeted",
   "scripts": {
-    "dev": "concurrently \"cd sweeted-backend && npm start\" \"cd sweeted-frontend && npm start\""
+    "update-ip": "node sweeted-frontend/scripts/update-ip.js",
+    "dev": "node sweeted-frontend/scripts/update-ip.js && concurrently \"cd sweeted-backend && npm start\" \"cd sweeted-frontend && npm start\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

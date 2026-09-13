@@ -92,12 +92,20 @@ exports.updatePost = async (req, res) => {
         const { content } = req.body;
         const userId = req.user.id;
 
+        if (!content?.trim()) {
+            return res.status(400).json({ message: "Le contenu du post ne peut pas être vide." });
+        }
+        if (content.length > 2000) {
+            return res.status(400).json({ message: "Le contenu ne peut pas dépasser 2000 caractères." });
+        }
+
         const post = await Post.findById(id);
         if (!post || post.id_user !== userId) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé à modifier ce post." });
         }
 
-        await Post.update(id, content);
+        const sanitizedContent = xss(content.trim());
+        await Post.update(id, sanitizedContent);
         res.status(200).json({ message: "Post mis à jour avec succès !" });
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la mise à jour du post.", error });

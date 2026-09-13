@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { COLORS } from '../config/theme';
+import { useTheme } from '../context/ThemeContext';
 
 const SIZE = 60;
 const STROKE = 6;
@@ -11,17 +11,19 @@ const CENTER = SIZE / 2;
 
 // Anneau circulaire de progression du scroll avec pourcentage.
 export default function ScrollProgress({ progress }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => getStyles(colors), [colors]);
   const p = Math.min(1, Math.max(0, progress || 0));
   const pct = Math.round(p * 100);
   return (
     <View style={styles.wrap} pointerEvents="none">
       <Svg width={SIZE} height={SIZE}>
-        <Circle cx={CENTER} cy={CENTER} r={R} stroke={COLORS.divider} strokeWidth={STROKE} fill="none" />
+        <Circle cx={CENTER} cy={CENTER} r={R} stroke={colors.divider} strokeWidth={STROKE} fill="none" />
         <Circle
           cx={CENTER}
           cy={CENTER}
           r={R}
-          stroke={COLORS.primary}
+          stroke={colors.primary}
           strokeWidth={STROKE}
           fill="none"
           strokeDasharray={CIRC + ' ' + CIRC}
@@ -37,7 +39,7 @@ export default function ScrollProgress({ progress }) {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors) => StyleSheet.create({
   wrap: {
     width: SIZE,
     height: SIZE,
@@ -52,6 +54,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
 });

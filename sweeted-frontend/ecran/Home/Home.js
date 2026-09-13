@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
 import { FlatList, View, StyleSheet, StatusBar, TouchableOpacity, Text, RefreshControl, Alert, Modal, TextInput, ActivityIndicator, Platform } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
@@ -6,7 +6,8 @@ import Post from '../../components/Post';
 import { apiFetch } from '../../config/apiClient';
 import { API_BASE_URL } from '../../config/api';
 import { openPdf } from '../../config/openPdf';
-import { COLORS, SPACING } from '../../config/theme';
+import { SPACING } from '../../config/theme';
+import { useTheme } from '../../context/ThemeContext';
 import ScrollProgress from '../../components/ScrollProgress';
 
 const POSTS_PER_PAGE = 20;
@@ -22,6 +23,8 @@ const hideFeedScrollbar = () => {
 };
 const Home = forwardRef((props, ref) => {
   const navigation = useNavigation();
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => getStyles(colors, isDark), [colors, isDark]);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -70,7 +73,7 @@ const Home = forwardRef((props, ref) => {
       const enrichedPosts = data.map(post => ({
         ...post,
         user: post.display_name || `Utilisateur ${post.user_id}`,
-        avatar: post.avatar_url || `https://i.pravatar.cc/150?u=user${post.user_id}`,
+        avatar: post.avatar_url ? (post.avatar_url.startsWith('http') ? post.avatar_url : `${API_BASE_URL.replace('/api', '')}${post.avatar_url}`) : `https://i.pravatar.cc/150?u=user${post.user_id}`,
         totalReactions: Number(post.total_reactions) || 0,
         has_reacted: !!post.has_reacted,
         is_bookmarked: !!post.is_bookmarked,
@@ -202,15 +205,15 @@ const Home = forwardRef((props, ref) => {
 
   if (loading && posts.length === 0) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>Chargement des posts...</Text>
+      <View style={[styles.loadingContainer, { backgroundColor: colors.screenBackground }]}>
+        <Text style={{ color: colors.textDark }}>Chargement des posts...</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+    <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       {error ? (
         <View style={styles.errorBanner}>
@@ -224,7 +227,7 @@ const Home = forwardRef((props, ref) => {
         style={{ flex: 1, width: '100%', maxWidth: 770, alignSelf: 'center' }}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <View style={styles.postCard}>
+          <View style={[styles.postCard, { backgroundColor: colors.cardBackground, borderColor: isDark ? colors.divider : 'transparent', borderWidth: isDark ? 1 : 0 }]}>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => navigation.navigate('PostDetails', { post: item })}
@@ -242,14 +245,14 @@ const Home = forwardRef((props, ref) => {
             </TouchableOpacity>
 
             <View style={styles.commentActionArea}>
-              <View style={styles.divider} />
+              <View style={[styles.divider, { backgroundColor: colors.divider }]} />
               <TouchableOpacity
                 style={styles.commentInfo}
                 activeOpacity={0.7}
                 onPress={() => navigation.navigate('PostDetails', { post: item })}
               >
-                <Icon name="chat-outline" size={20} color={COLORS.primary} />
-                <Text style={styles.commentText}>Voir ou ajouter un commentaire...</Text>
+                <Icon name="chat-outline" size={20} color={colors.primary} />
+                <Text style={[styles.commentText, { color: colors.textSecondary }]}>Voir ou ajouter un commentaire...</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -262,12 +265,19 @@ const Home = forwardRef((props, ref) => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
-            colors={[COLORS.primary]}
-            tintColor={COLORS.primary}
+            colors={[colors.primary]}
+            tintColor={colors.primary}
           />
         }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
+        ListEmptyComponent={
+          !loading && !error ? (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>Aucun post pour le moment. Sois le premier a publier !</Text>
+            </View>
+          ) : null
+        }
         ListFooterComponent={
           hasMore && posts.length > 0 ? (
             <View style={styles.loadingMore}>
@@ -294,29 +304,29 @@ const Home = forwardRef((props, ref) => {
         }}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+          <View style={[styles.modalContent, { backgroundColor: colors.cardBackground }]}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Modifier le post</Text>
+              <Text style={[styles.modalTitle, { color: colors.textDark }]}>Modifier le post</Text>
               <TouchableOpacity onPress={() => { setEditModalVisible(false); setEditingPost(null); setEditContent(''); }} disabled={isEditing}>
-                <Icon name="close" size={28} color={COLORS.textDark} />
+                <Icon name="close" size={28} color={colors.textDark} />
               </TouchableOpacity>
             </View>
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, { backgroundColor: colors.inputBackground, color: colors.text, borderColor: colors.divider }]}
               placeholder="Modifier votre post..."
-              placeholderTextColor={COLORS.placeholder}
+              placeholderTextColor={colors.placeholder}
               multiline
               value={editContent}
               onChangeText={setEditContent}
               editable={!isEditing}
             />
             <TouchableOpacity
-              style={[styles.submitButton, isEditing && { opacity: 0.6 }]}
+              style={[styles.submitButton, { backgroundColor: colors.primary }, isEditing && { opacity: 0.6 }]}
               onPress={handleSaveEdit}
               disabled={isEditing}
             >
               {isEditing ? (
-                <ActivityIndicator color="#FFF" />
+                <ActivityIndicator color={colors.onPrimary} />
               ) : (
                 <Text style={styles.submitButtonText}>Enregistrer</Text>
               )}
@@ -332,10 +342,10 @@ Home.displayName = 'Home';
 
 export default Home;
 
-const styles = StyleSheet.create({
+const getStyles = (colors, isDark) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
   },
   loadingContainer: {
     flex: 1,
@@ -343,14 +353,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   errorBanner: {
-    backgroundColor: '#FFF0F0',
+    backgroundColor: colors.danger + '1A',
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.divider,
+    borderBottomColor: colors.divider,
   },
   errorText: {
-    color: COLORS.danger,
+    color: colors.danger,
     textAlign: 'center',
   },
   listContent: {
@@ -358,11 +368,11 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
   postCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.cardBackground,
     marginBottom: 12,
     marginHorizontal: 12,
     elevation: 1,
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -373,7 +383,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: COLORS.divider,
+    backgroundColor: colors.divider,
     marginBottom: 10,
   },
   commentInfo: {
@@ -382,7 +392,7 @@ const styles = StyleSheet.create({
   },
   commentText: {
     marginLeft: 8,
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     fontSize: 13,
     fontStyle: 'italic',
   },
@@ -391,17 +401,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingMoreText: {
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     fontSize: 13,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: '#FFF',
+    backgroundColor: colors.cardBackground,
     borderRadius: 16,
     padding: 20,
     width: '85%',
@@ -416,27 +426,27 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   textInput: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.divider,
     borderRadius: 12,
     padding: 12,
     fontSize: 15,
-    color: COLORS.textDark,
+    color: colors.textDark,
     minHeight: 100,
     marginBottom: 15,
     textAlignVertical: 'top',
   },
   submitButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: 'center',
   },
   submitButtonText: {
-    color: '#FFF',
+    color: colors.onPrimary,
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -447,8 +457,18 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.cardBackground,
     elevation: 5,
     zIndex: 10,
+  },
+  emptyContainer: {
+    paddingVertical: 40,
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  emptyText: {
+    color: colors.textMuted,
+    fontSize: 14,
+    textAlign: 'center',
   },
 });

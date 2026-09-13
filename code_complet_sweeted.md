@@ -1,6 +1,6 @@
 # Code source du projet : Sweeted
 
-80 fichiers inclus (2.2 Mo), 28 entrees exclues (voir annexe).
+82 fichiers inclus (2.3 Mo), 28 entrees exclues (voir annexe).
 
 ## Index des fichiers inclus
 
@@ -14,9 +14,10 @@ package.json
 projet_to_md.py
 sweeted-backend\.env.example
 sweeted-backend\.gitignore
-sweeted-backend\logs_depuis_expo
+sweeted-backend\logs_depuis_le_terminal
 sweeted-backend\package-lock.json
 sweeted-backend\package.json
+sweeted-backend\schema.sql
 sweeted-backend\scripts\start-server.ps1
 sweeted-backend\scripts\token.js
 sweeted-backend\src\app.js
@@ -52,6 +53,7 @@ sweeted-backend\src\routes\officialRoutes.js
 sweeted-backend\src\routes\postRoute.js
 sweeted-backend\src\routes\sweetRoute.js
 sweeted-backend\src\routes\userRoutes.js
+sweeted-backend\uploads\official-1789150590736-487698163
 sweeted-backend\uploads\post-1789127285281-800528175
 sweeted-frontend\.env.example
 sweeted-frontend\.gitignore
@@ -1064,52 +1066,113 @@ dist
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Node
 ```
 
-## Fichier : sweeted-backend\logs_depuis_expo
+## Fichier : sweeted-backend\logs_depuis_le_terminal
 
 ```text
-Console Warning
+ npm start
 
-InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead.
+> start
+> expo start
 
-Source:
-D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\Data\LogBoxData.js (235:38)
+env: load .env
+env: export EXPO_PUBLIC_API_URL
+Starting project at D:\Sweeted\sweeted-frontend
+Starting Metro Bundler
 
-Call Stack:
-addLog (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\Data\LogBoxData.js:235)
-registerWarning (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:255)
-console.warn (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:113)
-warnOnce (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Utilities\warnOnce.js:27)
-module.exports.get__InteractionManager (D:\Sweeted\sweeted-frontend\node_modules\react-native\index.js:264)
-useLatestCallback$argument_0 (D:\Sweeted\sweeted-frontend\node_modules\@react-navigation\stack\lib\module\views\Stack\Card.js:91)
-latestCallback (D:\Sweeted\sweeted-frontend\node_modules\use-latest-callback\lib\src\index.js:21)
-useLatestCallback$argument_0 (D:\Sweeted\sweeted-frontend\node_modules\@react-navigation\stack\lib\module\views\Stack\Card.js:135)
-latestCallback (D:\Sweeted\sweeted-frontend\node_modules\use-latest-callback\lib\src\index.js:21)
-setTimeout$argument_0 (D:\Sweeted\sweeted-frontend\node_modules\@react-navigation\stack\lib\module\views\Stack\Card.js:250)
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+█ ▄▄▄▄▄ █ ██▀▀ █▄██ ▄▄▄▄▄ █
+█ █   █ █  ▀█ ▀▄█▀█ █   █ █
+█ █▄▄▄█ █▀  █▄▄█▄██ █▄▄▄█ █
+█▄▄▄▄▄▄▄█▄█ ▀▄█ ▀ █▄▄▄▄▄▄▄█
+█▄▄█▀▄▄▄▀██▄█▄█▄ ▄██ ▀▄▄ ▄█
+█▄▀   █▄▄  ▄█▀▄█  ▀ █▄  ▀██
+█▀██▀▄▄▄▀ ▀▀▄▀█▄ ▄▀▄▀▀▄ ▀██
+███▄ ▀ ▄▀▄█  ▄██▄▄▄█▄▀ ▀███
+█▄▄██▄█▄▄  ██▄▀▄▄ ▄▄▄ ▀ ▄▄█
+█ ▄▄▄▄▄ █▀ ██▀██▀ █▄█ ▀▀▀██
+█ █   █ █▄▀ ▄ █▄█▄▄ ▄▄▀ ▀▀█
+█ █▄▄▄█ █▀▀▀ ▄██▄██▄▀█▀▀ ██
+█▄▄▄▄▄▄▄█▄█▄███▄████▄▄▄▄▄▄█
 
-Console Warning
+› Scan the QR code above to open in Expo Go.
+› Metro: exp://192.168.88.57:8081
+› Web: http://localhost:8081
 
-SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/AppAndFlow/react-native-safe-area-context
+› Using Expo Go
+› Press s │ switch to development build
 
-Source:
-D:\Sweeted\sweeted-frontend\App.js (85:17)
+› Press a │ open Android
+› Press w │ open web
 
-Call Stack:
-addLog (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\Data\LogBoxData.js:235)
-registerWarning (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:255)
-console.warn (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:113)
-warnOnce (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Utilities\warnOnce.js:27)
-module.exports.get__SafeAreaView (D:\Sweeted\sweeted-frontend\node_modules\react-native\index.js:101)
-LoginScreen (D:\Sweeted\sweeted-frontend\App.js:85)
-callComponent.react_stack_bottom_frame (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:17130)
-renderWithHooks (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:5648)
-updateFunctionComponent (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:8081)
-beginWork (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:9340)
-runWithFiberInDEV (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:697)
-performUnitOfWork (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:14134)
-workLoopSync (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:13966)
-renderRootSync (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:13947)
-performWorkOnRoot (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:13087)
-performWorkOnRootViaSchedulerTask (D:\Sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:3673)
+› Press j │ open debugger
+› Press r │ reload app
+› Press m │ toggle menu
+› shift+m │ more tools
+› Press o │ open project code in your editor
+
+› Press ? │ show all commands
+
+Logs for your project will appear below. Press Ctrl+C to exit.
+Android Bundling failed 3664ms index.js (1285 modules)
+ ERROR  SyntaxError: D:\Sweeted\sweeted-frontend\ecran\Search.js: Unexpected token, expected "," (145:2)
+
+  143 |         ) : null}
+  144 |     </View>
+> 145 |   };
+      |   ^
+  146 |
+  147 |   return (
+  148 |     <View style={[styles.safeContainer, { paddingTop: insets.top }]}>
+    at constructor (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:369:19)
+    at FlowParserMixin.raise (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:6620:19)
+    at FlowParserMixin.unexpected (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:6640:16)
+    at FlowParserMixin.expect (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:6920:12)
+    at FlowParserMixin.parseParenAndDistinguishExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11687:14)
+    at FlowParserMixin.parseParenAndDistinguishExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:3607:18)
+    at FlowParserMixin.parseExprAtom (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11357:23)
+    at FlowParserMixin.parseExprAtom (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+    at FlowParserMixin.parseExprSubscripts (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+    at FlowParserMixin.parseUpdate (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+    at FlowParserMixin.parseMaybeUnary (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+    at FlowParserMixin.parseExprOps (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+    at FlowParserMixin.parseMaybeConditional (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+    at FlowParserMixin.parseMaybeAssign (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+    at FlowParserMixin.parseMaybeAssign (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:3565:18)
+    at FlowParserMixin.parseExpressionBase (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10805:23)
+    at D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10801:39
+    at FlowParserMixin.allowInAnd (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12450:16)
+    at FlowParserMixin.parseExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10801:17)
+    at FlowParserMixin.parseReturnStatement (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13171:28)
+    at FlowParserMixin.parseStatementContent (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12827:21)
+    at FlowParserMixin.parseStatementLike (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12796:17)
+    at FlowParserMixin.parseStatementLike (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:2934:24)
+    at FlowParserMixin.parseStatementListItem (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12776:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13345:61)
+    at FlowParserMixin.parseBlockBody (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13338:10)
+    at FlowParserMixin.parseBlock (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13326:10)
+    at FlowParserMixin.parseFunctionBody (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12129:24)
+    at D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:2908:63
+    at FlowParserMixin.forwardNoArrowParamsConversionAt (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:3084:16)
+    at FlowParserMixin.parseFunctionBody (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:2908:12)
+    at FlowParserMixin.parseArrowExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12104:10)
+    at FlowParserMixin.parseParenAndDistinguishExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11713:12)
+    at FlowParserMixin.parseParenAndDistinguishExpression (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:3607:18)
+    at FlowParserMixin.parseExprAtom (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11357:23)
+    at FlowParserMixin.parseExprAtom (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:4780:20)
+    at FlowParserMixin.parseExprSubscripts (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11102:23)
+    at FlowParserMixin.parseUpdate (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11087:21)
+    at FlowParserMixin.parseMaybeUnary (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:11067:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10920:61)
+    at FlowParserMixin.parseExprOps (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10925:23)
+    at FlowParserMixin.parseMaybeConditional (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10902:23)
+    at FlowParserMixin.parseMaybeAssign (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10852:21)
+    at FlowParserMixin.parseMaybeAssign (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:3565:18)
+    at D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10821:39
+    at FlowParserMixin.allowInAnd (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:12450:16)
+    at FlowParserMixin.parseMaybeAssignAllowIn (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:10821:17)
+    at FlowParserMixin.parseVar (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13413:91)
+    at FlowParserMixin.parseVarStatement (D:\Sweeted\sweeted-frontend\node_modules\@babel\parser\lib\index.js:13259:10)
 ```
 
 ## Fichier : sweeted-backend\package-lock.json
@@ -2537,6 +2600,236 @@ performWorkOnRootViaSchedulerTask (D:\Sweeted\sweeted-frontend\node_modules\reac
 }
 ```
 
+## Fichier : sweeted-backend\schema.sql
+
+```sql
+-- ============================================================================
+-- SCHÉMA DE BASE DE DONNÉES - SWEETED (ISPM)
+-- MySQL / MariaDB (Encodage UTF8mb4)
+-- ============================================================================
+
+CREATE DATABASE IF NOT EXISTS `sweeted`
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE `sweeted`;
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------------------------------------------------------
+-- 1. Table : Roles
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `Roles`;
+CREATE TABLE `Roles` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `nom` VARCHAR(50) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `Roles` (`id`, `nom`) VALUES
+  (1, 'Admin'),
+  (2, 'Modérateur'),
+  (3, 'Utilisateur')
+ON DUPLICATE KEY UPDATE `nom` = VALUES(`nom`);
+
+-- ----------------------------------------------------------------------------
+-- 2. Table : Permissions
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `Permissions`;
+CREATE TABLE `Permissions` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `nom` VARCHAR(100) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `Permissions` (`id`, `nom`) VALUES
+  (1, 'create_user'),
+  (2, 'publish_official'),
+  (3, 'update_post'),
+  (4, 'delete_post')
+ON DUPLICATE KEY UPDATE `nom` = VALUES(`nom`);
+
+-- ----------------------------------------------------------------------------
+-- 3. Table : Permission_de_role
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `Permission_de_role`;
+CREATE TABLE `Permission_de_role` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `id_role` INT NOT NULL,
+  `id_permission` INT NOT NULL,
+  CONSTRAINT `fk_pdr_role` FOREIGN KEY (`id_role`) REFERENCES `Roles` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_pdr_permission` FOREIGN KEY (`id_permission`) REFERENCES `Permissions` (`id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_role_permission` (`id_role`, `id_permission`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Admin a toutes les permissions
+INSERT INTO `Permission_de_role` (`id_role`, `id_permission`) VALUES
+  (1, 1), -- Admin : create_user
+  (1, 2), -- Admin : publish_official
+  (1, 3), -- Admin : update_post
+  (1, 4), -- Admin : delete_post
+  (2, 4)  -- Modérateur : delete_post
+ON DUPLICATE KEY UPDATE `id_role` = VALUES(`id_role`);
+
+-- ----------------------------------------------------------------------------
+-- 4. Table : Users
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `Users`;
+CREATE TABLE `Users` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `matricule_number` VARCHAR(50) NOT NULL UNIQUE,
+  `password` VARCHAR(255) NOT NULL,
+  `display_name` VARCHAR(100) NULL,
+  `avatar_url` VARCHAR(255) NULL,
+  `bio` VARCHAR(280) NULL,
+  `filiere` VARCHAR(100) NULL,
+  `id_role` INT NOT NULL DEFAULT 3,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_users_role` FOREIGN KEY (`id_role`) REFERENCES `Roles` (`id`),
+  INDEX `idx_users_matricule` (`matricule_number`),
+  INDEX `idx_users_display_name` (`display_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------------------------
+-- 5. Table : Posts
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `Posts`;
+CREATE TABLE `Posts` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `content` TEXT NULL,
+  `image_url` VARCHAR(255) NULL,
+  `id_user` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_posts_user` FOREIGN KEY (`id_user`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
+  INDEX `idx_posts_user` (`id_user`),
+  INDEX `idx_posts_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------------------------
+-- 6. Table : Sweets (Likes / Réactions)
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `Sweets`;
+CREATE TABLE `Sweets` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `id_user` INT NOT NULL,
+  `id_post` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_sweets_user` FOREIGN KEY (`id_user`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_sweets_post` FOREIGN KEY (`id_post`) REFERENCES `Posts` (`id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_user_post_sweet` (`id_user`, `id_post`),
+  INDEX `idx_sweets_post` (`id_post`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------------------------
+-- 7. Table : Comments
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `Comments`;
+CREATE TABLE `Comments` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `id_user` INT NOT NULL,
+  `id_post` INT NOT NULL,
+  `content` TEXT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_comments_user` FOREIGN KEY (`id_user`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_comments_post` FOREIGN KEY (`id_post`) REFERENCES `Posts` (`id`) ON DELETE CASCADE,
+  INDEX `idx_comments_post` (`id_post`),
+  INDEX `idx_comments_created` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------------------------
+-- 8. Table : Officiel (Publications officielles de la direction)
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `Officiel`;
+CREATE TABLE `Officiel` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `id_user` INT NOT NULL,
+  `content` TEXT NULL,
+  `image_url` VARCHAR(255) NULL,
+  `is_pinned` TINYINT(1) NOT NULL DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_officiel_user` FOREIGN KEY (`id_user`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
+  INDEX `idx_officiel_pinned_created` (`is_pinned`, `created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------------------------
+-- 9. Table : file (Documents PDF, images et fichiers de code Sweet Studio)
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `file`;
+CREATE TABLE `file` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `type` ENUM('file', 'image', 'code') NOT NULL DEFAULT 'file',
+  `name` VARCHAR(255) NOT NULL,
+  `path` VARCHAR(255) NULL,
+  `content` LONGTEXT NULL,
+  `language` VARCHAR(50) NULL,
+  `size` INT NOT NULL DEFAULT 0,
+  `visibility` ENUM('public', 'prive') NOT NULL DEFAULT 'prive',
+  `download_count` INT NOT NULL DEFAULT 0,
+  `id_user` INT NOT NULL,
+  `id_post` INT NULL,
+  `id_official_post` INT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_file_user` FOREIGN KEY (`id_user`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_file_post` FOREIGN KEY (`id_post`) REFERENCES `Posts` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_file_official` FOREIGN KEY (`id_official_post`) REFERENCES `Officiel` (`id`) ON DELETE SET NULL,
+  INDEX `idx_file_user` (`id_user`),
+  INDEX `idx_file_visibility` (`visibility`),
+  INDEX `idx_file_post` (`id_post`),
+  INDEX `idx_file_official` (`id_official_post`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------------------------
+-- 10. Table : Notification
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `Notification`;
+CREATE TABLE `Notification` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `type` VARCHAR(50) NOT NULL,
+  `message` TEXT NOT NULL,
+  `is_read` TINYINT(1) NOT NULL DEFAULT 0,
+  `id_user` INT NOT NULL,
+  `id_official_post` INT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_notif_user` FOREIGN KEY (`id_user`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_notif_official` FOREIGN KEY (`id_official_post`) REFERENCES `Officiel` (`id`) ON DELETE CASCADE,
+  INDEX `idx_notif_user_read` (`id_user`, `is_read`),
+  INDEX `idx_notif_created` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------------------------
+-- 11. Table : Suivre (Followers / Following)
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `Suivre`;
+CREATE TABLE `Suivre` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `id_user_suiveur` INT NOT NULL,
+  `id_user_suivi` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_suivre_suiveur` FOREIGN KEY (`id_user_suiveur`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_suivre_suivi` FOREIGN KEY (`id_user_suivi`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_suivre` (`id_user_suiveur`, `id_user_suivi`),
+  INDEX `idx_suivre_suivi` (`id_user_suivi`),
+  INDEX `idx_suivre_suiveur` (`id_user_suiveur`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------------------------
+-- 12. Table : enregistrer (Bookmarks / Enregistrements de posts)
+-- ----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `enregistrer`;
+CREATE TABLE `enregistrer` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `id_user` INT NOT NULL,
+  `id_post` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_enregistrer_user` FOREIGN KEY (`id_user`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_enregistrer_post` FOREIGN KEY (`id_post`) REFERENCES `Posts` (`id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_user_post_enregistrer` (`id_user`, `id_post`),
+  INDEX `idx_enregistrer_user` (`id_user`),
+  INDEX `idx_enregistrer_post` (`id_post`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+SET FOREIGN_KEY_CHECKS = 1;
+```
+
 ## Fichier : sweeted-backend\scripts\start-server.ps1
 
 ```powershell
@@ -2639,7 +2932,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
     res.on('finish', () => {
         const bodyPreview = req.method === 'POST' && req.body ? JSON.stringify(req.body).slice(0, 200) : '';
-        console.log(`[REQ] ${new Date().toISOString()} ${req.method} ${req.originalUrl} => ${res.statusCode} ${bodyPreview}`);
+        console.log(`[REQ] ${new Date().toISOString()} ${req.ip} ${req.method} ${req.originalUrl} => ${res.statusCode} ${(req.headers['user-agent'] || '').slice(0, 50)} ${bodyPreview}`);
     });
     next();
 });
@@ -3260,12 +3553,20 @@ exports.updatePost = async (req, res) => {
         const { content } = req.body;
         const userId = req.user.id;
 
+        if (!content?.trim()) {
+            return res.status(400).json({ message: "Le contenu du post ne peut pas être vide." });
+        }
+        if (content.length > 2000) {
+            return res.status(400).json({ message: "Le contenu ne peut pas dépasser 2000 caractères." });
+        }
+
         const post = await Post.findById(id);
         if (!post || post.id_user !== userId) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé à modifier ce post." });
         }
 
-        await Post.update(id, content);
+        const sanitizedContent = xss(content.trim());
+        await Post.update(id, sanitizedContent);
         res.status(200).json({ message: "Post mis à jour avec succès !" });
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la mise à jour du post.", error });
@@ -3536,7 +3837,7 @@ module.exports = (req, res, next) => {
         req.user = decoded;
         next(); 
     }catch (error){
-        res.status(400).json({ message: "Token invalide." });
+        res.status(401).json({ message: "Token invalide ou expiré." });
     }
 };
 ```
@@ -4509,8 +4810,8 @@ router.post('/', authMiddleware, upload.fields([{ name: 'image', maxCount: 1 }, 
 // Lecture publique autorisée ; token optionnel pour renvoyer has_reacted
 router.get('/', optionalAuthMiddleware, postController.getAllPosts);
 router.get('/:id', optionalAuthMiddleware, postController.getPostById);
-router.put('/:id', authMiddleware, permissionMiddleware('update_post'), postController.updatePost);
-router.delete('/:id', authMiddleware, permissionMiddleware('delete_post'), postController.deletePost);
+router.put('/:id', authMiddleware, postController.updatePost);
+router.delete('/:id', authMiddleware, postController.deletePost);
 
 // Erreurs multer (filtre type / taille) → réponse JSON propre
 router.use((err, req, res, next) => {
@@ -4608,6 +4909,149 @@ router.use((err, req, res, next) => {
 });
 
 module.exports = router;
+```
+
+## Fichier : sweeted-backend\uploads\official-1789150590736-487698163
+
+```text
+PNG
+
+   
+IHDR     ê   ü*   	pHYs  %  %IR$ð   sRGB ®Îé   gAMA  ±üa  \IDATxíÝ	`\e½÷ñßs&[ÓBË¬Q¸¤Iº!¶iPû»^®^÷¥¯^äzpÁ
+º PJÓ¥[v¡ldkK6ÉÌyÞÿ»dÎd2sfòýÀLÎÌ&33ÏïY%                                                                                                                                                                                                                               Iá  òÕtê$)}¼?Õnm±ÿ¶ÇÃòZ¨TÕÇ´fÑF%F   (73fì¥©7Ù]|SNÇxw\Õlu]óª   Ï{§æÙmë­ÚèÏ±;s¸?VÁÀWlëJ  ¤k²>¤ øÝÚSùrzÆZB^¡®ö-    IÕ<c?ùàC¶õÃÏñÚÃ®N²­_(  @´µÕè'_¦°æ
+Ã7Û=¨ ÜÑJ   
+3Ç«Ê¡û7¼^®j¦\X£á÷PB  R;·VOëÅò§È»Vy¢Pcå¼F{"   JÔ}ê'=]ÒõÕÙû6÷×©¶¿F}nO¥R+i! QO¦³¯ûÛ¥>»Sa    ìJKK­ÝG)í+¶Ö`oK{J~g¤ÚKÎ·Ûk7X¨®Q¯UoïÁo`÷÷v¿¯Q&³íúû
+  0ºM½§Òá!Êè0+½DÞj­Z6º*¬Í~_aj0+Ûú·ààÿ-P¸çß·ýKÉ©O@	@  Àè-ä7uÎÊ[È8A?Q¡¶ÛZ©|R¾~0'øÊnðþ%D   ­yîËI¬¦ÖSìV]Ê&pÛãþW£R@	@  @eikKéþõ¸³-WÌR>ÞÏãÜJ   Ê_:Øpm®µëß­ ÞÖ×	Ûõ¨"  ræÔ8c°ÐáýkíænÙ{\jg¼B÷"  òM»¹êÕrî|+ROô³ÊÁV¥ÜãJ   ÊÇÑmã4nÃmö·[ÇYð ,Ï&µBGI  Hº¹¬UÓ6]ß©Ð/°{&Ô|üCsO`:J¶J  l­SåÂ¯Ê»é¢ì2<.X ÎÅ¯PBÔ  dV(¿d[çYø ×F!dÂ%F   ÉRwã¥ýÖÞq4SZPUÐ) Ä    9çî®µë¿`[°KJ(§ÇèV%F   ÉÐÜÚ 0óÛ:J(<¯[tÐîý) @iyïÔ4ó
+ýb»Aø)Î_­2J$  @é4Ì«WÐ÷%ï·[ÕÂq¡Bwz?* Äè  J#ïný­mÍFóÔÓNø@"Ð  ßÓTþÅàq?´  âjyÒ}Qø8NyÎý][Ç/  P<Í3UèÚÖABøtçM.X   8&·6+þ(ÂG1ýE®ê·  0òg§0¼BrûÅãÜ×´fÑF	Â4¼  `dEÝ®|°D^û
+ÅãÔ®Î%òGâÐ  FÎÿ¡´º]>É¹gê#1   `d4Ï=ÈÂÇ¯lëp¡¸¼¾¬îö;$  ^óý¦ÙÖÑB¹«UõìÅ   
+«a^½Bwm#ÛßÔ_ó­ZµE@B@  @áÝV£ ïV?G(®hÜGàßª[¯~D@@  @axïT¿áC¶õN¡øÂð\­YºZ@Â@  @a4Î~]Éå¢rýrÁÛÔ½ô÷Ê ë  ák3Ýjà¯±ð±PDQøðVçï(  0<S[÷Õ¿Á¶©7»ÖGáå @þZZê´9ü¥Õi>k½¼ÞfáãJe   ò·¹æÓ)ÓÃ
+Ã·ªgÙõÊ]°  @~fNWà¢B0Ås·ªÜ«´ªýneY*  @|Óf  ø¡Eä/§>Pî    hÜÇÿ_*ëÓ56ýNu.{J@£Ö  Ä³©êµrîMB¸¿+åÞ£ÕíKTÆ  ÜM3QaævyFÿªRïÓªÅO¨ tÁ  ¹;·VÌ%÷¼û/õîñ.Â*]°  @nLÀ®rwdÝ¢Lø6Ý´ì6.X  `h³³ëhÊÝ	Bá9õZËÒ×Ö}U=Wõ
+¨`´  ]k8¯Z~íä<ácdDcj>¨®%7  vÍÝ?ËÂÇ9B¹Ð®~j_N&|`4¡  Ø¹£[ÆilÍ]òþ ¡ÜV
+;Gíí0Ð  v®¾æóBs7(4Yø¸ZB´  :£QA4ð|¬P[åÜ×©ý2Í11  lïØÖ±JûïðQ(Z[ÇÕÕ¾BÀ(G,  °½êð½V`nkÀ.¿µ'´YÝKè  þÝä9ÎÜn¥V<§ìrº¦}I
+@  üKKKzkþ(ïçùsºWi÷zÝÔÞ# /@,  ð/[jÛäÕ*»V.Nø v  0¨yÆ~
+S?JÈÿ¥6Ö¿W÷\ù¬ ì-   `P¼ð/ZËÑ¸Ç9`×h  Ò+f©Ôí@j¸2V¢úðu-X]"  0Úµ´T©·ú
+«Á?M«_aøIõ,ý«XÕÈ 0Úm­>ÕÂÇl!&M­ûiÂc@  Ík P_ñ9}QÇ>   fUÕï³Ö#¸.Ó¡ã¿Ì >Æ  0ZÛº¯jý}¶5VcµªÙZ³h£ ÄF  £Uÿ¦qÝ¯Mø òGO  F£ÆY3äuëO¿_+®[' y£ Ñ¦¥¥.»n­ñx]¬îë	À°@  m6U·YaºEã/	À°1 ÑdÊì=5àoó¹J[éê\²@ 1   Naø)»&|Äá¬õ£~àPtÁ `´4ó8î!&w::ÒP  F¹skåOK~!ÿ¤ÂÌ¯ `   OøV~µ[®îe÷	@Á@  ¨t
+çUËe¾-&Ï¹@A@  ¨tÁ°ëÃ¸T}ÿR((  lÒÌã%ÿa!îêèØ* E   Rµ´TÉ¹ÏX ÙK+cÿ3õ.0X JÕ[=Ï®ç	ñ9÷jkz àh  5Ìo¥è¯ÙVµZ¾è	(8  (>!ïòz#  @¥6ç¥výn!_}ªÉ\+ #  @eqÏgÅóa¹[}cA   Li"ïß.äÏ©[=Wõ
+À   P)^zÆnJûKm«VÈ÷í0b   TÝzÿË®_.G¨ú`Ä8 òwÜªÎÜ-Z?Çë^u/y Z@  ({ó?ácø1û0Â   »¦ßg×¯Ï«`D@  (gM3wóm«J®^ùÔ­0¢   +ï}Ë¶öÏiÆõß+ #  @¹jn}§¼ZÂÕ¥­0¢   £És&Zøø1£eá8­G   Ü´´Ô)Ì\f[û	âåý`Ä@  (7k>jÅåBzHP F rÒ<çX»þ¬PXÎÝ«ÎeO	À#  P.çî®0óSÉ×æ» (   ¹skåÓ¿²­ãÂ¥P,Z @9x2ý1»>U	¥ûº (º ¤khmVàÛVµ0ÜÝêj ]°  H²ãO=ÔÂÇÏDøIË h   $UËYTþm)À­¢a  IµyÓÇ%wº0úº; hh  [?dáãÂH[¯ÚÔ½P4  ¦©5jõø¼0òn×¢!  $'Ì8V^J~OaäyÇ@@  HÏÞSUÁV*Þ_( \- EÅ t   aÞÞJm½ÚZ?ÄõZÈmPT´  Pj-mãlýf¡x¼ÿ»êû¢"  PJmm5Ú¼þ§¶uP\ÎýU[ ¨   J[[J¬ÿm½Z(¾ÀÝ( EG   ÃÇÇåu¾PiÏ
+è@	@  (¶¨ÛÕýÏ|CÞ}QÑJ(´³ oz  SÃ¼z}ßü¹B	¹Uêj* EÇ4¼  KÃÌñ>.¶ðñ&¡´­   PSN?Péþ?Xøh` c@  iÍ'7(Ó×NøH§MÊèn(	Z@  )Ùñsf.±[{	ÉàÝãÚ'õ7(	  #!
+©­ß×;¤Y­Eú $   ZãFië,|/$W@É@  (:m®úO¹ðc>ö(£À@"  P­«WYõú«ä½Tnúëïa,  cþü@Í­çYðè¶àñ*!áü_õêg dh  Þ;5Î>ZW}Én*>SËëÒ(Þ, «¥¥JM­ïÓ|ò¤®"  Gã¬Ú¬¯ÚÖ$¡ÜÚ4n¥  \4º¿\ÿ§äÝ»­Õ£F(G·ëÎ ¤   ìJvAÁ-ïT8ðYÉícáC([7
+@É@  ØhGoÕ¥­¶V#år¸(9  Ïmñè?YÃÏÛ­h%s>++Ó&et· oª  dÍ4iù)r}÷3JóÆõ@   F·h!ÁkV*­ø´|01«Ci(9 `t:ºmÆnhÑ5+þ[ÞYð3[U²Ð­D   F£Ûj4vãkä×Ð;&ÞI«GëWUH   ¦ÌÞSÿNù
+ï÷/F¿j`Ì @åÆw,^u¸ÒþÝJo´{FçoUÏU½ @%rjÕ kVo­¯¶ÛuÂèå?@b@  £¥m¶lx­óä]cTò×
+@b°®+  ¼5W­ÔÚ-takÖÚáoxÓêl?,ê% @  üDc;®<ÐÊoP¸öí>°{«Í
+Ûs×>d!  ÊG4nýú-|¼ËBÇévÏ8ÊB» $
+ lQkÇÕ]/WÐ÷Vùõ¯·{Î¶tÐÉ
+CÛ¨ ¸E   H¶¶Ön8ÀBÆ)Z¸â<ûz¼¼# »uðniµ $ --uÚT×ªµëÛìÖ<kè/ _^×kÁ $
+ PZ­ÍÖÊñfmö¯Ëì# BÇø   â2eÂúÃäSmz`ýkíÛ]¬PHilêvH  xf)¥ÎTZ¯|]RFswjù¢' q  ã½SÃéG©zàLÛ>ÍZ9¦³V"@"@  õ\÷ª0u[ÏTJ/SÈ`r¥ÜªEHÌ¢ (æ«ªÌywö`÷*Ñ½
+¥áÜZu¶& D  ?
+çU+õà$gÉûS¥Ì1½«èbóºB   ÈÝ´3vÓÀæc¬¹MáÚy<¶{k$·ór $ °kG·Õ¨~ý§«¿w¼4{¿£¥ô\õMX Àöfì¥0&§WIëO·{öìZÅÐA$Ómê¼æ1H, `p5òÚ_éÔÉVgYãDûº¿H(;n $ F³yÈm«6._uµrìÆr±;Û Ñ  0ÌèUÿ!eN·â9ò[§gï÷¤T÷ jênD£i *ÝÌãµ¾úp¥^mµÃgØ[ÿáöuã.QWû» ÑhJµt,Zy¼B6êõré£:*PÙ¼_( G J1eöÐÉ
+üIZxã©Vüâìýô®Â¨àþ®ºêåx (g§î/×ß*ïÎRÚZ;¯4v`´ñËuãÂg ñ  PN¢®UËVí§­á9÷i`²ý¤©£w@Y  ÊAóÜÝ	OV¾ÑrÆl»g¼ <g£Æì¥´ $-  TÓÎØMý[[lëõ
+ÓgYQ=Àýð $ÉÑmãT¿¾AÎ­-§Û=Ek5°.T ?	@Ù  @DÉÃôkl8Ïn-Oæ râü£JOè²A Ri9kz·!ïß,¥ORàk &ÿGõ,Ø  e  ÅÔÒ²·¶T ¯7«wÓ¬m3XÑÜä'm¯¡ß	@Y! ÀH¦Î]¸úd)<]ýÙvÏÁ;aº[{W­²B ÐÒR§M©é
+×há¹vÏ!PhWiÑ¢>(+ (é§í¡¾þc­aã5Ú¤yöõ yUÀHåS?²C áj3]aæ,õ
+e·^]«ÞUÀs·¨ûÚ{ ì@  .ï&·!ïÎµgZø8rÛP$Nß²D \5½j/iójjý°~&Y' ¥ð¸jÂë ,@ `(­[ëÆ»,|c¡ã ì}4v ¥tn\ú  % ìHÔÍjÊ©Sf>j7æXà¨³û äB{=þH Ê />wKí5µþwtË.c InÕ¸([ xNócÕù´µt¼Æn<¿\[ l@ `pÇå3¯ÉvµbT[¤êK ¬@ ^óæÕë±þ7É·Ìq ¹H¸ÀýBkm²F 0ú4W­àzlëçíÖdP¢nW?²G 0º4Ì~Rk¿*ïß"Ö+ÊsK´fñM¼lòG 0:DÓê6Í|£^h-/rÚß¶ðA{%P  *_ËYÔ8ë¹àmv«V ÊëÖ>©?@E  ¨l
+­GiÓæËä\³ 'ç¢Eú "¤ hþü@ª>¬û¥Ýz± )÷Æ¼Ek×PÉ ò4·$_s¼¨hÊÓGÔ¹äÿ bÐ@ei3]>s	@ysúÆüZ *J  ¨f}La¸L^ 8}G7_¹N *
+-  Ê_Ó½äS_ü[íR# À=ª¾àçPq  ÊÛST:µÀÇ¨$¿Ñ-×®C, å«±õJW-'| ÆmVû¢ T$ò­j>iÖ[lë
+»q TÀM«?-   ¼´µ¥ÔÜz¾~bác¨,ÑÌWýc~( 1  ÊG[[Ö®ÿP>há
+ þ+Ì|T6òÐ0¯^k7üÈ¶^oáC *»[u5?F
+"äk9^AßÏ,x¼^ *ÓÿêÆÏ@E# H¶ãÎ`ïTÑ`ó³ r9·RS" Ï	 ªñÔý¥_ÛÖIPÉúäýu/íGd:qî>òDø Fÿ;u/¹A Fäº]mÍüÞÚh§@¥{Ti÷1É1»0J0dÉ8ß|¹m( Ï»Ïèæv¦ÝFZ@ $G4ÕnüÀ¶æ
+@ås®Gãú& £
+@2ÝV£ ïB«} .T:s¾::Ò0ª@ ÷NõÏ|Ì6Þ' £¿@7-[. £@é5Î>ÇjC?' £ÅÍªvßQ)% (¥Ærîw¶U# yúåu£õ¶½¿P ®W>|§Ö,½] F%Z@ Î	³°z_ÙV­Dr?Òa>&çï
+Ãûo«{Ù2µ  Jcúi{(~ÇJ#/Hîï[ÿ)-X±V}ásºQÕþm±æ0@ FÿÇíz¶dJKáÇÔqÅzµ´TYÁ¹N®'äÓïÑªU[`T# (¾¦Ùo´úÏH*ïWklúm·ªì|'ësç©ëú;`Ô# (®I'¿Ôj¿& ¹B¥ÕÑ±5{k½µ~8WyÄ©Ç.?W¶µgy]¨Îö?	 D PLÙÅ«¿j$×=ÓÅ?o§jÇXÈª$N¨Zg¨sÉ[íV§F[ªqýóÅ¸ Û@ Ïõï°Ü<Iæôë¶~DRéÝìz¼*iÅu7ÜFÛïdµs ÏW% (Æ¶ë¯õh®ß®~ò»|ð"UÐ^ßûç-çkF¦mÂ=fÿÒ¹êYò  àyh0òZZÆÉW}ß¶&H4½ºÚzá}î UwV/¾é7½öTáEAî<õ´¯ üå½ÓæªOËiº¤súÑv÷ùp¢*¿ñÛÎí­Br.#ïÞfAî*À@ ¬)³çXä?$]40ÛW/ßîþTêPUèw¬­_úÂ;ýî*×«PÔaã v1  FNCËÞÊèÇ¶Å"nH>¯%êºæ±íîýaªþJ­¸rÝïR¿@ÝK.T· `§h02Î«VP}¹Hö|^©àÛÝ­.¤*ë·
+ï½à®ÆSøútV×/ @ Pxmm)÷Æ¶NPü_5éÚîî­uYÁº2!tZ­ÝÒw½à¾ ÜWÃæzåOhâøï r@, wß3s¸(PÉòàÜõ,Ù°ýýáN*eö¶o·GÆïkÁd\hÇÏWçâGz9C   °[úËEø@9q©Kwxÿ²v%Ë«¾û.fnXS?!¯÷©«ýw  
+gÒiË÷ÿÊ¶
+8¨q]Zsím;|Äi*»pÇ«gV~îPfàUº©ã^@LÔP(½åú/±Ñ(+þ';}ÈùãUþWªÿÊ?×$KTU;ð _ Ã7~ ÍµÚÖåe½jkïðh,ïÊ?8ýQ«;ÖîäÑC»huó¯«jÓZuõ#<ÑÀð]³â"»~»rãtn\xßÛR÷r)S«²-8ðÍ?fZ±§róµn~PÝK~­hÊb Z@ Ï¤Ñ*çïP~Ò
+ÝÏwúh¦²çêôþ¶Ã¦Ý4VÎí¥¡8·\UþdÑø.Âa# È_cë+­pòy+°Ò9Ê»M¿açÓUî¼ÿæÏwøØÖÖºã÷ØÅÑëí9ú5ÍÑª¥· 
+.X òÓ<sºBM¿Y)k$`ÔÉüTôïð¡:möÇª¼Ý î¥;}´ºn2í»`9mµ`r©ªÝWµ¢}  À @.Î«Ö÷Õ+®Öæúí_7u>£TíîÐý};î²L}VHÙG@yúËvúh_ÍD9Dùv8r¡µ~üß.wñéým¿½9m®ÂU¾¥âßÇ ØÎü@SV©°IAp}¿TîþµÁí!ÕÔKÛw7Úª>¹ÌÕúgµ¹z³[×+ðÉ»G¬ ³N>óWÕV?¤ÝÝZ-ZÔ§rvÂì#	-|(é;dý·ÕµhãNOûÉv]Æ]ý_uØkÕ½]2©£²Í
+¹à³ê\|½ `@H[[\?ÓÃÙö9<[iÙ³úO>þÏZÐ]Túç?fÛáóöwÔ´í¦YØõ½öoÝc5w+¶G4¦îAu\±^IÖ<ãXáBÛÎêÉ@Yå@UõeCìTæSJ»oì´{Ùs|úP{oê´7«Ïë´Ûw:V 
+Ì	ÍçînÂ¯µð>{9mÈ5*	×+ç7ÙÏñ ¿(pwZÍäª®¹ÛZbÔ!ã6[a"£Rj:ùòU°­Ã/o¯±«»ýÂî1mÚnê{³íúb§»5¶îDu\õä.÷j{ÖWoÐ=W>+ ("F¯ÆYÇYëÃ¬¥¢IIåÕo¯ÒhèZ%S&üªªnQ]p·:®yLÅ-2¸påiVKz½eÐí
+åÍé¥&LÕª[vºOcëT{ñýÙ¶R*KîÝêj¿D P>ÑòÔÚÏ[ã#e=}¬×&{ß&çî¶ò_wIÇ,<¦ªô?ÔÑ±UÃ1µu_etº´wÙ?õçýå.OÍP÷µ»Ü«qÖgíú*O7«wàº³c  ¡(P`t2{OeüäýªÈóßõ[XØíÒ%ÿ¨}}Ðî|È~ß',¨<i¿ñ?äÓO+¨}aßð°¯FA°Bíx]íòb9{Ø1¬ô/~°«ë³çÖg{^=aÅÚÇ­êY{ôùÐ¡,ün½=¾}tÚÓþ&Ýý¼ ÔÙ×qvÿ8ûÞ{Ûì²»d]=VeßÊ¶V>	ÜwÕµøöu×s[5¶öØóÊ·óïµê^ö;@@0zL9ý@¥û~a[-Mäÿbâ¯Öô·l8o_ýÀãòãROÃÓRí×2Aµc¢õ,¨h÷lx	µ¯¡-,úý-ìj?ëö³È´È»tÂ	-êY°a{MyúÜZåç£ïR×æ! ³`at4ãpeúÛÖ¶c-GÎÿÝ
+ñ«m»[AxÒu·©çªÞsâhf´èòðû64Ô+5á Õ(>2Û¢¯VÞÇ¾F­+veOÎÝ+§®!ÂG¤/x«=Gåøü¤-,ÿá@9  ò3c?¹à÷òðm¢.Tþq+^/×Yq|ÒO?¢^³Áÿ¯Û.ÿ¼¿­-¥{6ÔiLÝ8õmÙ])¦À[ËIp¸­Ã¬¼µ¢d¥ÞökÏM­*Ó}r³µ¦= Wm¿ûi*Kî3°Z PèÊÖ0¯^ÁÖ¨?ô\rwÈìë4îÀu\6¼ú¤¥¥Néª}Õç÷Ëò:Dah-'UË[HíòUN°ÙªÎeÍiÿ)ÙE6o/»É)ÌÂô+µfÉß eT6·åývEøÝ´s`ÔÏ´f5Ä;38kÚÛ.;vt[Æ­·Öð n¢=¯·=Ù_ÛËBÊ+ïýZ²5u"QWx\õGío>tËÇs2o²|ùÍçu:	 ÊÍµöé­£q0¤í/¶ÂÙõ\û}ãàÎìÊÚÛvy¡*=±OÆo¨W&U£0½·í«ÛÓZ"öµ×á^¶×^VÀßÍþãív4½>]tjp¯pèÏ$¤ío¶?g¯}Ýhßï	û^ëí{=n>]7'íoÖÓïµ²wkëX=­WG¥ù²âÜ­ÊÔ}K PFèÊ×Ø²¿\U«FÏ±['	ÌÂ¦û­\æÊ¼xµz.ÊÃÑ-ãTC¥ØÀ>½ÛPa5ÏjU¨E¶U>ÓNGk¥ü\­Yz£  @0z´XgKM´°ÞEöÉ½¯PAµpøKkÍ²ÇÄÕÔºÀZQ^£râuº|B Pf }Z¬EdSõíìoµ[ÕB³àáü7T?ð]u°ò3ò4mÖê¬U·ä50öÝrÅz@aF¨¶|&ÍþO+¼~QÙiGQfµÚßo*S÷Ý|å:Ã1àÎµ÷2ú<ÌN#}>á@¹¢£Scë!¿±ÂìABp½RøU_Ðªë0\ÓÎØMý[:më(¯«kÉG eª|ÛçÕÕ¾RýcÿÃ¶Ús¡ÅÅ_©Ê½B]KßMø@Áôo9[e>\§½¾" (c êÆÐï^-ï¾­ìô­H(xôX¡ë4Õ£UïP(SÚÆØëþ]*NO[½ÉÇÔ¹ì)@# ÛÚ7«{ê*t±ù-Bé9ýCÿ0U]¯Ý¶PP8ég§Êù©*N©kÉ
+2Çàß5µnµ?×~B)DþXÕú¬V¶ÿCÀHij½AÞ¿ReÁ_©®é¯b,® 	Eðï:Û¯Vf Å
+Á÷Åv»ÎÓiSßKøÀj5I¡®òp·}\ð RÐìÌô¨ß]j-!­ÂÈrÖð¸X	_QÏ
+FRKK6ÕüNÎ©¤Ë¾6R¯Qçµ "% ;öà}tÈ~¿¯®s¢Åp¸kº³Õ½ä×zô/}FÚ~GMÿÊa-,ï?¡®ö_ **`WV­Ú¢C÷øo«<Ç.
+ô¸=§ïQïø6õ´ß- Î«V&ü°µlÖ)é¼ÿ¹Æ¥¿- ¨0tÁrÕ4ãHùà;¶5K¬~§0u¾zêP\sOÒ×)ùp7+p2]T"Ëü@M+>jµ§¶ñ8w¯÷^­^¼T@±yïÔ4{mLQ²Ý­ÍÐ%ë  ä£áËU}XÝ¡l±wËåÂOkÍ²ÇÂäÖyÊø?)É}Ñú7Òiê\Ò- ¨P`8ZR*ü¼;Wå0 µ$ÜMòáGÔ- æ¼Rhi§ÍÕ×ÛÖ$%Û e^¯®e×
+ *ÐáOw.}¼Æ°nÈm±Õ§4qüu/í | ¤6×£d^kM}áÀhÀ4¼@!¬»o­>âY+@$]Úó°R)ÿ&:í·úîwÓJ©¹å «o»Ô¶&(\¿åóóÕµägQ.#@!LmÝWþãí²ðñ¸Hi­a¬9À×|ÈZ)URùðêZú}À(A 
+aÀGsõ©ÑË[øøµ2ÔÍ×=  )On°6¹(¹¾¨î¥ "«©õv=O£Ó)<UNx;á2wn­|ÕÅøYçúí#ø
+þª `¡fN÷ÿc[c4ú¬¾«¾®UKVdy¼ï
+J¥8®WÎDít»0*1
+/¯	ê­¾E^Éí[>2¼:T|H+ÛïD
+-{+¨Ym§ë$Nìgz¿:2àÀ¨E, ?ÎÂÇÏFaø¸O.s¶:§Ï$| ±¢Ï/%.|HOÊ»Ó F;¦áâ??PoÕ§¶->8:B¼Ó3võá;Ôy]·ÔÁH®kW¶ÚëókJÖgÜ_º6u·¯ rtÁâj}²Âp±mUktX ÿ¼V/½K@Òµ´ÔiSÍrjý¸Y©WkuÇZ ÄÒ4c/ùÌåÝ+=|vù³ýWWûÞê>¬¥ÐýPÏ¤>ª{l  1 @®²Sz?wû«ry9·ÆÞNSxX+áe¥yV«ÁoU8m>©ã? {> àyhrõäÀùVª8]Ë­´*ohLÿÕêèØ* 4±üÖ,Cï®Òû2þÝêY|£: ø7 ³N²ÍOg×û®(®?;¥®Âo«sÙÕÊUØû9;S©yÿc¥ªÏW­ °3BûP°ÜÂÇËT){ÚJJÿ«w¿Ud«¦ÖÓ­àÿvbØëêSJ={¹V­Ú" ÀN@]ii©ÒæZaýmªNOÙïòceÆ|G=W=( ÜMmÝWýZa-yG¨4¢9Ê¥ß«5 0$º`»Ò[Ýfå7©ì¹­ôm¥jÕâ§T¨ ×}G.,UøxÄÞ>¤ÎéWHóC rB v¦±õ`«ÛVS.ç×É_êÛªßò{-_þJÒ[ý.ùð5*¾-ònR©OkÍ"kõX* @î ÀN±ÃTî°àômM_®M*Íqs&*Ì\(Wô®ÄwXËyêZºÚÞ¼  ±1Ø¦§Y
+g¹Í
+nUà.Ð©¿¥K*V[[î_}MSñ<$_ÔÄÝªú Èøw--ã´¹úFÛzÊC(çº,0ÍWÕÆ­a^½R[/°¸ý~ç3ìaËöYcÇOÔ¹ì) .XÀ¿ÛTý6+ÖIøpKíg½Ho§V£B°õ>> ·ÎþªúÖ°¦ - ÀóÍ±67ÛÖÁJ*ç¶ÊíV0úV_Û!`´hõY»þFÓ]r¾¥êÚ_jÅÏ
+ Pp´ Ï·!u¦OføxnñÀ0¼P§O¿UóãQ¢­-¥û×¿Ç^êT`Nå]§}½X.u- 0² Àóz§6¯Ó?ê'
+k¿ûÏÅ»ö£ÈÚgÎV\$ïS*,{=¹?ØëëGên¿C ¢ ðãg`ü%ÃV»\i/ÑN\¥K>N­çZ«Çwm»0áÃ¹{-p\%þæ½òZ øhS,eTBQÈ¸Õjz©TýåZùÇÍ&µ¾NÎÝZ%>¢q§%
+ÃêYrã?é¹N â# ÿÙ]Åæ´É®îÙËqö´íEúv³çØëâ>Æ)®èuåõm,±ÖªwÂ½ºsr@B@çÙ±Åð¤ÖÈ»vkpiWÏÔ¿²h ð<3-8üÞBD}G<%çnï±ÐÑ©[­Úþ{ÕÑ  q<çè¶Õ¯·&ªpÖÛe­à+­±ínuN»ÀìÄÙG(ã,ï´Ë&Ñke½mo¶`ñÇÉeÖÙ×4!s¯±@  ð|­S¥ðÃrÁ+­ ³ÕÂÖn¿ëóÞG5¬ýv{µh¬³ÂÒvû>{ì^»Ü©kU©éßh5±[`hmVðÄÀ¶õ¯^? PQ ÀL?mmíh[ãwðè¥ª2Ê¤6©f`új7©çª^                                                                                                                      Âr à9--UÚR{¦¼?U^ÇØ§Däûän)ü£ÆÜ ´  ÈåëÇª*óþ©`©V-¾Wåfþü@V¾Ý
+59íïÝ#êj¿J@\Çz¨RÈ¹;vp¾¹~»úÒþ#ºyÉ:aäMùV®^¥ä]h¥(ÈlR:õ2þi­Ù¢-nRÏ%*Í³¢@}&ðîIø[TíRUhÛ©MÚéÕmíT(ÊWÓ¬ïÙÊ{bqº¼CåfÒ¬iöJ½1ÆÚïy¨8ZZ&hsõM¶uX{w©jÓIZµj0²ZµÊý(®W.|Â¾>f7²÷á¿(Ðùp:=¥$jl]dIj/mï÷OÛsú¸U<*çï²À·\©ê5Z³èa òÔp^µÜÚ»ìÍùÅ1²Ú¥`rÙµ4¶Zk?=Ö1ÕÕÇkå5·ÈUÓ¬Y¡ç-¹à>l-mßFV"È.xÝnçÅòvÛ­KW¬WO Ù¨ÊÛgûR©k4»ùVk©@@9J=ðr{3~âÙËjÞ§r2ùì÷lQ\éÉr5é´Ãå]¼+ÚÚrëÑÃé?ìÜø¨\°H7ß¦Æ[áÿÖÂV',ÜiaôI¯ÔÂ×jÒl] qâ¢\½Â.yôöoRKÛ8LÕ;íC'×Í-ÈUÐß`¯=ÏzpÃØ±]¶·!«ôñËÔ[½ÄÂÈk³`x¼,ÌùYr%D.×ÔÖ}ÊT8SùðÚWÑÍ¤¢Zé(0åÃk²¦Ì[ Ähå]®Ï©U×q}ªì=iºßX¹GM­giJÛa¸,Ìù×iÀß¥I3¢ÏD*P6¨@ù®lJÙùqoµfìïË¹|¿Aqo±_q¼òâR:0öYQ|¡ÔücrÁj(	ö~´§mïf']Ý¿Ó+ªXù£Òë©iÖçÔ¹¤[Ià´À®¯S±öº¨E#zn££èùQ4ægr/£í© ¸RZÏQwû¯ÊÏâUÑØÁÊßdMÝd_×(©¢þÒ½zµÃ'*­Rê¯QI(¦´ÒácB·¨³ýU*§y{ÉoÙG?ÐÞc¢®°ÑTè§h°ÀÇ\#S¬5äËöó_¨RsÁJ­Yü}U°M]¹·tÝ%ç_oÏÓCæ-:±&·Þ¯ÕíÉýl¶¡ÊÏ?IÊ¿?;VRm®m±£4ÞÍ¢éwuÓ#¿ûmÂhâÕsÕºié]ê^¶T]K¾n³5qÂÞV¥Vw÷+÷æikUñ_ScëÅ1c/ÁÌµ²ýêjÿ³]>«Îi/µÖú·ÛsËì{*ã¿N÷6Êgi¸¼Þ ê<ÖfÇÁÅùþå|¨#'=µÎÿÆ:Fî¢ÄL±ÒZ° £ÎÅËÕ¹ä½z&uÏ°óãZ;§Ò¹}ÿ>mtÔLj°$í?Z´ÃÓYÿ^	G Ay2;ê'[©*eÂ(æL·ð0EÃåô"=[=I@.öªºÈ®¯ÊaOoÿ-Tfâwü»{m´óÕ8þL;UÎ²{râNTÚ]cïñCw7º:³¦÷gòÅë#´ é (/ÑÓDÓzJÂV(Èo?[!^NÊ" õ)¬{½6_µKÿ÷ÉÖhûïiÜ×«ç;³`A¿:.TUp?]Hoh).VócíEÏiXûkaª;ÖJ?C\$å%¨>Yj0Ñ%JÖÂV¾Ü~»VW\õ\Õ«®öOªÊ½Haæ\»ç¢ìÅ¹å·É
+¦®¥ïWÇMr±jñÓê^òe{Û>Ín­ËáÃåS?Ó´YÛÆàáECïñªï
+eÆ¿Räuç~IkmT:/¿wêwÖÝB_}Äsëoä¦kñµ<{Bÿ3yô.÷õþp?×Ü¹§f[æðB5áUJW}Ù§ÝvºÓM2F«Vm@´ |4ÌÛÛ®=¦ao«é}» ñÌíå*¬*Um.lh|¬^|Â³­püÀûzÌ|PØÞ½µ'èÖ]îãýÁÚ:ÅhX·å{SÝSçß«y.øWH_gWµ*ÐI$è¾þ¹ÔBþ1ôÎþÖBýráî\Ð/ï{¼R©Ý$åÃ52ÝRUPÚ{ÙK©íó@ÚÚ7¥/ Êko?ÃÀô:ùôW³sàÖ¹OÊÑÄbÊÉð×ÿØïß¯ùókØËAD¸þl»>D#ÁùëþÞlë>%MCËÞªª;@¿¯\úyïG©^NO«Ú­Û6;Ó<×þ¶)ôÿZÚOÊU=¦CÆ=]£¡RE½öUÆ.aø¼BêsçÏx;pþ$Q¸þ
+öüm}dûy{ßo^õ*­ÑïqáSÖ
+²ë}2¾N@B@PZÞ^§Íë¦k¤x5êêå3lk­¥¥JôÍíµ=ï¬ue I¥ QA9bí®S¬ö3fóv«0³m^³çWrúÁûÒöµ©õY+­ÜmwÝ,Za»ÝªCw¿#§uÔòóàÓG(roª
+6YèÉeÕákh¯`ýa±©õOëÆ¥æ´oÃì)ð¯²Ð|ª=G
+Óû>YÏ;¢u¨}ZZ»~gÞeÏíb9·HìLW;Ò<ãå±§H×[Tó­¼ýÏ+LlçóTûýN°ÀõRõ?Â?ë¥ÆÖvûvevþdËWÝªq[ÿ®¡ÉÎµëãuîù3Zôô¨aÞçÚz¦ý¹vµöGý­?eçÀKVADaÓ»°_@B@Pz×MÍceð¨ÊqßZÁU ²©fµRûÑ
+>*bÖæ|Hà¢q ¿V±8wõeNµÄ­ <É
+{fÇqdgzq¶Õh¨çY´×
+÷YÁò7öö;­j¿{§Ç>ô¬Õ§Ùó;!ç/í;ì:ÿ.yÁ9ö{^ç+H_j×ÚéãÞª:§Î~©Ñµðv¦¢Ér¬>[>*°Ð¿(ômDk üÑ¾gî­p>Ûäe)Ñï<½õEêós´pÅ¹öRÀîzîÊ9°{;FÓìyfYÐ{Õ[s«gýÞ×åÙUàwæÁg²gâi×ïá¦_´¿ËOw½£?^×¬²¿BfCuLR6$ý*QB?CñÅk²÷]Ux+TKÕ9ïïÔm×µ<´µåÆ/Z±~ÒÌóµ5ÝmÉË¶­mR 	|½] ñ+Õ4kf¹óÝ}ýms¿hÝûmãü{Ñ%t;ÿûGá ¹õ+ö»Z
+¾§¢ð§»4nó.ZY\M¼çI#×½£iÆ^vþÌW¿»ÅZn~d÷Dã¿vWAØùãýÛø_{íÝnçÏ¥<gâw
+3Aì¿eJÅ{UÔìÜ{j½ì5åßm	Ã ;hÈ}Ò¦_GbñbF°çOuüzU;«ñÕã1ª²B^q?ä¦Ìn²ýºí÷×Rãµ¿îÛðÃ¤ÖsÿbÇÿÓHky×vyÕÞß©ÆÙßQóû©?cjª×Øïøñmþað7äÔí¨ZZê4iö¬ÕêküýÌûhdíeÏë»ÉÜe-j±?¿pü­Z°ÅÞß4ô~­aqÂçx?ÔûùSªO
+ì! ù¦­Øß
+Ýñºzx÷g­lÿÂà±»®X=²æçËÑjÓõ9ïïÜZÕ÷ýA~`µâÙÝBËT¤æû©qÖÏøíV±@UW¿_áÕÖZÐ JÐ4çUªJ]mä#UÁUJ²©­ûjsõÕrá·íu¸¿«.Û¢¶¹æ
+?«Ðk
+a(©àR{þb¯±òiV÷L;c7{??fû8w¿Æ)ì;@ Aòõg,Ç«tnYök¨ïÙuî+ÁF5ê5×ª¢½{k¬c¼¾aµØ[U;öóz>§5RNù2«µ¾Ñ¶Þ<üúa¨Ð/³V×«MjµVðö/Ôº75qü
+%Uó¬(í£ó'®ä§©Ê]i­!,ÞYL«ÿ].èr¿Pg	Rzëd{.ÚõN¾UädTÜô2Jg?Ìnr£xÎ-ÊÂ©­ÿk`½Ó
+RÈnß¸p½ý^=Ã©E#¡iÆ¥Üby_üñ3;6>Û¥£qÖUfÎ¶V¤lëR îêÄNÇ?¡Ùù\.Cò/²Ë"5µ"·s`èÖj§ãÕrVîJT¢óª­åÓö\ìºüæª.`$[4pÚùÅó¸Æ×ÿmps~¨0ø¶¢º³\ESBÁë4¢î&ÑØXüÏµfÑÃÏÝ°Ëãmá l7©B4ç¥òÕÔë`%K½}@_¬0s¼ÊIã©û[«Øö×§Ê\£$jý
+;¢ÙÙwþxE'Ü,_x¡êþv=Ô¥ý´¹wt¯Zûv=T]7tPB$ÛCÏl8î6u\õä?oö,¾IqëòïÕHÈv%8<÷Ü³òÔSñZ@²ß&hV¡D]ÈÌë÷Ái«]=6ø5^»Ûå;¶UàÂüHêÿvõ*4_Ý­¤fJóá5bpn;.Ôî·Pä¾&G­¢Ê¡ÖOIÙ9Ó¤ÑÉ©iÖì=í´ëI¨·ZÉîs½ )*ë ÙÒáËì­v·XÇ(¼a»»gµá³ÈqÜ:O«Û?p·a^½Ô÷_±qþZzÒ]êºþ_÷í¶uµ6WGÓ,ÆYã¢Å®¯T!¤ú.°Ã-éØ7½Á
+·iìÀÝÙ±.ÏfGÚ4ö ¹¾ãì|n­S¶­o1Ôß³|fÍiyý^çå¸wT¨¦Ô]kÏÁÙv`+´sÁ)9j_E­
+>ZÄ?¦îÉÖ"x­c~ ô¨å,Þ;åþn¿kÔÊU4Ü­qý÷¾àüih¨WõÚ³örá3ì9¦áÞ®§ÌZ
+Qì5p½v=¶Á£¯UªÅ*{¶ô}I¡?ÇNÊ]Û¼»TkÚÙâ	<Éæ|ÔúgðÐÒÆö­cú¯°Âúm¶û7¡ÿÚÚ®)xMiqú»rUÿ·Ý*ÀÑªÍ­ÝösÎÌù;9WèM3Î²ÂÙÛ4,ÙWÙå»
+®SOÇ;Ýu°0yß¶Ë4wn­ôÇZ9ü]ö}Þ¤hr¸z+8|A»\¥ÑE+ßb¯ß+ã®Q]Ý#: ¶w»ó3FzÁõªÙ¼ª3ÇØù±[¶+bLZµ0ÎÒ°dÏÕvN_¨L¸\=K7ìt×è¹»kÛå÷2eÒõÇXþø½»Ì³s¹ãm7Ü±ë×@v§Í
+pÑ{Üã«&u6o}rj)t×ª&ÛB$IoêXçÖ©¿þ/ÛÝÖ'Íútç@¼ZtÿSÑ®*$9_qº?:û÷×,Úñ´»¡
+ð¹h¿¨ëËªÅO+_Ís­¦=ýEi8®¹öÃBcÓæµ6Åàì.Qçn5Îþµüý½¢m°>Z¨Ñï·ÓG»ÑBÊ´zÊuCÁ ºiÛ%ÞLiÅ-úI&%«¼Y÷×éÓ~³]0ÏÅªUÑÌxÑùóM}¼ì{ÆyaDú%ì7Mz1E­}ýkÀnOAL¿R)w¹µÚ{ýNÂwié.8 $W4Æ@[ãMéýÍºåõ;yìVûmåZfoüÁ'íë«T(fM³ëGô+£ÏïôÑhAB¯O(÷Ô«ìûEsé_®¼e¢çäåÍ/·göõZ±tÏ«kñöu&µm±îÇöwÙe/	v²îÓýö;ý§æL½z° ½Xe/ù¨ýbÃYçcjêÞ©W>«îxëqî×êhØüÙ´òö\£<Ï
+èÁ¡§¡nqaøi5µ~XEã£¬cp+nÓjû>±×Â2e är[¬ëâM¹ªc§E]4&Íüo(ç!aÇ¯î¥7kø¢?9dZ­Ý®Ûé£ý}·«ºê©X:_ 6ë õûw)oþjû½Y+ºÎ«»ýw2ó¥Ës·©/}ªn½î­vA;¦r¨ônåËëûêöþÂw)³ï×­Y]g¯Òèµ1º§z-´ÖåÐ6\£ãÎ°Ó¦üímïñÖ*
+ûqÑý«¤~¦¹Íyµ%Æ,XH.Dãä@×íòñqã.³ë§3«
+
+Üù*¦YQw®8kD*»î¢tK}Gý¦cp~úà@ø<ówQÈý»·ilú»ì«?\«Þ.y§Tö+ wi nn6|Tt*ûoÅ×"ÕÕ|jDÇ³t·/²÷7/AÑÕ¹-[Ý_ÊÅNKÃéHÈ»Ù[¬µü¾?Û5ð2E AÅ¤º^§M»m{tDµfîççUj±+Ô;c­ïàt·ª6ý~èýÂ5#ZçD}yö£N½CùpÚ¤ 8ÏÂÔiÝË¢ni¨lYífXýNÝ|e!º¨%Ç±­ÑDók¨þOÝ¸ð´ÎÅ³kÈ ønnQ94Êxháø]
+ü¥Ú¼ù×jõqFùÌòü©åíQ
+×äXÇx­Ì©6(¥_G¥vå*
+
+¡{cÊì#¬PóXÇxÿ«meØ/hW<ÕJùøÓç6Ì<Ä~¦üÖñîûZÝ/(
+¯û¦»^eÉ}A=×Ü®JS«økúlãü7ÕyÍ_U,ôYûGïÚü]ó½µÙÖ2ÿUmyP³þ ÆÖxc%  z×ÅY³cP Üá­^Üia ^a8° râÜ}¯¦ûn£Õtý!·}«¢YÜnM§(®À>ôò]Lð»*¦«z-c~JR¹hnÑÆÚ_«¹<Î¹ìqÖ"SÜööÍöï~Y(®£[J¸h¨ÌN¶µ¥¹Dÿ¶Ê¶=ñóE3F¤,²rf¿H@`:)çX Îr©§Ëu^~æ7ík£r}
+x¤­éÓlë2Å-¢·YuüR­Yövíû´Æ®¿=Ö¢^Ó²óÌNg£ %Þgã6Î/QçûUlk®¶ÚÁU¶5MåÂßÔ=W>«Jä_ëófe±e2²»më(¡8êëÇEoå%¤.ÐÅßT)×2A©Ú1ª
+öëßOaêeÖÚ<ÅÎ¿ìkjd×±9×*­NRÓ©óÚZä$ÐüÀÞx§Ä;Æ=¥êÔ9ïÞ»ÇVÛô7Åó_Ò6FqõÖk1Ç¤¾ó®w.è·©Å³·ÖäÞ¦¥¥*æâÿâR¨T¼~®¼RSI<¨ÎãO*-QÍv´pdlýÖzxJap²aLWØªÓ¹Mp1¶·Ð3`V4HÏâGµfÑ_¬âézuµWÝKÞ¢Î©¯~hråðT8°ÐBÈèX¬e ä¶b+2Æ«uôþ¦XTíßV,îhe6Äë­¸ìý;cãt£NÜë0µZñÔ+­9ïýlvZÒ|æßß =]J¥Î/R¹Ìå£É*´ü;ÐZ2òX_ÃýUûTçÖ8ðOBñdK¢^utlÕ¨`ïkÝ¦ÎÅçÚëçöÙð#{MìºÕÚE\¥8A$OÕÆê5ÐW]õïìúÑÜðözññºR¥wVWQóëB,ß?µbÍXëÿ­Ü[ªÆDä3ææxÝ¼
+ìÆé[ÍaòVßÞµúUÀ*;©ÚÛVüþýÎöüYsb4ÅõBqá9ìKK@åY³äoêv½Í£hÆÇ]ñÖ²!õ¥Ák  H Tî5ó¼RAü/
+ßu×)jlÓ¾mm)û°ÖÉ}0Ó;«U4è:ÞöXÇÈµØÏÛ@]è0þó%ÍÉ\÷y)
+ª¯¹KÊg'`»Æs$Þ7gçS!!EN\-ßî>Zv>v.½ÜÞß¸mÀúÎ9«Uq?K¢! Y¢B»|ÅúL¶û^å#­ùF¾½÷+ÂÔÃ­Ñ$Þ hoMìqAÎÇìêä÷ÔýËiW×_MO% õ!L~Åéu\5òk¤Û]ùpîAZ¨b°÷TÃ¸4ÏôÈÙ3ÝÇw½µØWÏ©ÉòÐ³Ñ/uL´`ßªÅO+7/Y§Ðý&Ö1Î¡æ¹/r¿´?7æTÂªÊýBùr®Cq¹ðD¨°ôîq%ß(®ÕÝ¯Ò÷õTÁÁ0A¦ÌÞÃÞËnqeÑ¢9ò6ÿ¡]ïºÒÉûÉj^[=Pd$K8p]Ç¬7j8RÁ·bµd&Ì¼ûL­4þfÅ,È;HewÝ?àú¤í'ìÝ(,:L¡X£Û@æX+05ÑEZ>¼UH%~]»·x}>Æ[ (%t­ÛW<UucÍµ·Y¨¸.Ö1ò¯Róývúpûbp½
+áÍA?{Õ¢Çî²
+D0ä^T~³3¥²cG0Úy°+Ã^ë4°[ÜéÓ+×@ýUöÿÈ®wò¹<¯@Ñ@,Î¬x¶jÌÖ¸SÐn/Ìþã¬±¿sÞi±E¨×+¯ßiÍ¢5ó³foR<{kËfIç×
+%÷P©yoF5Ïv¿÷Cãª«sG·ÕØ9rÚû9­Ö-WTÖ Ã-Ðé|÷{½DÇÏ:@@Â@-ó¢â1ñr7ª£#­a¦±ÕªD­4ïÉ®r¾àmVÔ:P¹K+»&ÉNx¿Dqùô¼!÷qµÑJÔùCTz9¬$¤´WÌfÅå5ôX«(¿8»1ÏFãrø[{ÖeÙN8ôçVUÏ" À" 96÷å1e`¸LÕ$¥ü×cuz«_Xx?î¬	Vh·ð ´DõXY5ÕÅd^CÏÔÕ~Ö
+ù¬0I¥ä½EÛL_9cj×)Z@.®@¯P)eÏ-,~×Ðv¸uÊ¤âO·^ñûsØJ$ÉáÔó´ßýê9uékì:îÿ¥c[ÇþóVmo´ð`SI>'Z<Ð}¯0­8&³ÎÇµçå:ñÄ]/2x[{¯=×w+¾£4eö*é­/²çìRëÈvY§¸¼þC/=#ÔäÄYÇlÍD\Ç¶îk¯Ñ×
+¹÷7¨gqcG03¬Ä! ²}ý	g½Æ)ÜBe[­ð-L{_u¯fÕl[Q<ª-
+ý§ïTX[VÈEí{®uÜ^êÓ<ÄNö¸NÅW¥NW©d¢?^(½y^fí§ñ[c®T@}®MYµÙã¡&ìðJ¥¾*lÏ¹¡?¯\PºJ `' HÝ7FcuÜ-_¼­¶êR!qjj\æÃÙ­¦ÙÑ1»¤~íþUP.ÎXe¬òºç2yÎ6¾upÉÝ9â}.R¾Cñ¥,Ø¿E¥ÐÐPm·³ÓÔz½ÿ|,=o°ÊÛz¶Eïª$ÌHf¿ªW<UhË=a­Æ:Fn¶gEøÏ*ÞÂwkân«ÐRÁRÅæç¹Ë¡{vfWìý­5C®­bk5É
+¯¥k}ÁùêåöòxF±¹³ÔÐ:ôuæö:S>,yõöú¼LCNîzí=í#Ñ
+°ÂöÂàÐ!÷qa>ã÷E A2øà+æ;3F+ÌÆYÐÏj\Ôõ*ÞïàôM-XÐ¯B[µø^Åîoï^¶ËuM"d¬ÀðGå#tÑÿÝskíz¾¢t$ÃÄ±OØ9bó5öWü¬Î+^-nKÛ8þ|ÅZË±¤ú¢\Þ3¡Õ×Þ,ìËaö0ïºC AéÍ³°ÐÇ î!U×Þ£pëuëì
+û§±É.ö4Ô,./ð°ª\~ù¸åñö÷ö^z
+*ýÌ®ãO§*5ksÍGU,2o²¿áÐ­:((ÀîçÊ÷oPêâ­èÜ»þ}Ör7E3_S×+§ûµ%ó9Z?v"wèÕ2ä~Aê^	C Aé­Û|}Ðìëù¿èÆ#U«ã­Mã»;m.øV¶ÿC#'þßorUK£È?+68ÎZf7i¤My¼Õ^e0T!Qêú:ìú/Ï
+ZþM{¼FZãö0_ñºS"WZ­bÀýÀã1Cì¶Óée;Ö4çåö¾:Ô¸CoäN	Ã4 Õdou±	²ì«[ÕM9{F{ZaúGI>½ÚO[cã4MG·ä°ê³f£	WÔ­åO4kèuGòuü)*í®°+f EÍï3$nÚéÊçüß_AæW:þÔ¡û¼ç«qÖqré_ØÖPcäcòÌ+0GãÞ^á>°»ýwÂÎ¹ð-Ù÷Õ]{H«®~D@Â@Pz)7Gqe2×j¤î;ö!¸E·HÝËrY<*~ìöéw°£´{íþCîÕ;~µ}ïüºy+D:;¶iÖ«ThM­§¨ª*Z¨,	«¯Ú1|ÜñHuZ´|Åy:êÞxòáýKUeázpÒÂjýZEz7ôk ñD]&ÍüOeÜBå>ä®«9¥ù(Ó<çX;WÏr¿@$¥MÏê55Ö1rÏjÚ[5ÒæN]foðÝ*¬´Õâ~M#Ùz¦öõ>îÀÍªÆâÜ¹ _þOdÿyñQ¡õr+ð}SÍsÒpµ´ì­¦ÙÖ*c­+ò	ñÙÒogdÌé ÝÞÊTMW\==î?¥¼»8ú( ,´óç:î¬
+³Chn9H­Z£Ìevko¡°fb?¶{séÐ»Û¤Î\Ó;tü¬ZkàÐãû­E D" ´|ú¥Û
+¤1ø.-ZÔ§6~(ù®
+É¹åZ³ì6EÜõ@¤ÖÜÔq¯ÿòêJýwêìÐ+L¯PÃ¬/kjkü.S
+óö¶ãyÚ\½F>üx]°sQ@¢q=áÎÍöëoýkx³r;1¦ßZªüpkçÏgU½yµBnüÅ&§¾j_kûÂ.ûY¢	èvUHQ÷¼I­ç(¬°[oW.39Ý«Tÿi>v¬±õ`{&£É^>ä¾Î¯Ðáã]S¢´|0Oq¹Xÿcgêê«oàûA_ªáóVkõóKì_ür¬c¼n-
+uÙUárèÿÕýÏ4Z¨:[ù;ÄªA>©ÿ15Íüs¶ëEènVUø°à)ÕÔvêÛbÝ`
+d´[Ñ¡ir}§Æy;ÍhõpírÖâ^29üà¬E
+3¯RÏÒ
+Cþ{G·}Qc×·Øañ[Qþå(ûw/´/YøYlçÌuvß­rÇ^pþdúªÕçö°À{¨RÖ©ô¦©A	
+ªyîîÖúj-\ñ!;ñô®°Ö7¨³ð±3fjïëØszàÐ;»Í
+«>}H J+*ðÆlÆÞLÃø5ûùºqá3VCÿM+$OÃå´Fáú*ÌÀZÕÑ88ÝJÐºhEú¡[i¢¶ÆÈUO´Ä
+OÊ
+Ñ4À'ggÜÝ&+Äôj`Ó`svdêm#ª¥®ÊùqÚ´mÞë	ï¶B»Å»CUã^d[Ü7êÊ×0÷í
+2Q×¹£5<Q§0*4ì=ÂmµógóÏ_o_ÇX]îçW´vIüq.£ÍôÓöPºÿåöi­ÆmöÄMqtT@þ¹v?ªeË^hÊ1Øý?ÿm·æäÞÒë/P÷"ÖOAbñ¡Ò9®eQ<O©¾þ.SÍ¦ß*3îÂawñqþRõôÄìæ2»i½6«Ç¶â¬B^g(äÖM¬«ã1Mù¥Ý
+vkÊàs=îá4[Ç¬¨Îý?¹Ñ`Öá¨t©àá7ø@éTÔ5äîvïYôw5ü:û(Ö­)Ôù->9Ö~±Ã;¢1Nî¿-¼PÔe2­c¬¢ vúû§Ùs|èàsç$rÑäßÔÄ	§¦þyn«Ñ¸g¬¥×M³÷ÖWÛ98)L7÷oà¯ÕØtñZÛ<@P:µUö¦q±7ánu\wv§áYµêi5Í¼Ô>,qdç¬@V]Ü)%£n.­7Ú'0~QÎ»¯Zz»¨«Zax}Z.°ç<Ãl:¹Èøë¬¤ØÝÚL4è9ïßuýjÕlÙ«tþXpýo+\¯Qâù&{/ÒZ²­©hÀVÆ<·>`~Áõf« ø°:Û«K¥gª¹u?ZèÂ½§wË­±½¶MMïãeg§Ê¤ß}ÿ Òñ.æêç&ð*ÿõ¹w(ïôðg%Õ%p+¬ECñ¸³³Å©ÌÙ§[­è÷ì;S%å¢~ÿÿ'ÿÔ7¥}X$WÑ¸¦Y×[y'f`ý7 ¸Ö,ù&Í8ÕcT>R%=æ«»ý5Îj·$ØÓ^sñ§2ÏGaË<hç¯¨zÓ/µbE3é{¯lQIønçó<g×}r¿Umê£Z¾¤¸t@%äâ/Høâ¡x¾Ý§h|DãÆî6ü1$ù³{ýû1kÂü>zpÃqkÕâ{å2¯·V­/v­(l¯««ýEíîV1Üw¶Àñ-ôâ¼f¥ê¶×Xzk4 =Z'¤4#Ã£×ªs±óç+%û*Qá@:?aá£Ü=!|ÈZÞ¦åP (kÊ÷b#÷ê2·¨T\õ×ò*yý@W¬W)t,Ød`µâÊ'*ËRÏÏËGëd§.f!îoö¦®%òÓÙ¾pp=aÙÓr`~]©n^þýýÞa!ÀZÑ\´Xa1ì-öï¶Xáø;Ba.äºÌÞÞª±ý/±¿íçÔÓAí|¡8=`çì©*8J]/PF (
+Wu}(íïÿµ´<­R9tìÍö3\ëçUþX¥Í¾Wà×ª{É
+í:Ù¾Ïí9BãHöG~Ôþù
+Æ¨®e×
+ÃáUU{¾}ÎLsµRªQùó®ÓØ¢ÍïÛDFêüòývùjkNÑöa8ìïä³÷v»|D©àXM0ÛÞ~ÓÔÞJô:°÷;ýÎ.¯Uf`½V¾a­Ï¥û\òÄ¦ÛU*Ö1¡Õ¨GJ4&¢©õ;±uZ¬î¥wå5S¡8w£µHüâüÞ5dgºYÙþåkp±È_ëè¶?¨îéi
+Ro°àuö³ì®pwÛú+Ue~¤U×="Æª«Qcëëì¹½LÑ´Èù¼Î
+wZ]k½»,*°þÀ*~©M5'Zø»¢©v³``<î°ë_¨:ø!¸¼­Ï.(÷áö¾¾FcoÓ-%jñ­4Ñ¸ïþn[·ÛÉv¾Þ¨ô¸[x~Q	 (
+YmVïuL*µT¥ÖÙ~µ&Í~\[ëaØã¿¦)­Z¢Úð-Ö¬QûAö#÷ÞXçDë=H×g/--ïÓÚ­°2ËþF;¶êàì;»äúíÃx{lûkUº^kÝµ¬nëcVx}¯ý	ê+çùá²¿y:æ¹]Û´µÅÒÕþ]ÏTÓ¬³¬ tÞ¶î;_O&»ÞJ¶ ´Âþ¦W*S½\ÒÑ±É®e/Ñ"½U3ì<Å.Ç+ZÑëEöóÕîò{8g9=b?çÊø?Ûívu·ß¡¡¬Uuu¼¿¥K­U!9¿m-Òò©>¹gVoRMõ
+ÓëJ2±FÞÜEöKüFIXëF>içO¿½Ï=­tÕ#ºyQÔ]±H                                                                                                                                                                                                                                         Äòÿ|Ýå5ä    IEND®B`
 ```
 
 ## Fichier : sweeted-backend\uploads\post-1789127285281-800528175
@@ -4979,8 +5423,8 @@ yarn-error.*
 ```javascript
 import React, { useEffect, useState } from 'react';
 import { 
-  StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView, 
-  StatusBar, ActivityIndicator, Image 
+  StyleSheet, Text, View, TextInput, TouchableOpacity, 
+  StatusBar, ActivityIndicator, Image, Platform, useWindowDimensions
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import ProfileScreen from './components/profil';
@@ -4989,7 +5433,7 @@ import ProfileScreen from './components/profil';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PostDetails from './ecran/PostDetails/PostDetails';
 import HomeScreen from './ecran/tabs/index';
@@ -4997,12 +5441,14 @@ import NotificationsScreen from './ecran/Notifications';
 import OfficialDetails from './ecran/Officiels/OfficialDetails';
 import { API_BASE_URL } from './config/api';
 import SweetedSplash from './components/SweetedSplash';
-import { COLORS, SPACING, RADIUS, FONTS } from './config/theme';
+import { COLORS, SPACING, RADIUS, FONTS, SHADOWS } from './config/theme';
 
 const Stack = createStackNavigator();
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const { width } = useWindowDimensions();
+  const isDesktop = Platform.OS === 'web' && width >= 768;
   const [isLoginView, setIsLoginView] = useState(true);
   const [password, setPassword] = useState('');
   const [matricule, setMatricule] = useState('');
@@ -5021,11 +5467,19 @@ const LoginScreen = () => {
 
     try {
       const endpoint = isLoginView ? '/auth/login' : '/auth/register';
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ matricule_number: matricule.trim(), password })
-      });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+      let response;
+      try {
+        response = await fetch(`${API_BASE_URL}${endpoint}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ matricule_number: matricule.trim(), password }),
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
 
       const data = await response.json().catch(() => ({}));
 
@@ -5054,19 +5508,19 @@ const LoginScreen = () => {
         setMatricule('');
       }
     } catch (error) {
-      setFeedback({ type: 'error', message: 'Impossible de joindre le serveur. Vérifiez votre connexion.' });
+      setFeedback({ type: 'error', message: error && error.name === 'AbortError' ? 'Le serveur ne repond pas (30s). Verifiez qu il est demarre et que vous etes sur le meme WiFi.' : 'Impossible de joindre le serveur. Verifiez votre connexion.' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, isDesktop && styles.containerDesktop]}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
       
     
 
-      <View style={styles.contentContainer}>
+      <View style={[styles.contentContainer, isDesktop && styles.contentContainerDesktop]}>
         <View style={styles.topSection}>
           {/* Correction ici : Utilisation de blanc en dur pour plus de clarté */}
           <Image 
@@ -5156,9 +5610,18 @@ export default function App() {
       try {
         const token = await AsyncStorage.getItem('token');
         if (token) {
-          const response = await fetch(`${API_BASE_URL}/auth/me`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const meController = new AbortController();
+          const meTimeout = setTimeout(() => meController.abort(), 15000);
+          let meResponse;
+          try {
+            meResponse = await fetch(`${API_BASE_URL}/auth/me`, {
+              headers: { Authorization: `Bearer ${token}` },
+              signal: meController.signal,
+            });
+          } finally {
+            clearTimeout(meTimeout);
+          }
+          const response = meResponse;
           if (response.ok) {
             setInitialRoute('Home');
           } else {
@@ -5215,6 +5678,20 @@ const styles = StyleSheet.create({
   loadingContainer: { flex: 2, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.headerGreen },
   loadingLogo: { width: 140, height: 140 },
   contentContainer: {flex: 1, overflow: 'hidden', borderRadius: 28, marginBottom: 20},
+  containerDesktop: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  contentContainerDesktop: {
+    flex: 0,
+    flexGrow: 0,
+    flexShrink: 1,
+    width: '100%',
+    maxWidth: 460,
+    marginBottom: 0,
+    ...SHADOWS.large,
+  },
   topSection: { backgroundColor: COLORS.headerGreen, padding: 30, alignItems: 'center' },
   bottomSection: { flex: 1, backgroundColor: COLORS.formBackground, padding: 20 },
   toggleContainer: { flexDirection: 'row', backgroundColor: COLORS.toggleBackground, borderRadius: 25, height: 50, marginBottom: 20 },
@@ -5623,7 +6100,7 @@ const Sidebar = ({
     },
     {
       id: CODE,
-      label: 'Sweet Studio',
+      label: 'Studio',
       icon: 'code',
       badge: 0,
     },
@@ -5865,7 +6342,7 @@ const styles = StyleSheet.create({
 
 ```javascript
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import { Entypo, Ionicons, MaterialCommunityIcons as MIcon } from '@expo/vector-icons';
 import ReactionButton from './ReactionButton';
 import { formatRelativeTime } from './formatTime';
@@ -5893,7 +6370,7 @@ export default function Post({ post, onReact, currentUserId, role, onDelete, onE
   };
 
   const toggleMenu = (e) => {
-    if (e) e.stopPropagation();
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
     setShowMenu(prev => !prev);
   };
 
@@ -5901,7 +6378,7 @@ export default function Post({ post, onReact, currentUserId, role, onDelete, onE
     <View style={styles.card}>
       <View style={styles.header}>
         <View style={styles.userInfo}>
-          <Image source={{ uri: post.avatar }} style={styles.avatar} />
+          <Image source={{ uri: post.avatar || 'https://i.pravatar.cc/150?u=default' }} style={styles.avatar} />
           <View>
             <Text style={styles.user}>{post.user}</Text>
             <Text style={styles.time}>{formatRelativeTime(post.created_at)}</Text>
@@ -5923,7 +6400,7 @@ export default function Post({ post, onReact, currentUserId, role, onDelete, onE
       <Text style={styles.content}>{post.content}</Text>
 
       {post.image && (
-        <Image source={{ uri: post.image }} style={styles.postImage} />
+        <Image source={{ uri: post.image }} style={styles.postImage} resizeMode={Platform.OS === 'web' ? 'contain' : 'cover'} />
       )}
 
       {hasAttachment && onOpenFile ? (
@@ -6061,7 +6538,7 @@ const styles = StyleSheet.create({
   },
   postImage: {
     width: '100%',
-    height: 200,
+    height: Platform.OS === 'web' ? 420 : 200,
     borderRadius: 10,
     marginBottom: 10,
     backgroundColor: '#eee',
@@ -6110,6 +6587,7 @@ const styles = StyleSheet.create({
   },
   optionsButton: {
     padding: 8,
+    marginRight: Platform.OS === 'android' ? '5%' : 0,
     borderRadius: 20,
   },
   dropdownOverlay: {
@@ -6252,6 +6730,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { apiFetch } from '../config/apiClient';
+import { appendFilePart, cleanUri, imageMime } from '../config/fileUpload';
 import { API_BASE_URL } from '../config/api';
 import { COLORS, SPACING } from '../config/theme';
 
@@ -6369,6 +6848,11 @@ export default function ProfileScreen() {
 
   const saveProfile = async () => {
     setSaving(true);
+    if (!displayName.trim() && !bio.trim() && !filiere.trim() && !avatarUri) {
+      setSaving(false);
+      setSaveError("Modifie au moins un champ avant d'enregistrer.");
+      return;
+    }
     setSaveError('');
 
     const formData = new FormData();
@@ -6377,10 +6861,13 @@ export default function ProfileScreen() {
     if (filiere.trim()) formData.append('filiere', filiere.trim());
 
     if (avatarUri) {
-      const filename = avatarUri.split('/').pop();
-      const match = /\.(\w+)$/.exec(filename);
-      const type = match ? `image/${match[1]}` : 'image/jpeg';
-      formData.append('avatar', { uri: avatarUri, name: filename, type });
+      const rawName = String(avatarUri).split('?')[0].split('/').pop() || 'avatar.jpg';
+      const upAv = await appendFilePart(formData, 'avatar', cleanUri(avatarUri), rawName, imageMime(rawName));
+      if (!upAv.ok) {
+        setSaving(false);
+        setSaveError("Lecture de l'image impossible : " + upAv.debug);
+        return;
+      }
     }
 
     const result = await apiFetch('/users/me', { method: 'PUT', body: formData });
@@ -6979,7 +7466,7 @@ const styles = StyleSheet.create({
 ## Fichier : sweeted-frontend\components\ReactionButton.js
 
 ```javascript
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { apiFetch } from '../config/apiClient';
@@ -6990,16 +7477,18 @@ export default function ReactionButton({ total, hasReacted: initialHasReacted = 
   const [hasReacted, setHasReacted] = useState(initialHasReacted);
   const [reactionCount, setReactionCount] = useState(total);
   const [error, setError] = useState('');
+  useEffect(() => { setHasReacted(initialHasReacted); }, [initialHasReacted]);
+  useEffect(() => { if (typeof total === 'number') setReactionCount(total); }, [total]);
 
 const handleToggleReact = async (e) => {
-    if (e) e.stopPropagation();
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
     setIsReacting(true);
     setError('');
 
     const method = hasReacted ? 'DELETE' : 'POST';
     const result = await apiFetch(`/sweets/${postId}`, {
       method,
-      body: JSON.stringify({}),
+      ...(method === 'DELETE' ? {} : { body: JSON.stringify({}) }),
     });
 
     if (result.ok) {
@@ -7430,8 +7919,10 @@ function xhrToBlob(uri) {
   return new Promise(function (resolve, reject) {
     try {
       var xhr = new XMLHttpRequest();
-      xhr.onload = function () { resolve({ response: xhr.response, status: xhr.status }); };
-      xhr.onerror = function () { reject(new Error('xhr status=' + xhr.status)); };
+      var timedOut = false;
+      var timer = setTimeout(function () { timedOut = true; try { xhr.abort(); } catch (e2) {} reject(new Error('xhr timeout')); }, 30000);
+      xhr.onload = function () { clearTimeout(timer); resolve({ response: xhr.response, status: xhr.status }); };
+      xhr.onerror = function () { clearTimeout(timer); if (!timedOut) reject(new Error('xhr status=' + xhr.status)); };
       xhr.responseType = 'blob';
       xhr.open('GET', uri, true);
       xhr.send(null);
@@ -7446,7 +7937,7 @@ function errMsg(e) {
 }
 
 function logDebug(msg) {
-  try { console.log('[upload-debug] ' + msg); } catch (ignored) {}
+function logDebug(msg) {}
 }
 
 export async function appendFilePart(formData, field, uri, name, mime) {
@@ -7469,7 +7960,15 @@ export async function appendFilePart(formData, field, uri, name, mime) {
 
   if (!part) {
     try {
-      const response = await fetch(uri);
+      const upController = new AbortController();
+      const upTimeout = setTimeout(() => upController.abort(), 30000);
+      let upResponse = null;
+      try {
+        upResponse = await fetch(uri, { signal: upController.signal });
+      } finally {
+        clearTimeout(upTimeout);
+      }
+      const response = upResponse;
       const b = await response.blob();
       if (b && b.size >= 64) {
         part = (b.type === mime) ? b : b.slice(0, b.size, mime);
@@ -7512,6 +8011,25 @@ export async function appendFilePart(formData, field, uri, name, mime) {
   const msg = debug.join(' | ');
   logDebug(msg);
   return { ok: true, debug: msg };
+}
+
+export function cleanUri(uri) {
+  if (!uri) return uri;
+  const noQuery = String(uri).split('?')[0];
+  if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+    if (noQuery.startsWith('/')) return 'file://' + noQuery;
+  }
+  return noQuery;
+}
+
+export function imageMime(filename) {
+  const match = /\.(\w+)$/.exec(String(filename || ''));
+  const ext = (match ? match[1] : 'jpg').toLowerCase();
+  if (ext === 'jpg' || ext === 'jpeg') return 'image/jpeg';
+  if (ext === 'png') return 'image/png';
+  if (ext === 'webp') return 'image/webp';
+  if (ext === 'gif') return 'image/gif';
+  return 'image/jpeg';
 }
 ```
 
@@ -7663,7 +8181,7 @@ export const BREAKPOINTS = {
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator,
-  RefreshControl, Alert
+  RefreshControl, Alert, Modal
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
@@ -7697,6 +8215,8 @@ export default function Fichiers({ onOpenInStudio }) {
   const [refreshing, setRefreshing] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [feedback, setFeedback] = useState({ type: '', message: '' });
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchFiles = useCallback(async () => {
     setLoading(true);
@@ -7777,25 +8297,22 @@ export default function Fichiers({ onOpenInStudio }) {
   };
 
   const confirmDelete = (file) => {
-    Alert.alert('Supprimer', `Voulez-vous vraiment supprimer « ${file.name} » ?`, [
-      { text: 'Annuler', style: 'cancel' },
-      {
-        text: 'Supprimer',
-        style: 'destructive',
-        onPress: async () => {
-          const result = await apiFetch(`/files/${file.id}`, { method: 'DELETE' });
-          if (result.ok) {
-            setFiles(prev => prev.filter(f => f.id !== file.id));
-            setFeedback({ type: 'success', message: 'Fichier supprimé.' });
-          } else {
-            setFeedback({
-              type: 'error',
-              message: result.data?.message || 'Impossible de supprimer le fichier.',
-            });
-          }
-        },
-      },
-    ]);
+    setDeleteTarget(file);
+  };
+
+  const doDeleteFile = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    const result = await apiFetch(`/files/${deleteTarget.id}`, { method: 'DELETE' });
+    setIsDeleting(false);
+    if (result.ok) {
+      setFiles(prev => prev.filter(f => f.id !== deleteTarget.id));
+      setDeleteTarget(null);
+      setFeedback({ type: 'success', message: 'Fichier supprimé.' });
+    } else {
+      setDeleteTarget(null);
+      setFeedback({ type: 'error', message: result.data?.message || 'Impossible de supprimer le fichier.' });
+    }
   };
 
   const renderFile = ({ item }) => (
@@ -7913,6 +8430,32 @@ export default function Fichiers({ onOpenInStudio }) {
           }
         />
       )}
+
+      <Modal
+        visible={deleteTarget !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => { if (!isDeleting) setDeleteTarget(null); }}
+      >
+        <View style={styles.confirmOverlay}>
+          <View style={styles.confirmBox}>
+            <Text style={styles.confirmTitle}>Confirmer la suppression</Text>
+            <Text style={styles.confirmText}>Voulez-vous vraiment supprimer ce fichier ?</Text>
+            <View style={styles.confirmActions}>
+              <TouchableOpacity style={styles.confirmCancelBtn} onPress={() => setDeleteTarget(null)} disabled={isDeleting}>
+                <Text style={styles.confirmCancelText}>Annuler</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.confirmDeleteBtn} onPress={doDeleteFile} disabled={isDeleting}>
+                {isDeleting ? (
+                  <ActivityIndicator color={COLORS.white} />
+                ) : (
+                  <Text style={styles.confirmDeleteText}>Supprimer</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -8083,6 +8626,57 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: SPACING.xl,
   },
+  confirmOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  confirmBox: {
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    padding: 20,
+    width: '100%',
+    maxWidth: 360,
+  },
+  confirmTitle: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    marginBottom: 8,
+  },
+  confirmText: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    marginBottom: 18,
+  },
+  confirmActions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  confirmCancelBtn: {
+    flex: 1,
+    paddingVertical: 11,
+    borderRadius: 10,
+    backgroundColor: COLORS.inputBackground,
+    alignItems: 'center',
+  },
+  confirmCancelText: {
+    fontWeight: '600',
+    color: COLORS.textDark,
+  },
+  confirmDeleteBtn: {
+    flex: 1,
+    paddingVertical: 11,
+    borderRadius: 10,
+    backgroundColor: COLORS.danger,
+    alignItems: 'center',
+  },
+  confirmDeleteText: {
+    fontWeight: 'bold',
+    color: COLORS.white,
+  },
 });
 ```
 
@@ -8161,7 +8755,7 @@ const Home = forwardRef((props, ref) => {
       const enrichedPosts = data.map(post => ({
         ...post,
         user: post.display_name || `Utilisateur ${post.user_id}`,
-        avatar: post.avatar_url || `https://i.pravatar.cc/150?u=user${post.user_id}`,
+        avatar: post.avatar_url ? (post.avatar_url.startsWith('http') ? post.avatar_url : `${API_BASE_URL.replace('/api', '')}${post.avatar_url}`) : `https://i.pravatar.cc/150?u=user${post.user_id}`,
         totalReactions: Number(post.total_reactions) || 0,
         has_reacted: !!post.has_reacted,
         is_bookmarked: !!post.is_bookmarked,
@@ -8359,6 +8953,13 @@ const Home = forwardRef((props, ref) => {
         }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
+        ListEmptyComponent={
+          !loading && !error ? (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>Aucun post pour le moment. Sois le premier a publier !</Text>
+            </View>
+          ) : null
+        }
         ListFooterComponent={
           hasMore && posts.length > 0 ? (
             <View style={styles.loadingMore}>
@@ -8541,6 +9142,16 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     elevation: 5,
     zIndex: 10,
+  },
+  emptyContainer: {
+    paddingVertical: 40,
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  emptyText: {
+    color: COLORS.textMuted,
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
 ```
@@ -8833,6 +9444,7 @@ export default function OfficialDetails({ route }) {
   const [editBusy, setEditBusy] = useState(false);
   const [editFeedback, setEditFeedback] = useState({ type: '', message: '' });
   const [deleting, setDeleting] = useState(false);
+  const [deleteVisible, setDeleteVisible] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -8916,29 +9528,21 @@ export default function OfficialDetails({ route }) {
 
   const confirmDelete = useCallback(() => {
     setMenuOpen(false);
-    Alert.alert(
-      'Supprimer',
-      'Voulez-vous vraiment supprimer cette publication officielle ?',
-      [
-        { text: 'Annuler', style: 'cancel' },
-        {
-          text: 'Supprimer',
-          style: 'destructive',
-          onPress: async () => {
-            setDeleting(true);
-            const result = await apiFetch(`/official/${data.id}`, { method: 'DELETE' });
-            setDeleting(false);
-            if (result.ok) {
-              navigation.goBack();
-            } else {
-              Alert.alert('Erreur', result.data?.message || 'Impossible de supprimer la publication.');
-            }
-          },
-        },
-      ]
-    );
-  }, [data, navigation]);
+    setDeleteVisible(true);
+  }, []);
 
+  const doDeleteOfficial = async () => {
+    setDeleting(true);
+    const result = await apiFetch(`/official/${data.id}`, { method: 'DELETE' });
+    setDeleting(false);
+    if (result.ok) {
+      setDeleteVisible(false);
+      navigation.goBack();
+    } else {
+      setDeleteVisible(false);
+      Alert.alert('Erreur', result.data?.message || 'Impossible de supprimer la publication.');
+    }
+  };
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.headerBar}>
@@ -8956,7 +9560,9 @@ export default function OfficialDetails({ route }) {
                 <Icon name="dots-vertical" size={22} color={COLORS.primary} />
               </TouchableOpacity>
               {menuOpen ? (
-                <View style={styles.dropdown}>
+                <View style={styles.dropdownOverlay}>
+                  <TouchableOpacity style={styles.dropdownBackdrop} onPress={() => setMenuOpen(false)} />
+                  <View style={styles.dropdown}>
                   <TouchableOpacity style={styles.dropdownItem} onPress={openEdit}>
                     <Icon name="pencil-outline" size={16} color={COLORS.textDark} />
                     <Text style={styles.dropdownText}>Modifier</Text>
@@ -8975,6 +9581,7 @@ export default function OfficialDetails({ route }) {
                     <Icon name="delete-outline" size={16} color={COLORS.danger} />
                     <Text style={[styles.dropdownText, styles.dropdownTextDanger]}>Supprimer</Text>
                   </TouchableOpacity>
+                </View>
                 </View>
               ) : null}
             </View>
@@ -9109,6 +9716,38 @@ export default function OfficialDetails({ route }) {
           </Text>
         </View>
       </Modal>
+
+      <Modal
+        visible={deleteVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => { if (!deleting) setDeleteVisible(false); }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Confirmer la suppression</Text>
+            <Text style={{ marginVertical: 14, color: COLORS.textSecondary }}>Voulez-vous vraiment supprimer cette publication officielle ?</Text>
+            <TouchableOpacity
+              style={[styles.saveButton, { backgroundColor: COLORS.danger }, deleting && styles.saveButtonDisabled]}
+              onPress={doDeleteOfficial}
+              disabled={deleting}
+            >
+              {deleting ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                <Text style={styles.saveButtonText}>Supprimer</Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.saveButton, styles.saveButtonDisabled, { backgroundColor: COLORS.inputBackground, marginTop: 10 }]}
+              onPress={() => setDeleteVisible(false)}
+              disabled={deleting}
+            >
+              <Text style={[styles.saveButtonText, { color: COLORS.textDark }]}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -9160,6 +9799,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
+  },
+  dropdownOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 60,
+  },
+  dropdownBackdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   dropdownItem: {
     flexDirection: 'row',
@@ -9374,13 +10028,14 @@ const styles = StyleSheet.create({
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity, Image, RefreshControl,
-  Modal, TextInput, ActivityIndicator, Alert
+  Modal, TextInput, ActivityIndicator, Alert, Platform
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiFetch } from '../../config/apiClient';
+import { appendFilePart, cleanUri, imageMime } from '../../config/fileUpload';
 import { API_BASE_URL, fileUrl } from '../../config/api';
 import { openPdf, downloadFileUrl } from '../../config/openPdf';
 import { formatRelativeTime } from '../../components/formatTime';
@@ -9405,16 +10060,20 @@ export default function Officiels() {
   const [editContent, setEditContent] = useState('');
   const [editBusy, setEditBusy] = useState(false);
   const [editFeedback, setEditFeedback] = useState({ type: '', message: '' });
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const role = await AsyncStorage.getItem('userRole');
-        setIsAdmin(role === 'Admin');
-      } catch {}
-    })();
+    let active = true;
+    apiFetch('/auth/me').then(result => {
+      if (!active) return;
+      if (result.ok && result.data) {
+        setIsAdmin(result.data.role === 'Admin');
+        try { AsyncStorage.setItem('userRole', String(result.data.role || '')); } catch (ignored) {}
+      }
+    });
+    return () => { active = false; };
   }, []);
-
   useFocusEffect(
     useCallback(() => {
       fetchOfficials();
@@ -9485,10 +10144,13 @@ export default function Officiels() {
     formData.append('content', officialContent.trim());
 
     if (selectedImage) {
-      const filename = selectedImage.split('/').pop();
-      const match = /\.(\w+)$/.exec(filename);
-      const type = match ? `image/${match[1]}` : 'image/jpeg';
-      formData.append('image', { uri: selectedImage, name: filename, type });
+      const rawName = String(selectedImage).split('?')[0].split('/').pop() || 'photo.jpg';
+      const imgOk = await appendFilePart(formData, 'image', cleanUri(selectedImage), rawName, imageMime(rawName));
+      if (!imgOk.ok) {
+        setIsPublishing(false);
+        setPublishFeedback({ type: 'error', message: 'Lecture image impossible : ' + imgOk.debug });
+        return;
+      }
     }
 
     const result = await apiFetch('/official', { method: 'POST', body: formData });
@@ -9566,25 +10228,21 @@ export default function Officiels() {
 
   const confirmDelete = (official) => {
     setMenuOpenId(null);
-    Alert.alert(
-      'Supprimer',
-      'Voulez-vous vraiment supprimer cette publication officielle ?',
-      [
-        { text: 'Annuler', style: 'cancel' },
-        {
-          text: 'Supprimer',
-          style: 'destructive',
-          onPress: async () => {
-            const result = await apiFetch(`/official/${official.id}`, { method: 'DELETE' });
-            if (result.ok) {
-              fetchOfficials();
-            } else {
-              Alert.alert('Erreur', result.data?.message || 'Impossible de supprimer la publication.');
-            }
-          },
-        },
-      ]
-    );
+    setDeleteTarget(official);
+  };
+
+  const doDeleteOfficial = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    const result = await apiFetch(`/official/${deleteTarget.id}`, { method: 'DELETE' });
+    setIsDeleting(false);
+    if (result.ok) {
+      setDeleteTarget(null);
+      fetchOfficials();
+    } else {
+      setDeleteTarget(null);
+      Alert.alert('Erreur', result.data?.message || 'Impossible de supprimer la publication.');
+    }
   };
 
   const renderOfficial = ({ item }) => (
@@ -9615,7 +10273,9 @@ export default function Officiels() {
                 <Icon name="dots-vertical" size={20} color={COLORS.textMuted} />
               </TouchableOpacity>
               {menuOpenId === item.id ? (
-                <View style={styles.dropdown}>
+                <View style={styles.dropdownOverlay}>
+                  <TouchableOpacity style={styles.dropdownBackdrop} onPress={() => setMenuOpenId(null)} />
+                  <View style={styles.dropdown}>
                   <TouchableOpacity style={styles.dropdownItem} onPress={() => openEdit(item)}>
                     <Icon name="pencil-outline" size={16} color={COLORS.textDark} />
                     <Text style={styles.dropdownText}>Modifier</Text>
@@ -9635,6 +10295,7 @@ export default function Officiels() {
                     <Text style={[styles.dropdownText, styles.dropdownTextDanger]}>Supprimer</Text>
                   </TouchableOpacity>
                 </View>
+                </View>
               ) : null}
             </View>
           ) : null}
@@ -9648,7 +10309,7 @@ export default function Officiels() {
           activeOpacity={0.9}
           onPress={() => navigation.navigate('OfficialDetails', { official: item })}
         >
-          <Image source={{ uri: item.image }} style={styles.officialImage} />
+          <Image source={{ uri: item.image }} style={styles.officialImage} resizeMode={Platform.OS === 'web' ? 'contain' : 'cover'} />
         </TouchableOpacity>
       ) : null}
 
@@ -9731,6 +10392,7 @@ export default function Officiels() {
           if (!isPublishing) {
             setShowPublish(false);
             setSelectedImage(null);
+            setOfficialContent('');
             setPublishFeedback({ type: '', message: '' });
           }
         }}
@@ -9740,7 +10402,7 @@ export default function Officiels() {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Publier un avis officiel</Text>
               <TouchableOpacity
-                onPress={() => { setShowPublish(false); setSelectedImage(null); setPublishFeedback({ type: '', message: '' }); }}
+                onPress={() => { setShowPublish(false); setOfficialContent(''); setSelectedImage(null); setPublishFeedback({ type: '', message: '' }); }}
                 disabled={isPublishing}
               >
                 <Icon name="close" size={28} color={COLORS.textDark} />
@@ -9847,6 +10509,38 @@ export default function Officiels() {
           </View>
         </View>
       </Modal>
+
+      <Modal
+        visible={deleteTarget !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => { if (!isDeleting) setDeleteTarget(null); }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Confirmer la suppression</Text>
+            <Text style={{ marginVertical: 14, color: COLORS.textSecondary }}>Voulez-vous vraiment supprimer cette publication officielle ?</Text>
+            <TouchableOpacity
+              style={[styles.submitButton, { backgroundColor: COLORS.danger }, isDeleting && styles.submitButtonDisabled]}
+              onPress={doDeleteOfficial}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                <Text style={styles.submitButtonText}>Supprimer</Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.submitButton, { backgroundColor: COLORS.inputBackground, marginTop: 10 }]}
+              onPress={() => setDeleteTarget(null)}
+              disabled={isDeleting}
+            >
+              <Text style={[styles.submitButtonText, { color: COLORS.textDark }]}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -9927,6 +10621,7 @@ const styles = StyleSheet.create({
   },
   menuButton: {
     padding: 2,
+    marginRight: Platform.OS === 'android' ? '5%' : 0,
   },
   dropdown: {
     position: 'absolute',
@@ -9942,6 +10637,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
+  },
+  dropdownOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 60,
+  },
+  dropdownBackdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   dropdownItem: {
     flexDirection: 'row',
@@ -10006,7 +10716,7 @@ const styles = StyleSheet.create({
   },
   officialImage: {
     width: '100%',
-    height: 200,
+    height: Platform.OS === 'web' ? 420 : 200,
     borderRadius: RADIUS.lg,
     backgroundColor: '#eee',
     marginBottom: SPACING.md,
@@ -10150,7 +10860,7 @@ const styles = StyleSheet.create({
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TextInput,
-  TouchableOpacity, KeyboardAvoidingView, Platform, Image
+  TouchableOpacity, KeyboardAvoidingView, Platform, Image, Alert, Modal, ActivityIndicator
 } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -10162,9 +10872,10 @@ import { openPdf } from '../../config/openPdf';
 import { COLORS, SPACING, RADIUS } from '../../config/theme';
 
 export default function PostDetails({ route }) {
-  const { post } = route.params;
+  const { post: initialPost } = route.params;
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
+  const [currentPost, setCurrentPost] = useState(initialPost);
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10173,10 +10884,67 @@ export default function PostDetails({ route }) {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [currentUserRole, setCurrentUserRole] = useState(null);
 
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editContent, setEditContent] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+
   useEffect(() => {
     fetchComments();
     fetchMe();
   }, []);
+
+  const handleReact = (added) => {
+    setCurrentPost(p => ({
+      ...p,
+      totalReactions: added ? (p.totalReactions || 0) + 1 : Math.max(0, (p.totalReactions || 0) - 1),
+      has_reacted: added,
+    }));
+  };
+
+  const handleBookmark = async (postId, bookmarked) => {
+    setCurrentPost(p => ({ ...p, is_bookmarked: bookmarked }));
+    const result = await apiFetch(`/bookmarks/${postId}`, {
+      method: bookmarked ? 'POST' : 'DELETE',
+    });
+    if (!result.ok) {
+      setCurrentPost(p => ({ ...p, is_bookmarked: !bookmarked }));
+      if (result.status === 409) return;
+      Alert.alert('Erreur', result.data?.message || "Impossible de mettre à jour l'enregistrement.");
+    }
+  };
+
+  const handleDeletePost = async (postId) => {
+    const result = await apiFetch(`/posts/${postId}`, { method: 'DELETE' });
+    if (result.ok) {
+      navigation.goBack();
+    } else {
+      Alert.alert('Erreur', result.data?.message || 'Impossible de supprimer le post.');
+    }
+  };
+
+  const handleEditPost = (p) => {
+    setEditContent(p.content || '');
+    setEditModalVisible(true);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editContent.trim()) {
+      Alert.alert('Erreur', 'Le contenu ne peut pas être vide.');
+      return;
+    }
+    setIsEditing(true);
+    const result = await apiFetch(`/posts/${currentPost.id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ content: editContent.trim() }),
+    });
+    setIsEditing(false);
+    if (result.ok) {
+      setCurrentPost(p => ({ ...p, content: editContent.trim() }));
+      setEditModalVisible(false);
+    } else {
+      Alert.alert('Erreur', result.data?.message || 'Impossible de modifier le post.');
+    }
+  };
 
   const fetchMe = async () => {
     const result = await apiFetch('/auth/me');
@@ -10190,14 +10958,14 @@ export default function PostDetails({ route }) {
     setLoading(true);
     setError('');
 
-    const result = await apiFetch(`/comments/${post.id}`);
+    const result = await apiFetch(`/comments/${currentPost.id}`);
 
     if (result.ok) {
       const enrichedComments = (result.data || []).map(comment => ({
         ...comment,
         user: comment.display_name || `Utilisateur ${comment.user_id}`,
         text: comment.content,
-        avatar: comment.avatar_url || `https://i.pravatar.cc/150?u=user${comment.user_id}`,
+        avatar: comment.avatar_url ? (comment.avatar_url.startsWith('http') ? comment.avatar_url : `${API_BASE_URL.replace('/api', '')}${comment.avatar_url}`) : `https://i.pravatar.cc/150?u=user${comment.user_id}`,
       }));
       setComments(enrichedComments);
     } else {
@@ -10225,7 +10993,7 @@ export default function PostDetails({ route }) {
 
     setCommentError('');
 
-    const result = await apiFetch(`/comments/${post.id}`, {
+    const result = await apiFetch(`/comments/${currentPost.id}`, {
       method: 'POST',
       body: JSON.stringify({ content: newComment }),
     });
@@ -10277,10 +11045,19 @@ export default function PostDetails({ route }) {
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={
           <View style={styles.headerContainer}>
-            <Post post={post} onReact={() => {}} currentUserId={currentUserId} role={currentUserRole} onOpenFile={(p) => {
-              if (!p.file_path) return;
-              openPdf(`${API_BASE_URL.replace('/api', '')}${p.file_path}`);
-            }} />
+            <Post
+              post={currentPost}
+              onReact={handleReact}
+              currentUserId={currentUserId}
+              role={currentUserRole}
+              onBookmark={handleBookmark}
+              onDelete={handleDeletePost}
+              onEdit={handleEditPost}
+              onOpenFile={(p) => {
+                if (!p.file_path) return;
+                openPdf(`${API_BASE_URL.replace('/api', '')}${p.file_path}`);
+              }}
+            />
             <Text style={styles.sectionTitle}>Commentaires ({comments.length})</Text>
           </View>
         }
@@ -10294,6 +11071,11 @@ export default function PostDetails({ route }) {
           </View>
         )}
         contentContainerStyle={styles.listContent}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>Aucun commentaire. Lance la discussion !</Text>
+          </View>
+        }
       />
 
       <View style={styles.inputWrapper}>
@@ -10318,6 +11100,47 @@ export default function PostDetails({ route }) {
           </TouchableOpacity>
         </View>
       </View>
+
+      <Modal
+        visible={editModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => {
+          if (!isEditing) {
+            setEditModalVisible(false);
+            setEditContent('');
+          }
+        }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Modifier le post</Text>
+              <TouchableOpacity onPress={() => { setEditModalVisible(false); setEditContent(''); }} disabled={isEditing}>
+                <Icon name="close" size={24} color={COLORS.textDark} />
+              </TouchableOpacity>
+            </View>
+            <TextInput
+              style={styles.editTextInput}
+              multiline
+              value={editContent}
+              onChangeText={setEditContent}
+              editable={!isEditing}
+            />
+            <TouchableOpacity
+              style={[styles.saveEditBtn, isEditing && styles.saveEditBtnDisabled]}
+              onPress={handleSaveEdit}
+              disabled={isEditing}
+            >
+              {isEditing ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                <Text style={styles.saveEditText}>Enregistrer</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }
@@ -10399,6 +11222,66 @@ const styles = StyleSheet.create({
   },
   sendButton: { marginLeft: 10, padding: 5 },
   sendButtonDisabled: { opacity: 0.5 },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: COLORS.white,
+    borderRadius: RADIUS.xl,
+    padding: SPACING.xl,
+    width: '100%',
+    maxWidth: 500,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+  },
+  editTextInput: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: RADIUS.md,
+    padding: SPACING.md,
+    minHeight: 100,
+    fontSize: 15,
+    color: COLORS.textDark,
+    textAlignVertical: 'top',
+    marginBottom: SPACING.lg,
+  },
+  saveEditBtn: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 12,
+    borderRadius: RADIUS.md,
+    alignItems: 'center',
+  },
+  saveEditBtnDisabled: {
+    opacity: 0.6,
+  },
+  saveEditText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  emptyContainer: {
+    paddingVertical: 30,
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  emptyText: {
+    color: COLORS.textMuted,
+    fontSize: 14,
+    textAlign: 'center',
+  },
 });
 ```
 
@@ -10408,7 +11291,7 @@ const styles = StyleSheet.create({
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   StyleSheet, Text, View, TextInput, TouchableOpacity,
-  FlatList, Image, ActivityIndicator
+  FlatList, Image, ActivityIndicator, Modal
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10424,6 +11307,7 @@ export default function SearchScreen({ onBack }) {
   const [searched, setSearched] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [statsMap, setStatsMap] = useState({});
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const insets = useSafeAreaInsets();
 
@@ -10439,7 +11323,7 @@ export default function SearchScreen({ onBack }) {
         if (u.id === currentUserId) return [u.id, null];
         const result = await apiFetch(`/users/${u.id}/stats`);
         if (result.ok && result.data) {
-          return [u.id, { is_following: !!result.data.is_following, followers_count: result.data.followers_count }];
+          return [u.id, { is_following: !!result.data.is_following, followers_count: Number(result.data.followers_count) || 0 }];
         }
         return [u.id, null];
       })
@@ -10450,7 +11334,7 @@ export default function SearchScreen({ onBack }) {
   const handleFollowToggle = async (user) => {
     const current = statsMap[user.id];
     if (!current || current.is_following === null) return;
-    const newState = { ...current, is_following: !current.is_following, followers_count: current.followers_count + (current.is_following ? -1 : 1) };
+    const newState = { ...current, is_following: !current.is_following, followers_count: (Number(current.followers_count) || 0) + (current.is_following ? -1 : 1) };
     setStatsMap(prev => ({ ...prev, [user.id]: newState }));
 
     const result = await apiFetch(`/follow/${user.id}`, {
@@ -10517,8 +11401,8 @@ export default function SearchScreen({ onBack }) {
     const showFollow = !isSelf && stats && stats.is_following !== null;
 
     return (
-      <TouchableOpacity style={styles.itemRow}>
-        <View style={styles.itemLeft}>
+    <View style={styles.itemRow}>
+        <TouchableOpacity style={styles.itemLeft} onPress={() => setSelectedUser(item)} activeOpacity={0.7}>
           <View style={styles.iconContainer}>
             {item.avatar_url ? (
               <Image source={{ uri: item.avatar_url.startsWith('http') ? item.avatar_url : `${API_BASE_URL.replace('/api', '')}${item.avatar_url}` }} style={styles.avatarImage} />
@@ -10535,7 +11419,7 @@ export default function SearchScreen({ onBack }) {
               {showFollow ? ` · ${stats.followers_count} abonné${stats.followers_count > 1 ? 's' : ''}` : ''}
             </Text>
           </View>
-        </View>
+        </TouchableOpacity>
         {showFollow ? (
           <TouchableOpacity
             style={[styles.followButton, stats.is_following && styles.followButtonActive]}
@@ -10547,7 +11431,7 @@ export default function SearchScreen({ onBack }) {
             </Text>
           </TouchableOpacity>
         ) : null}
-      </TouchableOpacity>
+    </View>
     );
   };
 
@@ -10601,6 +11485,78 @@ export default function SearchScreen({ onBack }) {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
+
+      {/* Modal profil utilisateur sélectionné */}
+      <Modal
+        visible={selectedUser !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSelectedUser(null)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.profileModal}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalHeaderTitle}>Détails de l'utilisateur</Text>
+              <TouchableOpacity onPress={() => setSelectedUser(null)}>
+                <Ionicons name="close" size={26} color={COLORS.textDark} />
+              </TouchableOpacity>
+            </View>
+
+            {selectedUser && (
+              <View style={styles.profileCard}>
+                <View style={styles.profileAvatarLarge}>
+                  {selectedUser.avatar_url ? (
+                    <Image
+                      source={{ uri: selectedUser.avatar_url.startsWith('http') ? selectedUser.avatar_url : `${API_BASE_URL.replace('/api', '')}${selectedUser.avatar_url}` }}
+                      style={styles.avatarLargeImg}
+                    />
+                  ) : (
+                    <Feather name="user" size={44} color="#666" />
+                  )}
+                </View>
+
+                <Text style={styles.profileName}>
+                  {selectedUser.display_name || selectedUser.matricule_number}
+                </Text>
+                <Text style={styles.profileMatricule}>
+                  Matricule : {selectedUser.matricule_number}
+                </Text>
+
+                {selectedUser.filiere ? (
+                  <View style={styles.filiereBadge}>
+                    <Text style={styles.filiereText}>{selectedUser.filiere}</Text>
+                  </View>
+                ) : null}
+
+                {selectedUser.bio ? (
+                  <Text style={styles.profileBio}>{selectedUser.bio}</Text>
+                ) : null}
+
+                {statsMap[selectedUser.id] && (
+                  <View style={styles.profileStatsRow}>
+                    <View style={styles.statBox}>
+                      <Text style={styles.statNum}>{statsMap[selectedUser.id].followers_count}</Text>
+                      <Text style={styles.statLabel}>Abonné{statsMap[selectedUser.id].followers_count > 1 ? 's' : ''}</Text>
+                    </View>
+                  </View>
+                )}
+
+                {currentUserId && Number(selectedUser.id) !== Number(currentUserId) && statsMap[selectedUser.id] && (
+                  <TouchableOpacity
+                    style={[styles.modalFollowBtn, statsMap[selectedUser.id].is_following && styles.modalFollowBtnActive]}
+                    onPress={() => handleFollowToggle(selectedUser)}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={statsMap[selectedUser.id].is_following ? styles.modalFollowBtnTextActive : styles.modalFollowBtnText}>
+                      {statsMap[selectedUser.id].is_following ? 'Ne plus suivre' : "S'abonner"}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -10706,6 +11662,119 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 13,
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  profileModal: {
+    backgroundColor: COLORS.white,
+    borderRadius: RADIUS.xl,
+    padding: SPACING.xl,
+    width: '100%',
+    maxWidth: 380,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  modalHeaderTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+  },
+  profileCard: {
+    alignItems: 'center',
+    paddingVertical: SPACING.sm,
+  },
+  profileAvatarLarge: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#F0F2F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+    overflow: 'hidden',
+  },
+  avatarLargeImg: {
+    width: '100%',
+    height: '100%',
+  },
+  profileName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    textAlign: 'center',
+  },
+  profileMatricule: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
+    marginTop: 2,
+    marginBottom: SPACING.sm,
+  },
+  filiereBadge: {
+    backgroundColor: COLORS.toggleActive,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: RADIUS.full,
+    marginBottom: SPACING.sm,
+  },
+  filiereText: {
+    color: COLORS.primaryDark,
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  profileBio: {
+    fontSize: 14,
+    color: COLORS.textDark,
+    textAlign: 'center',
+    marginVertical: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    lineHeight: 20,
+  },
+  profileStatsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: SPACING.md,
+  },
+  statBox: {
+    alignItems: 'center',
+  },
+  statNum: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    marginTop: 2,
+  },
+  modalFollowBtn: {
+    marginTop: SPACING.sm,
+    backgroundColor: COLORS.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: RADIUS.full,
+  },
+  modalFollowBtnActive: {
+    backgroundColor: COLORS.toggleInactive,
+  },
+  modalFollowBtnText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  modalFollowBtnTextActive: {
+    color: COLORS.textDark,
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
 });
 ```
 
@@ -10755,6 +11824,8 @@ const Studio = forwardRef((props, ref) => {
   const [createContent, setCreateContent] = useState('');
   const [creating, setCreating] = useState(false);
   const [createFeedback, setCreateFeedback] = useState({ type: '', message: '' });
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchFiles = useCallback(async () => {
     setLoading(true);
@@ -10813,25 +11884,27 @@ const Studio = forwardRef((props, ref) => {
   }, [initialFileId, openFile, onInitialHandled]);
 
   const confirmDeleteFile = (file, isCode) => {
-    Alert.alert('Supprimer', `Voulez-vous vraiment supprimer « ${file.name} » ?`, [
-      { text: 'Annuler', style: 'cancel' },
-      {
-        text: 'Supprimer',
-        style: 'destructive',
-        onPress: async () => {
-          if (isCode && editorFile?.id === file.id) {
-            setEditorVisible(false);
-            setEditorFile(null);
-          }
-          const result = await apiFetch(`/files/${file.id}`, { method: 'DELETE' });
-          if (result.ok) {
-            fetchFiles();
-          } else {
-            Alert.alert('Erreur', result.data?.message || 'Impossible de supprimer le fichier.');
-          }
-        },
-      },
-    ]);
+    setDeleteTarget({ file, isCode });
+  };
+
+  const doDeleteFile = async () => {
+    if (!deleteTarget) return;
+    const targetFile = deleteTarget.file;
+    const targetIsCode = deleteTarget.isCode;
+    setIsDeleting(true);
+    if (targetIsCode && editorFile && editorFile.id === targetFile.id) {
+      setEditorVisible(false);
+      setEditorFile(null);
+    }
+    const result = await apiFetch(`/files/${targetFile.id}`, { method: 'DELETE' });
+    setIsDeleting(false);
+    if (result.ok) {
+      setDeleteTarget(null);
+      fetchFiles();
+    } else {
+      setDeleteTarget(null);
+      setFeedback({ type: 'error', message: result.data && result.data.message ? result.data.message : 'Impossible de supprimer le fichier.' });
+    }
   };
 
   const saveEditor = async () => {
@@ -10899,37 +11972,36 @@ const Studio = forwardRef((props, ref) => {
   const pdfFiles = files.filter(f => f.type !== 'code');
 
   const renderCodeRow = ({ item }) => (
-    <TouchableOpacity
-        style={styles.row}
+    <View style={styles.row}>
+      <TouchableOpacity
+        style={styles.rowMain}
         onPress={() => openFile(item.id)}
         activeOpacity={0.7}
       >
-      <View style={styles.rowIcon}>
-        <Icon name="code-tags" size={24} color={COLORS.primary} />
-      </View>
-      <View style={styles.rowInfo}>
-        <Text style={styles.rowName} numberOfLines={1}>{item.name}</Text>
-        <View style={styles.rowMeta}>
-          <Text style={styles.rowMetaText}>{item.language}</Text>
-          <Text style={styles.rowMetaText}>{formatSize(item.size)}</Text>
-          <Icon
-            name={item.visibility === 'public' ? 'earth' : 'lock-outline'}
-            size={12}
-            color={COLORS.textMuted}
-          />
+        <View style={styles.rowIcon}>
+          <Icon name="code-tags" size={24} color={COLORS.primary} />
         </View>
-      </View>
+        <View style={styles.rowInfo}>
+          <Text style={styles.rowName} numberOfLines={1}>{item.name}</Text>
+          <View style={styles.rowMeta}>
+            <Text style={styles.rowMetaText}>{item.language}</Text>
+            <Text style={styles.rowMetaText}>{formatSize(item.size)}</Text>
+            <Icon
+              name={item.visibility === 'public' ? 'earth' : 'lock-outline'}
+              size={12}
+              color={COLORS.textMuted}
+            />
+          </View>
+        </View>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.rowDeleteBtn}
-        onPress={(e) => {
-          e.stopPropagation();
-          confirmDeleteFile(item, true);
-        }}
+        onPress={() => confirmDeleteFile(item, true)}
       >
         <Icon name="delete-outline" size={20} color={COLORS.danger} />
       </TouchableOpacity>
       <Icon name="chevron-right" size={20} color={COLORS.textMuted} />
-    </TouchableOpacity>
+    </View>
   );
 
   const renderPdfRow = ({ item }) => (
@@ -11020,15 +12092,6 @@ const Studio = forwardRef((props, ref) => {
           )}
         </ScrollView>
       )}
-
-      {editorFeedback.message ? (
-        <View style={styles.inlineBanner}>
-          <Text style={editorFeedback.type === 'error' ? styles.errorText : styles.successText}>
-            {editorFeedback.message}
-          </Text>
-        </View>
-      ) : null}
-
       <Modal
         visible={editorVisible}
         transparent
@@ -11047,6 +12110,14 @@ const Studio = forwardRef((props, ref) => {
                 <Icon name="close" size={28} color={COLORS.textDark} />
               </TouchableOpacity>
             </View>
+
+            {editorFeedback.message ? (
+              <View style={styles.inlineBanner}>
+                <Text style={editorFeedback.type === 'error' ? styles.errorText : styles.successText}>
+                  {editorFeedback.message}
+                </Text>
+              </View>
+            ) : null}
 
             <ScrollView style={styles.editorScroll} keyboardShouldPersistTaps="handled">
               <Text style={styles.inputLabel}>Nom du fichier</Text>
@@ -11196,6 +12267,43 @@ const Studio = forwardRef((props, ref) => {
           </View>
         </View>
       </Modal>
+
+      <Modal
+        visible={deleteTarget !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => { if (!isDeleting) setDeleteTarget(null); }}
+      >
+        <View style={styles.createModalOverlay}>
+          <View style={styles.createModal}>
+            <View style={styles.editorHeader}>
+              <Text style={styles.editorTitle}>Confirmer la suppression</Text>
+              <TouchableOpacity onPress={() => setDeleteTarget(null)} disabled={isDeleting}>
+                <Icon name="close" size={28} color={COLORS.textDark} />
+              </TouchableOpacity>
+            </View>
+            <Text style={{ color: COLORS.textDark, fontSize: 14, marginVertical: 12 }}>Voulez-vous vraiment supprimer ce fichier ?</Text>
+            <TouchableOpacity
+              style={[styles.saveButton, { backgroundColor: COLORS.danger }, isDeleting && styles.disabled]}
+              onPress={doDeleteFile}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                <Text style={styles.saveButtonText}>Supprimer</Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.saveButton, { backgroundColor: COLORS.inputBackground, marginTop: 10 }]}
+              onPress={() => setDeleteTarget(null)}
+              disabled={isDeleting}
+            >
+              <Text style={[styles.saveButtonText, { color: COLORS.textDark }]}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 });
@@ -11332,6 +12440,11 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     backgroundColor: COLORS.inputBackground,
     borderRadius: RADIUS.md,
+  },
+  rowMain: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   rowDeleteBtn: {
     padding: 6,
@@ -11515,28 +12628,9 @@ import Fichiers from "../Fichiers/Fichiers";
 import Studio from "../Studio/Studio";
 import DesktopLayout from '../../components/Layout/DesktopLayout';
 import { apiFetch } from '../../config/apiClient';
-import { appendFilePart } from '../../config/fileUpload';
+import { appendFilePart, cleanUri, imageMime } from '../../config/fileUpload';
 import { API_BASE_URL } from '../../config/api';
 import { COLORS, SPACING, RADIUS, SHADOWS, FONTS, BREAKPOINTS } from '../../config/theme';
-
-const cleanUri = (uri) => {
-  if (!uri) return uri;
-  const noQuery = String(uri).split('?')[0];
-  if (Platform.OS === 'android' && noQuery.startsWith('/')) {
-    return `file://${noQuery}`;
-  }
-  return noQuery;
-};
-
-const imageMime = (filename) => {
-  const match = /\.(\w+)$/.exec(String(filename || ''));
-  const ext = (match ? match[1] : 'jpg').toLowerCase();
-  if (ext === 'jpg' || ext === 'jpeg') return 'image/jpeg';
-  if (ext === 'png') return 'image/png';
-  if (ext === 'webp') return 'image/webp';
-  if (ext === 'gif') return 'image/gif';
-  return 'image/jpeg';
-};
 
 const ETUDIANT = 'etudiant';
 const OFFICIEL = 'officiel';
@@ -11726,6 +12820,7 @@ const HomeScreen = () => {
       onRequestClose={() => {
         if (!isCreating) {
           setShowCreateModal(false);
+          setPostContent('');
           setSelectedImage(null);
           setSelectedPdf(null);
           setCreateFeedback({ type: '', message: '' });
@@ -11740,6 +12835,7 @@ const HomeScreen = () => {
               <TouchableOpacity
                 onPress={() => {
                   setShowCreateModal(false);
+          setPostContent('');
                   setSelectedImage(null);
                   setSelectedPdf(null);
                   setCreateFeedback({ type: '', message: '' });
@@ -12245,13 +13341,13 @@ registerRootComponent(App);
         "@react-native-async-storage/async-storage": "^2.2.0",
         "@react-navigation/native": "*",
         "@react-navigation/stack": "*",
-        "expo": "~57.0.0",
-        "expo-document-picker": "~57.0.1",
+        "expo": "~57.0.22",
+        "expo-document-picker": "~57.0.2",
         "expo-file-system": "~57.0.7",
         "expo-font": "~57.0.3",
-        "expo-image-picker": "~57.0.16",
+        "expo-image-picker": "~57.0.17",
         "expo-status-bar": "~57.0.1",
-        "expo-web-browser": "~57.0.2",
+        "expo-web-browser": "~57.0.3",
         "react": "19.2.3",
         "react-dom": "19.2.3",
         "react-native": "0.86.3",
@@ -13446,9 +14542,9 @@ registerRootComponent(App);
       "license": "MIT"
     },
     "node_modules/@expo/fingerprint": {
-      "version": "0.20.12",
-      "resolved": "https://registry.npmjs.org/@expo/fingerprint/-/fingerprint-0.20.12.tgz",
-      "integrity": "sha512-FIR5fkZYeFaLSowmjgyB6RPKl8AXeE8HuCBHHvyxK8UhOjpPfCAmzT4E7v2yub4qqDafKnfcOFCYxvpUEu+01w==",
+      "version": "0.20.13",
+      "resolved": "https://registry.npmjs.org/@expo/fingerprint/-/fingerprint-0.20.13.tgz",
+      "integrity": "sha512-h1x+w+JpNRu88a/5SMZRzJs9YDGR/f7R8ApCr7OdenhqmJ00hFxQMzvxajDLL+1P2Y2g/ND0xksusqvBqWSW5Q==",
       "license": "MIT",
       "dependencies": {
         "@expo/env": "^2.4.3",
@@ -13589,21 +14685,6 @@ registerRootComponent(App);
         }
       }
     },
-    "node_modules/@expo/metro-config/node_modules/hermes-estree": {
-      "version": "0.36.1",
-      "resolved": "https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.36.1.tgz",
-      "integrity": "sha512-guv1nQ6IJ7S83NRFPWc3SA7IBZrdNC9kapwOq6uXvF4wP+sDCgjzQbKPCoyYmoyZRzztF/n/c36l/rccCZSiCw==",
-      "license": "MIT"
-    },
-    "node_modules/@expo/metro-config/node_modules/hermes-parser": {
-      "version": "0.36.1",
-      "resolved": "https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.36.1.tgz",
-      "integrity": "sha512-GApNk4zLHi2UWoWZZkx7LNCOSzLSc5lB55pZ/PhK7ycFeg7u5LcF88p/WbpIi1XUDtE0MpHE3uRR3u3KB7TjSQ==",
-      "license": "MIT",
-      "dependencies": {
-        "hermes-estree": "0.36.1"
-      }
-    },
     "node_modules/@expo/metro-config/node_modules/picomatch": {
       "version": "4.0.7",
       "resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.7.tgz",
@@ -13628,19 +14709,6 @@ registerRootComponent(App);
         "jest-worker": "^29.7.0",
         "micromatch": "^4.0.4",
         "walker": "^1.0.8"
-      }
-    },
-    "node_modules/@expo/metro/node_modules/accepts": {
-      "version": "2.0.0",
-      "resolved": "https://registry.npmjs.org/accepts/-/accepts-2.0.0.tgz",
-      "integrity": "sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==",
-      "license": "MIT",
-      "dependencies": {
-        "mime-types": "^3.0.0",
-        "negotiator": "^1.0.0"
-      },
-      "engines": {
-        "node": ">= 0.6"
       }
     },
     "node_modules/@expo/metro/node_modules/hermes-estree": {
@@ -13925,47 +14993,6 @@ registerRootComponent(App);
         "node": "^20.19.4 || ^22.13.0 || ^24.3.0 || >= 25.0.0"
       }
     },
-    "node_modules/@expo/metro/node_modules/mime-db": {
-      "version": "1.54.0",
-      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.54.0.tgz",
-      "integrity": "sha512-aU5EJuIN2WDemCcAp2vFBfp/m4EAhWJnUNSSw0ixs7/kXbd6Pg64EmwJkNdFhB8aWt1sH2CTXrLxo/iAGV3oPQ==",
-      "license": "MIT",
-      "engines": {
-        "node": ">= 0.6"
-      }
-    },
-    "node_modules/@expo/metro/node_modules/mime-types": {
-      "version": "3.0.2",
-      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-3.0.2.tgz",
-      "integrity": "sha512-Lbgzdk0h4juoQ9fCKXW4by0UJqj+nOOrI9MJ1sSj4nI8aI2eo1qmvQEie4VD1glsS250n15LsWsYtCugiStS5A==",
-      "license": "MIT",
-      "dependencies": {
-        "mime-db": "^1.54.0"
-      },
-      "engines": {
-        "node": ">=18"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/express"
-      }
-    },
-    "node_modules/@expo/metro/node_modules/negotiator": {
-      "version": "1.1.0",
-      "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-1.1.0.tgz",
-      "integrity": "sha512-NMPBRMJgiQHjbd8phG3Vebdx4kZ1H121rbl5IkMqeOsahptB9BKo/d7oJ3zTXqTgagn2bWlNSXkh0QUGM31RYg==",
-      "license": "MIT",
-      "dependencies": {
-        "content-type": "^2.1.0"
-      },
-      "engines": {
-        "node": ">=18"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/express"
-      }
-    },
     "node_modules/@expo/metro/node_modules/ob1": {
       "version": "0.84.5",
       "resolved": "https://registry.npmjs.org/ob1/-/ob1-0.84.5.tgz",
@@ -14016,9 +15043,9 @@ registerRootComponent(App);
       }
     },
     "node_modules/@expo/prebuild-config": {
-      "version": "57.0.15",
-      "resolved": "https://registry.npmjs.org/@expo/prebuild-config/-/prebuild-config-57.0.15.tgz",
-      "integrity": "sha512-xTbWHroj0PDmlbqvmU+zF9ZZxveJkiuyiPoeRJYRGruFHebRAWnoTdw5S7d/UCzDBI8ropGGu9g2eb2nMxtvAw==",
+      "version": "57.0.16",
+      "resolved": "https://registry.npmjs.org/@expo/prebuild-config/-/prebuild-config-57.0.16.tgz",
+      "integrity": "sha512-QA8oMZ7y70kjOzw+abhRl9uYC8Nu/abeUTHr0YVxb3pgIC14gc7w543bYtI+5gEDI3q55jKUViIauC76QvZN1w==",
       "license": "MIT",
       "dependencies": {
         "@expo/config": "~57.0.9",
@@ -14028,7 +15055,7 @@ registerRootComponent(App);
         "@expo/json-file": "^11.0.1",
         "@react-native/normalize-colors": "0.86.3",
         "debug": "^4.3.1",
-        "expo-modules-autolinking": "~57.0.12",
+        "expo-modules-autolinking": "~57.0.13",
         "resolve-from": "^5.0.0",
         "semver": "^7.6.0"
       }
@@ -14105,34 +15132,6 @@ registerRootComponent(App);
       },
       "bin": {
         "excpretty": "build/cli.js"
-      }
-    },
-    "node_modules/@expo/xcpretty/node_modules/argparse": {
-      "version": "2.0.1",
-      "resolved": "https://registry.npmjs.org/argparse/-/argparse-2.0.1.tgz",
-      "integrity": "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==",
-      "license": "Python-2.0"
-    },
-    "node_modules/@expo/xcpretty/node_modules/js-yaml": {
-      "version": "4.3.2",
-      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-4.3.2.tgz",
-      "integrity": "sha512-SFNOvSJ+Dgf/9An904Yx+CgSlIPCkIpao4qo51lpee25TIRejdH3rhR4EZMGoNx3/TP3O+wzWuiTFl4sqbltzA==",
-      "funding": [
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/puzrin"
-        },
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/nodeca"
-        }
-      ],
-      "license": "MIT",
-      "dependencies": {
-        "argparse": "^2.0.1"
-      },
-      "bin": {
-        "js-yaml": "bin/js-yaml.js"
       }
     },
     "node_modules/@isaacs/ttlcache": {
@@ -14600,13 +15599,13 @@ registerRootComponent(App);
       }
     },
     "node_modules/accepts": {
-      "version": "1.3.8",
-      "resolved": "https://registry.npmjs.org/accepts/-/accepts-1.3.8.tgz",
-      "integrity": "sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==",
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/accepts/-/accepts-2.0.0.tgz",
+      "integrity": "sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==",
       "license": "MIT",
       "dependencies": {
-        "mime-types": "~2.1.34",
-        "negotiator": "0.6.3"
+        "mime-types": "^3.0.0",
+        "negotiator": "^1.0.0"
       },
       "engines": {
         "node": ">= 0.6"
@@ -14707,6 +15706,12 @@ registerRootComponent(App);
       "resolved": "https://registry.npmjs.org/arg/-/arg-5.0.2.tgz",
       "integrity": "sha512-PYjyFOLKQ9y57JvQ6QLo8dAgNqswh8M1RMJYdQduT6xbWSgK36P/Z/v+p888pM69jMMfS8Xd8F6I1kQ/I9HUGg==",
       "license": "MIT"
+    },
+    "node_modules/argparse": {
+      "version": "2.0.1",
+      "resolved": "https://registry.npmjs.org/argparse/-/argparse-2.0.1.tgz",
+      "integrity": "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==",
+      "license": "Python-2.0"
     },
     "node_modules/asap": {
       "version": "2.0.6",
@@ -15240,14 +16245,15 @@ registerRootComponent(App);
       }
     },
     "node_modules/compression": {
-      "version": "1.8.1",
-      "resolved": "https://registry.npmjs.org/compression/-/compression-1.8.1.tgz",
-      "integrity": "sha512-9mAqGPHLakhCLeNyxPkK4xVo746zQ/czLH1Ky+vkitMnWfWZps8r0qXuwhwizagCRttsL4lfG4pIOvaWLpAP0w==",
+      "version": "1.8.2",
+      "resolved": "https://registry.npmjs.org/compression/-/compression-1.8.2.tgz",
+      "integrity": "sha512-o8vI5RE5A6EVVOd9o41jKp41aJom+QTEO/Bx8MYNjexMo/Bv2WOjUfZr+aL0WnYSgymUy6zeguqLTsIhV0gMvQ==",
       "license": "MIT",
       "dependencies": {
         "bytes": "3.1.2",
         "compressible": "~2.0.18",
         "debug": "2.6.9",
+        "destroy": "1.2.0",
         "negotiator": "~0.6.4",
         "on-headers": "~1.1.0",
         "safe-buffer": "5.2.1",
@@ -15255,6 +16261,10 @@ registerRootComponent(App);
       },
       "engines": {
         "node": ">= 0.8.0"
+      },
+      "funding": {
+        "type": "opencollective",
+        "url": "https://opencollective.com/express"
       }
     },
     "node_modules/compression/node_modules/debug": {
@@ -15673,32 +16683,32 @@ registerRootComponent(App);
       }
     },
     "node_modules/expo": {
-      "version": "57.0.21",
-      "resolved": "https://registry.npmjs.org/expo/-/expo-57.0.21.tgz",
-      "integrity": "sha512-lQmC0kCJCleO+uLUwHXY0pLDzcvedKEsX+pmJp4mSxn3JlWDTZvUb0e5UIlV7+bqlN68LpAeKG4c2lrN4zuP0Q==",
+      "version": "57.0.22",
+      "resolved": "https://registry.npmjs.org/expo/-/expo-57.0.22.tgz",
+      "integrity": "sha512-YWUGqWtchsRQzcbU+Iqqt/1kFbZ9Pp3/eg+UenINahNt2RIaDElFJFFWLD1Yfex6WnBm6ESSE8h0/ja28hRqZg==",
       "license": "MIT",
       "peer": true,
       "dependencies": {
         "@babel/runtime": "^7.20.0",
-        "@expo/cli": "^57.0.23",
+        "@expo/cli": "^57.0.24",
         "@expo/config": "~57.0.9",
         "@expo/config-plugins": "~57.0.9",
         "@expo/devtools": "~57.0.1",
         "@expo/dom-webview": "~57.0.1",
-        "@expo/fingerprint": "^0.20.12",
+        "@expo/fingerprint": "^0.20.13",
         "@expo/local-build-cache-provider": "^57.0.8",
         "@expo/log-box": "^57.0.4",
         "@expo/metro": "~56.0.2",
         "@expo/metro-config": "~57.0.12",
         "@ungap/structured-clone": "^1.3.0",
         "babel-preset-expo": "~57.0.11",
-        "expo-asset": "~57.0.16",
-        "expo-constants": "~57.0.17",
-        "expo-file-system": "~57.0.6",
-        "expo-font": "~57.0.3",
-        "expo-keep-awake": "~57.0.1",
-        "expo-modules-autolinking": "~57.0.12",
-        "expo-modules-core": "~57.0.17",
+        "expo-asset": "~57.0.17",
+        "expo-constants": "~57.0.18",
+        "expo-file-system": "~57.0.7",
+        "expo-font": "~57.0.4",
+        "expo-keep-awake": "~57.0.2",
+        "expo-modules-autolinking": "~57.0.13",
+        "expo-modules-core": "~57.0.18",
         "pretty-format": "^29.7.0",
         "react-refresh": "^0.14.2",
         "whatwg-url-minimum": "^0.1.2"
@@ -15736,13 +16746,13 @@ registerRootComponent(App);
       }
     },
     "node_modules/expo-asset": {
-      "version": "57.0.16",
-      "resolved": "https://registry.npmjs.org/expo-asset/-/expo-asset-57.0.16.tgz",
-      "integrity": "sha512-IBRfQdW3iFT+GOBERMZLZM1MUNyrjMgMskuD0elVZ1ae44858UFlTJkHO3f8vi+u5zuv7O7KofsiN8NMG/uWzw==",
+      "version": "57.0.17",
+      "resolved": "https://registry.npmjs.org/expo-asset/-/expo-asset-57.0.17.tgz",
+      "integrity": "sha512-qSdWZBSfEg06o3GJMwcj36tw0vXkB6eYjqkQistWmyJkHxhUOKnsKJnev6OraXxLdoI+KOd1+qgp/ENx8gcqYA==",
       "license": "MIT",
       "dependencies": {
         "@expo/image-utils": "^0.11.5",
-        "expo-constants": "~57.0.17"
+        "expo-constants": "~57.0.18"
       },
       "peerDependencies": {
         "expo": "*",
@@ -15751,9 +16761,9 @@ registerRootComponent(App);
       }
     },
     "node_modules/expo-constants": {
-      "version": "57.0.17",
-      "resolved": "https://registry.npmjs.org/expo-constants/-/expo-constants-57.0.17.tgz",
-      "integrity": "sha512-cPWYBKN1SEbg2lXg2f8VkePJqGZrJPLvVdQDCTfbFu9sQHO1M31Y1zILReUuGnmt/VKeUz40ze579vR00xGu/A==",
+      "version": "57.0.18",
+      "resolved": "https://registry.npmjs.org/expo-constants/-/expo-constants-57.0.18.tgz",
+      "integrity": "sha512-cLDwDOniPfuCZPHNY++cAY2ZkK97u5aobbBvilPK2LLmaWxR4ZpD31LWUIzUDLrwMPxLjmh1uURnbeYEf0Mivw==",
       "license": "MIT",
       "peer": true,
       "dependencies": {
@@ -15765,9 +16775,9 @@ registerRootComponent(App);
       }
     },
     "node_modules/expo-document-picker": {
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-document-picker/-/expo-document-picker-57.0.1.tgz",
-      "integrity": "sha512-qBwM5oxDZ3I9kwFD3pUE1oK/WNv9artoEKO6UpqhQgNRr0XA1ALRVWYjkF4+ge9lUNDRehjTm/jenINkzqg84g==",
+      "version": "57.0.2",
+      "resolved": "https://registry.npmjs.org/expo-document-picker/-/expo-document-picker-57.0.2.tgz",
+      "integrity": "sha512-vVBbBNg0piMJUIxjB+DR6JaZZpcSl90ZUoywLA/EgNHTfRkZW+9axP97UxM2a0Zm0W6WfH3cLzzGAEfP9OKGwg==",
       "license": "MIT",
       "peerDependencies": {
         "expo": "*"
@@ -15784,9 +16794,9 @@ registerRootComponent(App);
       }
     },
     "node_modules/expo-font": {
-      "version": "57.0.3",
-      "resolved": "https://registry.npmjs.org/expo-font/-/expo-font-57.0.3.tgz",
-      "integrity": "sha512-kiVUnc2A8vAvO2FfDJTsQa5BwmY+PAkof/1wRb5MOkcX1jtiaSTwz9gCUAyscMBFLundZDmZrLy1P7LZVC+NvA==",
+      "version": "57.0.4",
+      "resolved": "https://registry.npmjs.org/expo-font/-/expo-font-57.0.4.tgz",
+      "integrity": "sha512-7WOMC2oA6xCfOm8bbofqWn2bIqyWFm7YLEnpc/gA1MJH0Ll0TfT/3+CqRkoW2eNRWMS8sxrz5WukUmSvmNquHA==",
       "license": "MIT",
       "peer": true,
       "dependencies": {
@@ -15808,9 +16818,9 @@ registerRootComponent(App);
       }
     },
     "node_modules/expo-image-picker": {
-      "version": "57.0.16",
-      "resolved": "https://registry.npmjs.org/expo-image-picker/-/expo-image-picker-57.0.16.tgz",
-      "integrity": "sha512-9CrY/hoBHI2GsOo/4AWz6cInRHhGhhCmbza3JYr4j3P/NWpthLlIm0IXSWpxadSYJx0a2FAti0f7XWMg95aPEg==",
+      "version": "57.0.17",
+      "resolved": "https://registry.npmjs.org/expo-image-picker/-/expo-image-picker-57.0.17.tgz",
+      "integrity": "sha512-qPcCkGSoqDLpmdXCLiLe09Je01gzBrwEgLd4SBI03Od/5t531vDTkzUmGemjm7vcsCTG2iqZMh2VZXBscAPO3g==",
       "license": "MIT",
       "dependencies": {
         "expo-image-loader": "~57.0.1"
@@ -15820,9 +16830,9 @@ registerRootComponent(App);
       }
     },
     "node_modules/expo-keep-awake": {
-      "version": "57.0.1",
-      "resolved": "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-57.0.1.tgz",
-      "integrity": "sha512-28lkFImeXTS+bhAjuCFV7w7tW5bXg27BJVrxv+nC/nyYa86qEa0oFeHwqol6ha5k4pdVDQgBF09GM4A1k76Ssg==",
+      "version": "57.0.2",
+      "resolved": "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-57.0.2.tgz",
+      "integrity": "sha512-GqgH746wtJImmsbyHmCQoi7cOslKuWQBbJHXr53S35Bpf5UvxCAztvnitUEd7D0QvFN2rvkOhylbZpgZZfBLlQ==",
       "license": "MIT",
       "peerDependencies": {
         "expo": "*",
@@ -15830,9 +16840,9 @@ registerRootComponent(App);
       }
     },
     "node_modules/expo-modules-autolinking": {
-      "version": "57.0.12",
-      "resolved": "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-57.0.12.tgz",
-      "integrity": "sha512-Q8KAlq37nLKsQ+HsS9NpQVpd5jCgqtu694TDUNHBUBpV9ViD82mRBh8Uug/h68RG9xnLS+kuL4nYaCuFRghHjg==",
+      "version": "57.0.13",
+      "resolved": "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-57.0.13.tgz",
+      "integrity": "sha512-Hj5NjZRlfccazhKab+wK19leRVUr1Y/PUERaRvegIbUSkq4GVxKq6lU9QHlKQyC16MdD/VS4iwsiLivB4o7lvQ==",
       "license": "MIT",
       "dependencies": {
         "@expo/require-utils": "^57.0.5",
@@ -15842,6 +16852,27 @@ registerRootComponent(App);
       },
       "bin": {
         "expo-modules-autolinking": "bin/expo-modules-autolinking.js"
+      }
+    },
+    "node_modules/expo-modules-core": {
+      "version": "57.0.18",
+      "resolved": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-57.0.18.tgz",
+      "integrity": "sha512-ovB7C+GVQTlKAOIsOIHJVVXN9Mn0ljf2SYBS+afrRaGqq+HZEn1D3o+HReIVeH1NjCn/xDBb7I4HjldHs6luZA==",
+      "license": "MIT",
+      "dependencies": {
+        "@expo/expo-modules-macros-plugin": "0.6.1",
+        "expo-modules-jsi": "~57.1.0",
+        "invariant": "^2.2.4"
+      },
+      "peerDependencies": {
+        "react": "*",
+        "react-native": "*",
+        "react-native-worklets": "^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0"
+      },
+      "peerDependenciesMeta": {
+        "react-native-worklets": {
+          "optional": true
+        }
       }
     },
     "node_modules/expo-modules-jsi": {
@@ -15875,9 +16906,9 @@ registerRootComponent(App);
       }
     },
     "node_modules/expo-web-browser": {
-      "version": "57.0.2",
-      "resolved": "https://registry.npmjs.org/expo-web-browser/-/expo-web-browser-57.0.2.tgz",
-      "integrity": "sha512-3vl5kvd7PB48ub6PpNIJUuPxO8xVa6D8RnIgNba6SXRwqFprOfeEZgwTgtm41kz0AAtvMOztUVNEUkwrHKjqMQ==",
+      "version": "57.0.3",
+      "resolved": "https://registry.npmjs.org/expo-web-browser/-/expo-web-browser-57.0.3.tgz",
+      "integrity": "sha512-+ecvhyS/PdWkpv4ai6FF1Trd6Y/4kn/eQ3O86mie2ecU3w+I8bKZh13kppY/jw1uSL7yikt03L5W/iiHojrFwQ==",
       "license": "MIT",
       "peerDependencies": {
         "expo": "*",
@@ -15885,9 +16916,9 @@ registerRootComponent(App);
       }
     },
     "node_modules/expo/node_modules/@expo/cli": {
-      "version": "57.0.23",
-      "resolved": "https://registry.npmjs.org/@expo/cli/-/cli-57.0.23.tgz",
-      "integrity": "sha512-stzSYxVwbWGbKR+mrYT6s4Rt6HrcUxb0JrHyebDGL4ehpvfRTv0rMzn4Q7fqB6f5wJ1KCmf6OAgqgK+TTB8/FA==",
+      "version": "57.0.24",
+      "resolved": "https://registry.npmjs.org/@expo/cli/-/cli-57.0.24.tgz",
+      "integrity": "sha512-CCBkvhPgAcrzJQ3daYbyOD6YuqKKkvOIyUfAbsUIvlpLomIlocYxFHYdmaC/KHqfCsbGFYSV/QKTSYshhSFNEA==",
       "license": "MIT",
       "dependencies": {
         "@expo/code-signing-certificates": "^0.0.6",
@@ -15905,7 +16936,7 @@ registerRootComponent(App);
         "@expo/osascript": "^2.7.1",
         "@expo/package-manager": "^1.13.1",
         "@expo/plist": "^0.8.1",
-        "@expo/prebuild-config": "^57.0.15",
+        "@expo/prebuild-config": "^57.0.16",
         "@expo/require-utils": "^57.0.5",
         "@expo/router-server": "^57.0.9",
         "@expo/schema-utils": "^57.0.2",
@@ -16010,6 +17041,19 @@ registerRootComponent(App);
         "ws": "^8.0.0"
       }
     },
+    "node_modules/expo/node_modules/accepts": {
+      "version": "1.3.8",
+      "resolved": "https://registry.npmjs.org/accepts/-/accepts-1.3.8.tgz",
+      "integrity": "sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==",
+      "license": "MIT",
+      "dependencies": {
+        "mime-types": "~2.1.34",
+        "negotiator": "0.6.3"
+      },
+      "engines": {
+        "node": ">= 0.6"
+      }
+    },
     "node_modules/expo/node_modules/ci-info": {
       "version": "3.9.0",
       "resolved": "https://registry.npmjs.org/ci-info/-/ci-info-3.9.0.tgz",
@@ -16025,25 +17069,34 @@ registerRootComponent(App);
         "node": ">=8"
       }
     },
-    "node_modules/expo/node_modules/expo-modules-core": {
-      "version": "57.0.17",
-      "resolved": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-57.0.17.tgz",
-      "integrity": "sha512-hHJwGHW0sMQiOLzEEl1QbJeWkBEBgjlPjrdBVGWlzvgUbCXJfFbDU2nhxoyzLMZnvHkpIzpiJjj5cM5W8gbudA==",
+    "node_modules/expo/node_modules/mime-db": {
+      "version": "1.52.0",
+      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.52.0.tgz",
+      "integrity": "sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==",
+      "license": "MIT",
+      "engines": {
+        "node": ">= 0.6"
+      }
+    },
+    "node_modules/expo/node_modules/mime-types": {
+      "version": "2.1.35",
+      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.35.tgz",
+      "integrity": "sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==",
       "license": "MIT",
       "dependencies": {
-        "@expo/expo-modules-macros-plugin": "0.6.1",
-        "expo-modules-jsi": "~57.1.0",
-        "invariant": "^2.2.4"
+        "mime-db": "1.52.0"
       },
-      "peerDependencies": {
-        "react": "*",
-        "react-native": "*",
-        "react-native-worklets": "^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0"
-      },
-      "peerDependenciesMeta": {
-        "react-native-worklets": {
-          "optional": true
-        }
+      "engines": {
+        "node": ">= 0.6"
+      }
+    },
+    "node_modules/expo/node_modules/negotiator": {
+      "version": "0.6.3",
+      "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-0.6.3.tgz",
+      "integrity": "sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==",
+      "license": "MIT",
+      "engines": {
+        "node": ">= 0.6"
       }
     },
     "node_modules/expo/node_modules/picomatch": {
@@ -16619,6 +17672,28 @@ registerRootComponent(App);
       "resolved": "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz",
       "integrity": "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==",
       "license": "MIT"
+    },
+    "node_modules/js-yaml": {
+      "version": "4.3.2",
+      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-4.3.2.tgz",
+      "integrity": "sha512-SFNOvSJ+Dgf/9An904Yx+CgSlIPCkIpao4qo51lpee25TIRejdH3rhR4EZMGoNx3/TP3O+wzWuiTFl4sqbltzA==",
+      "funding": [
+        {
+          "type": "github",
+          "url": "https://github.com/sponsors/puzrin"
+        },
+        {
+          "type": "github",
+          "url": "https://github.com/sponsors/nodeca"
+        }
+      ],
+      "license": "MIT",
+      "dependencies": {
+        "argparse": "^2.0.1"
+      },
+      "bin": {
+        "js-yaml": "bin/js-yaml.js"
+      }
     },
     "node_modules/jsc-safe-url": {
       "version": "0.2.4",
@@ -17394,19 +18469,6 @@ registerRootComponent(App);
         "node": "^20.19.4 || ^22.13.0 || ^24.3.0 || >= 25.0.0"
       }
     },
-    "node_modules/metro/node_modules/accepts": {
-      "version": "2.0.0",
-      "resolved": "https://registry.npmjs.org/accepts/-/accepts-2.0.0.tgz",
-      "integrity": "sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==",
-      "license": "MIT",
-      "dependencies": {
-        "mime-types": "^3.0.0",
-        "negotiator": "^1.0.0"
-      },
-      "engines": {
-        "node": ">= 0.6"
-      }
-    },
     "node_modules/metro/node_modules/hermes-estree": {
       "version": "0.35.0",
       "resolved": "https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.35.0.tgz",
@@ -17420,47 +18482,6 @@ registerRootComponent(App);
       "license": "MIT",
       "dependencies": {
         "hermes-estree": "0.35.0"
-      }
-    },
-    "node_modules/metro/node_modules/mime-db": {
-      "version": "1.54.0",
-      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.54.0.tgz",
-      "integrity": "sha512-aU5EJuIN2WDemCcAp2vFBfp/m4EAhWJnUNSSw0ixs7/kXbd6Pg64EmwJkNdFhB8aWt1sH2CTXrLxo/iAGV3oPQ==",
-      "license": "MIT",
-      "engines": {
-        "node": ">= 0.6"
-      }
-    },
-    "node_modules/metro/node_modules/mime-types": {
-      "version": "3.0.2",
-      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-3.0.2.tgz",
-      "integrity": "sha512-Lbgzdk0h4juoQ9fCKXW4by0UJqj+nOOrI9MJ1sSj4nI8aI2eo1qmvQEie4VD1glsS250n15LsWsYtCugiStS5A==",
-      "license": "MIT",
-      "dependencies": {
-        "mime-db": "^1.54.0"
-      },
-      "engines": {
-        "node": ">=18"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/express"
-      }
-    },
-    "node_modules/metro/node_modules/negotiator": {
-      "version": "1.1.0",
-      "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-1.1.0.tgz",
-      "integrity": "sha512-NMPBRMJgiQHjbd8phG3Vebdx4kZ1H121rbl5IkMqeOsahptB9BKo/d7oJ3zTXqTgagn2bWlNSXkh0QUGM31RYg==",
-      "license": "MIT",
-      "dependencies": {
-        "content-type": "^2.1.0"
-      },
-      "engines": {
-        "node": ">=18"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/express"
       }
     },
     "node_modules/micromatch": {
@@ -17489,24 +18510,28 @@ registerRootComponent(App);
       }
     },
     "node_modules/mime-db": {
-      "version": "1.52.0",
-      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.52.0.tgz",
-      "integrity": "sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==",
+      "version": "1.54.0",
+      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.54.0.tgz",
+      "integrity": "sha512-aU5EJuIN2WDemCcAp2vFBfp/m4EAhWJnUNSSw0ixs7/kXbd6Pg64EmwJkNdFhB8aWt1sH2CTXrLxo/iAGV3oPQ==",
       "license": "MIT",
       "engines": {
         "node": ">= 0.6"
       }
     },
     "node_modules/mime-types": {
-      "version": "2.1.35",
-      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.35.tgz",
-      "integrity": "sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==",
+      "version": "3.0.2",
+      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-3.0.2.tgz",
+      "integrity": "sha512-Lbgzdk0h4juoQ9fCKXW4by0UJqj+nOOrI9MJ1sSj4nI8aI2eo1qmvQEie4VD1glsS250n15LsWsYtCugiStS5A==",
       "license": "MIT",
       "dependencies": {
-        "mime-db": "1.52.0"
+        "mime-db": "^1.54.0"
       },
       "engines": {
-        "node": ">= 0.6"
+        "node": ">=18"
+      },
+      "funding": {
+        "type": "opencollective",
+        "url": "https://opencollective.com/express"
       }
     },
     "node_modules/mimic-fn": {
@@ -17585,12 +18610,19 @@ registerRootComponent(App);
       }
     },
     "node_modules/negotiator": {
-      "version": "0.6.3",
-      "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-0.6.3.tgz",
-      "integrity": "sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==",
+      "version": "1.1.0",
+      "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-1.1.0.tgz",
+      "integrity": "sha512-NMPBRMJgiQHjbd8phG3Vebdx4kZ1H121rbl5IkMqeOsahptB9BKo/d7oJ3zTXqTgagn2bWlNSXkh0QUGM31RYg==",
       "license": "MIT",
+      "dependencies": {
+        "content-type": "^2.1.0"
+      },
       "engines": {
-        "node": ">= 0.6"
+        "node": ">=18"
+      },
+      "funding": {
+        "type": "opencollective",
+        "url": "https://opencollective.com/express"
       }
     },
     "node_modules/node-fetch": {
@@ -19392,13 +20424,13 @@ registerRootComponent(App);
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-navigation/native": "*",
     "@react-navigation/stack": "*",
-    "expo": "~57.0.0",
-    "expo-document-picker": "~57.0.1",
+    "expo": "~57.0.22",
+    "expo-document-picker": "~57.0.2",
     "expo-file-system": "~57.0.7",
     "expo-font": "~57.0.3",
-    "expo-image-picker": "~57.0.16",
+    "expo-image-picker": "~57.0.17",
     "expo-status-bar": "~57.0.1",
-    "expo-web-browser": "~57.0.2",
+    "expo-web-browser": "~57.0.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "0.86.3",
@@ -19457,6 +20489,58 @@ sweeted-frontend/
 Bug: SSL Aiven non configuré dans db.js
 visible pendant le dev front: TOUT OU RIEN : si le backend ne se connecte pas, rien ne marche
 Peut attendre ?: ⛔ À vérifier maintenant (30 s) : lance le backend et appelle GET /api/posts. Si ça répond → rien à faire, passe au front. Si erreur SSL → à corriger avant tout
+
+
+
+Console Warning
+
+"megaphone" is not a valid icon name for family "feather"
+
+Source:
+D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\Data\LogBoxData.js (235:38)
+
+Call Stack:
+addLog (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\Data\LogBoxData.js:235)
+registerWarning (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:255)
+console.warn (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:113)
+Icon#render (D:\sweeted\sweeted-frontend\node_modules\@expo\vector-icons\build\createIconSet.js:76)
+callRender.react_stack_bottom_frame (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:17143)
+finishClassComponent (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:8389)
+updateClassComponent (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:8346)
+beginWork (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:9354)
+runWithFiberInDEV (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:697)
+performUnitOfWork (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:14134)
+workLoopSync (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:13966)
+renderRootSync (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:13947)
+performWorkOnRoot (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:13087)
+performSyncWorkOnRoot (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:3688)
+flushSyncWorkAcrossRoots_impl (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:3538)
+processRootScheduleInMicrotask (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:3570)
+scheduleMicrotask$argument_0 (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\Renderer\implementations\ReactFabric-dev.js:3708)
+
+
+
+Console Warning
+
+Cannot connect to Expo CLI.
+
+Try the following to fix the issue:
+- Ensure that Expo dev server is running and available on the same network
+- Ensure that your device/emulator is connected to your machine and has USB debugging enabled - run 'adb devices' to see a list of connected devices
+- If you're on a physical device connected to the same machine, run 'adb reverse tcp:8081 tcp:8081' to forward requests from your device
+
+URL: 192.168.0.160:8081
+
+Error: undefined
+
+Source:
+D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\Data\LogBoxData.js (235:38)
+
+Call Stack:
+addLog (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\Data\LogBoxData.js:235)
+registerWarning (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:255)
+console.warn (D:\sweeted\sweeted-frontend\node_modules\react-native\Libraries\LogBox\LogBox.js:113)
+setTimeout$argument_0 (D:\sweeted\sweeted-frontend\node_modules\expo\src\async-require\hmr.ts:312)
 ```
 
 ## Annexe : fichiers exclus (volontairement, avec raison)
@@ -19468,17 +20552,17 @@ Peut attendre ?: ⛔ À vérifier maintenant (30 s) : lance le backend et appell
 | .vscode/ | ? | dossier ignore (contenu regenere/telecharge) |
 | node_modules/ | ? | dossier ignore (contenu regenere/telecharge) |
 | server-err.log | 0 o | extension ignoree (binaire/media/genere) |
-| server-out.log | 7 Ko | extension ignoree (binaire/media/genere) |
+| server-out.log | 257 o | extension ignoree (binaire/media/genere) |
 | server.log | 2 Ko | extension ignoree (binaire/media/genere) |
 | sweeted-backend\.env | 220 o | secret (contenu masque) |
 | sweeted-backend\node_modules/ | ? | dossier ignore (contenu regenere/telecharge) |
+| sweeted-backend\uploads\avatar-1789154899400-293514641.jpeg | 695 Ko | extension ignoree (binaire/media/genere) |
 | sweeted-backend\uploads\file-1786995572163-306771736.pdf | 680 Ko | extension ignoree (binaire/media/genere) |
 | sweeted-backend\uploads\mjGoku.jpg | 44 Ko | extension ignoree (binaire/media/genere) |
-| sweeted-backend\uploads\post-1789127835384-339413324.jpeg | 14 o | extension ignoree (binaire/media/genere) |
-| sweeted-backend\uploads\post-1789127897864-517975702.jpeg | 14 o | extension ignoree (binaire/media/genere) |
 | sweeted-backend\uploads\post-1789145043417-82198511.jpeg | 33 Ko | extension ignoree (binaire/media/genere) |
 | sweeted-backend\web-err.log | 0 o | extension ignoree (binaire/media/genere) |
 | sweeted-backend\web-out.log | 0 o | extension ignoree (binaire/media/genere) |
+| sweeted-frontend\.env | 49 o | secret (contenu masque) |
 | sweeted-frontend\.expo/ | ? | dossier ignore (contenu regenere/telecharge) |
 | sweeted-frontend\8ltEY16Q.jpg | 77 Ko | extension ignoree (binaire/media/genere) |
 | sweeted-frontend\assets\adaptive-icon.png | 17 Ko | extension ignoree (binaire/media/genere) |
@@ -19490,4 +20574,4 @@ Peut attendre ?: ⛔ À vérifier maintenant (30 s) : lance le backend et appell
 | sweeted-frontend\assets\splash-icon.png | 17 Ko | extension ignoree (binaire/media/genere) |
 | sweeted-frontend\node_modules/ | ? | dossier ignore (contenu regenere/telecharge) |
 | sweeted-frontend\sweeted_logo-no_background.png | 85 Ko | extension ignoree (binaire/media/genere) |
-| sweeted-frontend\web-out.log | 3 Ko | extension ignoree (binaire/media/genere) |
+| sweeted-frontend\web-out.log | 19 Ko | extension ignoree (binaire/media/genere) |

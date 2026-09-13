@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useMemo, useState, useRef, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
@@ -25,7 +25,8 @@ import DesktopLayout from '../../components/Layout/DesktopLayout';
 import { apiFetch } from '../../config/apiClient';
 import { appendFilePart, cleanUri, imageMime } from '../../config/fileUpload';
 import { API_BASE_URL } from '../../config/api';
-import { COLORS, SPACING, RADIUS, SHADOWS, FONTS, BREAKPOINTS } from '../../config/theme';
+import { SPACING, RADIUS, SHADOWS, FONTS, BREAKPOINTS } from '../../config/theme';
+import { useTheme } from '../../context/ThemeContext';
 
 const ETUDIANT = 'etudiant';
 const OFFICIEL = 'officiel';
@@ -35,6 +36,8 @@ const FICHIERS = 'fichiers';
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => getStyles(colors, isDark), [colors, isDark]);
   const homeRef = useRef(null);
 
   // Détection responsive via hook natif useWindowDimensions
@@ -215,6 +218,7 @@ const HomeScreen = () => {
       onRequestClose={() => {
         if (!isCreating) {
           setShowCreateModal(false);
+          setPostContent('');
           setSelectedImage(null);
           setSelectedPdf(null);
           setCreateFeedback({ type: '', message: '' });
@@ -223,26 +227,27 @@ const HomeScreen = () => {
     >
       <View style={styles.modalOverlay}>
         <View style={styles.centeredView}>
-          <View style={styles.modalContent}>
+          <View style={[styles.modalContent, { backgroundColor: colors.cardBackground }]}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Créer un post</Text>
+              <Text style={[styles.modalTitle, { color: colors.textDark }]}>Créer un post</Text>
               <TouchableOpacity
                 onPress={() => {
                   setShowCreateModal(false);
+                  setPostContent('');
                   setSelectedImage(null);
                   setSelectedPdf(null);
                   setCreateFeedback({ type: '', message: '' });
                 }}
                 disabled={isCreating}
               >
-                <Ionicons name="close" size={28} color={COLORS.textDark} />
+                <Ionicons name="close" size={28} color={colors.textDark} />
               </TouchableOpacity>
             </View>
 
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, { backgroundColor: colors.inputBackground, color: colors.text, borderColor: colors.divider }]}
               placeholder="Quoi de neuf?"
-              placeholderTextColor={COLORS.placeholder}
+              placeholderTextColor={colors.placeholder}
               multiline
               value={postContent}
               onChangeText={setPostContent}
@@ -253,44 +258,44 @@ const HomeScreen = () => {
               <View style={styles.imagePreviewContainer}>
                 <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
                 <TouchableOpacity style={styles.removeImageButton} onPress={removeImage} disabled={isCreating}>
-                  <Ionicons name="close-circle" size={28} color={COLORS.white} />
+                  <Ionicons name="close-circle" size={28} color={colors.onPrimary} />
                 </TouchableOpacity>
               </View>
             ) : null}
 
-            <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage} disabled={isCreating}>
-              <Ionicons name="image-outline" size={24} color={COLORS.primary} />
-              <Text style={styles.imagePickerText}>Ajouter une image</Text>
+            <TouchableOpacity style={[styles.imagePickerButton, { borderColor: colors.divider, backgroundColor: colors.inputBackground }]} onPress={pickImage} disabled={isCreating}>
+              <Ionicons name="image-outline" size={24} color={colors.primary} />
+              <Text style={[styles.imagePickerText, { color: colors.primary }]}>Ajouter une image</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.imagePickerButton} onPress={pickPdf} disabled={isCreating}>
-              <Ionicons name="document-attach-outline" size={24} color={COLORS.primary} />
-              <Text style={styles.imagePickerText}>Ajouter un PDF</Text>
+            <TouchableOpacity style={[styles.imagePickerButton, { borderColor: colors.divider, backgroundColor: colors.inputBackground }]} onPress={pickPdf} disabled={isCreating}>
+              <Ionicons name="document-attach-outline" size={24} color={colors.primary} />
+              <Text style={[styles.imagePickerText, { color: colors.primary }]}>Ajouter un PDF</Text>
             </TouchableOpacity>
 
             {selectedPdf ? (
-              <View style={styles.pdfChip}>
-                <Ionicons name="document-text-outline" size={18} color={COLORS.primary} />
-                <Text style={styles.pdfChipText} numberOfLines={1}>{selectedPdf.name || 'piece-jointe.pdf'}</Text>
+              <View style={[styles.pdfChip, { backgroundColor: colors.inputBackground, borderColor: colors.divider }]}>
+                <Ionicons name="document-text-outline" size={18} color={colors.primary} />
+                <Text style={[styles.pdfChipText, { color: colors.text }]} numberOfLines={1}>{selectedPdf.name || 'piece-jointe.pdf'}</Text>
                 <TouchableOpacity onPress={removePdf} disabled={isCreating} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-                  <Ionicons name="close-circle" size={22} color={COLORS.textMuted} />
+                  <Ionicons name="close-circle" size={22} color={colors.textMuted} />
                 </TouchableOpacity>
               </View>
             ) : null}
 
             {createFeedback.message ? (
-              <Text style={createFeedback.type === 'error' ? styles.feedbackError : styles.feedbackSuccess}>
+              <Text style={createFeedback.type === 'error' ? styles.feedbackError : [styles.feedbackSuccess, { color: colors.primary }]}>
                 {createFeedback.message}
               </Text>
             ) : null}
 
             <TouchableOpacity
-              style={[styles.submitButton, isCreating && styles.submitButtonDisabled]}
+              style={[styles.submitButton, { backgroundColor: colors.primary }, isCreating && styles.submitButtonDisabled]}
               onPress={handleCreatePost}
               disabled={isCreating}
             >
               {isCreating ? (
-                <ActivityIndicator color={COLORS.white} />
+                <ActivityIndicator color={colors.onPrimary} />
               ) : (
                 <Text style={styles.submitButtonText}>Publier</Text>
               )}
@@ -327,8 +332,8 @@ const HomeScreen = () => {
 
   // Layout Mobile standard
   return (
-    <View style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + SPACING.sm }]}>
+    <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
+      <View style={[styles.header, { paddingTop: insets.top + SPACING.sm, backgroundColor: isDark ? colors.cardBackground : colors.headerGreen, borderBottomColor: colors.divider }]}>
         <View style={styles.headerRow}>
           <Image
             source={require('../../sweeted_logo-no_background.png')}
@@ -339,12 +344,12 @@ const HomeScreen = () => {
           <View style={styles.headerRight}>
             <View style={styles.headerIcons}>
               <TouchableOpacity style={styles.headerIconBtn} onPress={() => setIsSearching(true)}>
-                <Feather name="search" size={22} color={COLORS.black} />
+                <Feather name="search" size={22} color={colors.textDark} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.headerIconBtn} onPress={() => navigation.navigate('Notifications')}>
-                <Feather name="bell" size={22} color={COLORS.black} />
+                <Feather name="bell" size={22} color={colors.textDark} />
                 {unreadCount > 0 ? (
-                  <View style={styles.badge}>
+                  <View style={[styles.badge, { backgroundColor: colors.danger }]}>
                     <Text style={styles.badgeText}>{unreadCount > 9 ? '9+' : unreadCount}</Text>
                   </View>
                 ) : null}
@@ -353,24 +358,24 @@ const HomeScreen = () => {
                 {avatarUrl ? (
                   <Image source={{ uri: avatarUrl }} style={styles.headerAvatar} />
                 ) : (
-                  <Feather name="user" size={22} color={COLORS.black} />
+                  <Feather name="user" size={22} color={colors.textDark} />
                 )}
               </TouchableOpacity>
             </View>
 
             {mode === ETUDIANT || mode === OFFICIEL ? (
-              <View style={styles.toggleContainer}>
+              <View style={[styles.toggleContainer, { backgroundColor: colors.toggleBackground, borderColor: colors.toggleBorder }]}>
                 <TouchableOpacity
-                  style={[styles.toggleButton, mode === ETUDIANT && styles.activeToggle]}
+                  style={[styles.toggleButton, mode === ETUDIANT && [styles.activeToggle, { backgroundColor: colors.toggleActive }]]}
                   onPress={() => setMode(ETUDIANT)}
                 >
-                  <Text style={mode === ETUDIANT ? styles.activeToggleText : styles.toggleText}>Etudiant</Text>
+                  <Text style={mode === ETUDIANT ? [styles.activeToggleText, { color: colors.textPrimary }] : [styles.toggleText, { color: colors.textSecondary }]}>Etudiant</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.toggleButton, mode === OFFICIEL && styles.activeToggle]}
+                  style={[styles.toggleButton, mode === OFFICIEL && [styles.activeToggle, { backgroundColor: colors.toggleActive }]]}
                   onPress={() => setMode(OFFICIEL)}
                 >
-                  <Text style={mode === OFFICIEL ? styles.activeToggleText : styles.toggleText}>Officiel</Text>
+                  <Text style={mode === OFFICIEL ? [styles.activeToggleText, { color: colors.textPrimary }] : [styles.toggleText, { color: colors.textSecondary }]}>Officiel</Text>
                 </TouchableOpacity>
               </View>
             ) : null}
@@ -382,13 +387,21 @@ const HomeScreen = () => {
         {renderContent()}
       </View>
 
-      <View style={[styles.bottomNavContainer, { paddingBottom: insets.bottom }]}>
+      <View style={[
+        styles.bottomNavContainer, 
+        { 
+          paddingBottom: insets.bottom, 
+          backgroundColor: isDark ? colors.cardBackground : colors.headerGreen,
+          borderTopWidth: isDark ? 1 : 0,
+          borderTopColor: colors.divider,
+        }
+      ]}>
         <View style={styles.bottomNav}>
           <TouchableOpacity
             style={[styles.navItem, mode === ETUDIANT && styles.navItemActive]}
             onPress={() => setMode(ETUDIANT)}
           >
-            <Feather name="home" size={24} color={COLORS.white} />
+            <Feather name="home" size={24} color={colors.onHeader} />
             <Text style={mode === ETUDIANT ? styles.navLabelActive : styles.navLabel}>Accueil</Text>
           </TouchableOpacity>
 
@@ -396,7 +409,7 @@ const HomeScreen = () => {
             style={[styles.navItem, mode === OFFICIEL && styles.navItemActive]}
             onPress={() => setMode(OFFICIEL)}
           >
-            <Feather name="flag" size={24} color={COLORS.white} />
+            <Feather name="flag" size={24} color={colors.onHeader} />
             <Text style={mode === OFFICIEL ? styles.navLabelActive : styles.navLabel}>Officiels</Text>
           </TouchableOpacity>
 
@@ -406,7 +419,7 @@ const HomeScreen = () => {
             style={[styles.navItem, mode === CODE && styles.navItemActive]}
             onPress={() => setMode(CODE)}
           >
-            <Feather name="code" size={24} color={COLORS.white} />
+            <Feather name="code" size={24} color={colors.onHeader} />
             <Text style={mode === CODE ? styles.navLabelActive : styles.navLabel}>Code</Text>
           </TouchableOpacity>
 
@@ -414,7 +427,7 @@ const HomeScreen = () => {
             style={[styles.navItem, mode === FICHIERS && styles.navItemActive]}
             onPress={() => setMode(FICHIERS)}
           >
-            <Feather name="folder" size={24} color={COLORS.white} />
+            <Feather name="folder" size={24} color={colors.onHeader} />
             <Text style={mode === FICHIERS ? styles.navLabelActive : styles.navLabel}>Fichiers</Text>
           </TouchableOpacity>
         </View>
@@ -422,10 +435,10 @@ const HomeScreen = () => {
         {mode === ETUDIANT || mode === OFFICIEL ? (
           <View style={styles.fabWrapper}>
             <TouchableOpacity
-              style={styles.fab}
+              style={[styles.fab, { backgroundColor: colors.primary }]}
               onPress={() => setShowCreateModal(true)}
             >
-              <Ionicons name="add" size={32} color={COLORS.white} />
+              <Ionicons name="add" size={32} color={colors.onPrimary} />
             </TouchableOpacity>
           </View>
         ) : null}
@@ -438,18 +451,18 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-const styles = StyleSheet.create({
+const getStyles = (colors, isDark) => StyleSheet.create({
   desktopRootContainer: {
     flex: 1,
     height: '100%',
     width: '100%',
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
     ...(Platform.OS === 'web' && { height: '100vh', maxHeight: '100vh', overflow: 'hidden' }),
   },
   container: {
     flex: 1,
     ...(Platform.OS === 'web' && { height: '100vh', maxHeight: '100vh' }),
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
     position: 'relative',
   },
   content: {
@@ -458,7 +471,7 @@ const styles = StyleSheet.create({
     paddingBottom: 65,
   },
   header: {
-    backgroundColor: COLORS.headerGreen,
+    backgroundColor: colors.headerGreen,
     paddingHorizontal: SPACING.lg,
     paddingBottom: SPACING.lg,
     borderBottomLeftRadius: RADIUS.xxl,
@@ -493,13 +506,13 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#DDD',
+    backgroundColor: colors.divider,
   },
   badge: {
     position: 'absolute',
     top: -2,
     right: -4,
-    backgroundColor: COLORS.danger,
+    backgroundColor: colors.danger,
     borderRadius: 9,
     minWidth: 18,
     height: 18,
@@ -507,19 +520,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 4,
     borderWidth: 1.5,
-    borderColor: COLORS.headerGreen,
+    borderColor: colors.headerGreen,
   },
   badgeText: {
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontSize: 10,
     fontWeight: 'bold',
   },
   toggleContainer: {
     flexDirection: 'row',
-    backgroundColor: COLORS.toggleBackground,
+    backgroundColor: colors.toggleBackground,
     borderRadius: RADIUS.full,
     borderWidth: 1,
-    borderColor: COLORS.toggleBorder,
+    borderColor: colors.toggleBorder,
     overflow: 'hidden',
   },
   toggleButton: {
@@ -528,16 +541,16 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.full,
   },
   activeToggle: {
-    backgroundColor: COLORS.toggleActive,
+    backgroundColor: colors.toggleActive,
   },
   activeToggleText: {
     fontSize: FONTS.sizeBody,
     fontWeight: 'bold',
-    color: COLORS.black,
+    color: colors.textPrimary,
   },
   toggleText: {
     fontSize: FONTS.sizeBody,
-    color: COLORS.black,
+    color: colors.textPrimary,
   },
   bottomNavContainer: {
     position: Platform.OS === 'web' ? 'fixed' : 'absolute',
@@ -545,7 +558,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 100,
-    backgroundColor: COLORS.headerGreen,
+    backgroundColor: colors.headerGreen,
     borderTopLeftRadius: RADIUS.xxl,
     borderTopRightRadius: RADIUS.xxl,
   },
@@ -568,12 +581,12 @@ const styles = StyleSheet.create({
   },
   navLabel: {
     fontSize: 10,
-    color: COLORS.white,
+    color: colors.onHeader,
     fontWeight: '500',
   },
   navLabelActive: {
     fontSize: 10,
-    color: COLORS.white,
+    color: colors.onHeader,
     fontWeight: 'bold',
   },
   fabWrapper: {
@@ -582,18 +595,18 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   fab: {
-    backgroundColor: COLORS.headerGreen,
+    backgroundColor: colors.headerGreen,
     width: 55,
     height: 55,
     borderRadius: RADIUS.fab,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 4,
-    borderColor: COLORS.white,
+    borderColor: colors.onHeader,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -604,7 +617,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   modalContent: {
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.cardBackground,
     borderRadius: RADIUS.xl,
     paddingHorizontal: SPACING.xl,
     paddingTop: SPACING.xl,
@@ -623,15 +636,15 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: FONTS.sizeTitle,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   textInput: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.divider,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     fontSize: FONTS.sizeRegular,
-    color: COLORS.textDark,
+    color: colors.textDark,
     minHeight: 80,
     marginBottom: SPACING.md,
     textAlignVertical: 'top',
@@ -660,14 +673,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   imagePickerText: {
-    color: COLORS.primary,
+    color: colors.primary,
     fontSize: FONTS.sizeBody,
     fontWeight: '600',
   },
   pdfChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
     borderRadius: RADIUS.md,
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
@@ -676,11 +689,11 @@ const styles = StyleSheet.create({
   },
   pdfChipText: {
     flex: 1,
-    color: COLORS.textDark,
+    color: colors.textDark,
     fontSize: 13,
   },
   submitButton: {
-    backgroundColor: COLORS.headerGreen,
+    backgroundColor: colors.headerGreen,
     paddingVertical: SPACING.md,
     borderRadius: RADIUS.lg,
     alignItems: 'center',
@@ -689,17 +702,17 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   submitButtonText: {
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontSize: FONTS.sizeRegular,
     fontWeight: 'bold',
   },
   feedbackError: {
-    color: COLORS.danger,
+    color: colors.danger,
     marginBottom: SPACING.lg,
     textAlign: 'center',
   },
   feedbackSuccess: {
-    color: COLORS.primary,
+    color: colors.primary,
     marginBottom: SPACING.lg,
     textAlign: 'center',
   },

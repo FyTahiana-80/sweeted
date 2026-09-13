@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { COLORS, SPACING, RADIUS, SHADOWS, FONTS } from '../../config/theme';
+import { SPACING, RADIUS, SHADOWS, FONTS } from '../../config/theme';
+import { useTheme } from '../../context/ThemeContext';
 
 const ETUDIANT = 'etudiant';
 const OFFICIEL = 'officiel';
@@ -18,36 +19,39 @@ const DesktopHeader = ({
   avatarUrl,
   navigation,
 }) => {
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => getStyles(colors), [colors]);
+
   return (
-    <View style={styles.headerContainer}>
+    <View style={[styles.headerContainer, { backgroundColor: colors.cardBackground, borderBottomColor: colors.divider }]}>
       {/* Barre de recherche centrale */}
       <TouchableOpacity
-        style={styles.searchBar}
+        style={[styles.searchBar, { backgroundColor: colors.inputBackground }]}
         onPress={onOpenSearch}
         activeOpacity={0.8}
       >
-        <Feather name="search" size={18} color={COLORS.textSecondary} style={styles.searchIcon} />
-        <Text style={styles.searchPlaceholder}>Rechercher sur Sweeted...</Text>
+        <Feather name="search" size={18} color={colors.textSecondary} style={styles.searchIcon} />
+        <Text style={[styles.searchPlaceholder, { color: colors.placeholder }]}>Rechercher sur Sweeted...</Text>
       </TouchableOpacity>
 
       {/* Switch de mode Étudiant / Officiel (si applicable) */}
       {(mode === ETUDIANT || mode === OFFICIEL) && (
-        <View style={styles.toggleContainer}>
+        <View style={[styles.toggleContainer, { backgroundColor: colors.toggleBackground, borderColor: colors.toggleBorder }]}>
           <TouchableOpacity
-            style={[styles.toggleButton, mode === ETUDIANT && styles.activeToggle]}
+            style={[styles.toggleButton, mode === ETUDIANT && [styles.activeToggle, { backgroundColor: colors.primary }]]}
             onPress={() => onSetMode(ETUDIANT)}
             activeOpacity={0.8}
           >
-            <Text style={mode === ETUDIANT ? styles.activeToggleText : styles.toggleText}>
+            <Text style={mode === ETUDIANT ? [styles.activeToggleText, { color: colors.onPrimary }] : [styles.toggleText, { color: colors.textDark }]}>
               Étudiant
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.toggleButton, mode === OFFICIEL && styles.activeToggle]}
+            style={[styles.toggleButton, mode === OFFICIEL && [styles.activeToggle, { backgroundColor: colors.primary }]]}
             onPress={() => onSetMode(OFFICIEL)}
             activeOpacity={0.8}
           >
-            <Text style={mode === OFFICIEL ? styles.activeToggleText : styles.toggleText}>
+            <Text style={mode === OFFICIEL ? [styles.activeToggleText, { color: colors.onPrimary }] : [styles.toggleText, { color: colors.textDark }]}>
               Officiel
             </Text>
           </TouchableOpacity>
@@ -61,9 +65,9 @@ const DesktopHeader = ({
           onPress={() => navigation?.navigate('Notifications')}
           activeOpacity={0.7}
         >
-          <Feather name="bell" size={20} color={COLORS.textDark} />
+          <Feather name="bell" size={20} color={colors.textDark} />
           {unreadCount > 0 && (
-            <View style={styles.badge}>
+            <View style={[styles.badge, { backgroundColor: colors.danger }]}>
               <Text style={styles.badgeText}>{unreadCount > 9 ? '9+' : unreadCount}</Text>
             </View>
           )}
@@ -77,8 +81,8 @@ const DesktopHeader = ({
           {avatarUrl ? (
             <Image source={{ uri: avatarUrl }} style={styles.avatar} />
           ) : (
-            <View style={styles.avatarPlaceholder}>
-              <Feather name="user" size={18} color={COLORS.textDark} />
+            <View style={[styles.avatarPlaceholder, { backgroundColor: colors.inputBackground }]}>
+              <Feather name="user" size={18} color={colors.textDark} />
             </View>
           )}
         </TouchableOpacity>
@@ -89,12 +93,12 @@ const DesktopHeader = ({
 
 export default DesktopHeader;
 
-const styles = StyleSheet.create({
+const getStyles = (colors) => StyleSheet.create({
   headerContainer: {
     height: 64,
-    backgroundColor: COLORS.cardBackground,
+    backgroundColor: colors.cardBackground,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.divider,
+    borderBottomColor: colors.divider,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -106,7 +110,7 @@ const styles = StyleSheet.create({
     flex: 1,
     maxWidth: 420,
     height: 40,
-    backgroundColor: COLORS.inputBackground,
+    backgroundColor: colors.inputBackground,
     borderRadius: RADIUS.full,
     flexDirection: 'row',
     alignItems: 'center',
@@ -116,15 +120,15 @@ const styles = StyleSheet.create({
     marginRight: SPACING.sm,
   },
   searchPlaceholder: {
-    color: COLORS.placeholder,
+    color: colors.placeholder,
     fontSize: FONTS.sizeBody,
   },
   toggleContainer: {
     flexDirection: 'row',
-    backgroundColor: COLORS.toggleBackground,
+    backgroundColor: colors.toggleBackground,
     borderRadius: RADIUS.full,
     borderWidth: 1,
-    borderColor: COLORS.toggleBorder,
+    borderColor: colors.toggleBorder,
     overflow: 'hidden',
     marginHorizontal: SPACING.lg,
   },
@@ -134,16 +138,16 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.full,
   },
   activeToggle: {
-    backgroundColor: COLORS.toggleActive,
+    backgroundColor: colors.toggleActive,
   },
   activeToggleText: {
     fontSize: FONTS.sizeBody,
     fontWeight: 'bold',
-    color: COLORS.black,
+    color: colors.textPrimary,
   },
   toggleText: {
     fontSize: FONTS.sizeBody,
-    color: COLORS.black,
+    color: colors.textPrimary,
   },
   actionsRight: {
     flexDirection: 'row',
@@ -154,7 +158,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: RADIUS.full,
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -167,23 +171,23 @@ const styles = StyleSheet.create({
     height: 38,
     borderRadius: 19,
     borderWidth: 2,
-    borderColor: COLORS.primary,
+    borderColor: colors.primary,
   },
   avatarPlaceholder: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: COLORS.divider,
+    borderColor: colors.divider,
   },
   badge: {
     position: 'absolute',
     top: -2,
     right: -2,
-    backgroundColor: COLORS.danger,
+    backgroundColor: colors.danger,
     borderRadius: RADIUS.full,
     minWidth: 16,
     height: 16,
@@ -192,7 +196,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   badgeText: {
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontSize: 9,
     fontWeight: 'bold',
   },

@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator, TextInput, Modal, Alert } from 'react-native';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator, TextInput, Modal, Alert, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { apiFetch } from '../config/apiClient';
+import { appendFilePart, cleanUri, imageMime } from '../config/fileUpload';
 import { API_BASE_URL } from '../config/api';
-import { COLORS, SPACING } from '../config/theme';
+import { SPACING } from '../config/theme';
+import { useTheme } from '../context/ThemeContext';
 
 const assetUrl = (url) => {
   if (!url) return null;
@@ -17,6 +19,8 @@ const assetUrl = (url) => {
 export default function ProfileScreen() {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const { colors, isDark, palette, palettes, setPalette, toggleDarkMode } = useTheme();
+  const styles = useMemo(() => getStyles(colors, isDark), [colors, isDark]);
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState(null);
   const [bookmarks, setBookmarks] = useState([]);
@@ -123,6 +127,11 @@ export default function ProfileScreen() {
 
   const saveProfile = async () => {
     setSaving(true);
+    if (!displayName.trim() && !bio.trim() && !filiere.trim() && !avatarUri) {
+      setSaving(false);
+      setSaveError("Modifie au moins un champ avant d'enregistrer.");
+      return;
+    }
     setSaveError('');
 
     const formData = new FormData();
@@ -131,10 +140,13 @@ export default function ProfileScreen() {
     if (filiere.trim()) formData.append('filiere', filiere.trim());
 
     if (avatarUri) {
-      const filename = avatarUri.split('/').pop();
-      const match = /\.(\w+)$/.exec(filename);
-      const type = match ? `image/${match[1]}` : 'image/jpeg';
-      formData.append('avatar', { uri: avatarUri, name: filename, type });
+      const rawName = String(avatarUri).split('?')[0].split('/').pop() || 'avatar.jpg';
+      const upAv = await appendFilePart(formData, 'avatar', cleanUri(avatarUri), rawName, imageMime(rawName));
+      if (!upAv.ok) {
+        setSaving(false);
+        setSaveError("Lecture de l'image impossible : " + upAv.debug);
+        return;
+      }
     }
 
     const result = await apiFetch('/users/me', { method: 'PUT', body: formData });
@@ -198,7 +210,7 @@ export default function ProfileScreen() {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       </View>
     );
@@ -212,11 +224,11 @@ export default function ProfileScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="black" />
+          <Ionicons name="arrow-back" size={24} color={colors.textDark} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Profil</Text>
         <TouchableOpacity onPress={openEdit}>
-          <Ionicons name="create-outline" size={24} color="black" />
+          <Ionicons name="create-outline" size={24} color={colors.textDark} />
         </TouchableOpacity>
       </View>
 
@@ -232,12 +244,12 @@ export default function ProfileScreen() {
             <Text style={styles.userTag}>{tag}</Text>
             {user?.filiere ? (
               <Text style={styles.userFiliere}>
-                <Ionicons name="school-outline" size={13} color={COLORS.textMuted} /> {user.filiere}
+                <Ionicons name="school-outline" size={13} color={colors.textMuted} /> {user.filiere}
               </Text>
             ) : null}
             {user?.bio ? <Text style={styles.userBio}>{user.bio}</Text> : null}
             <TouchableOpacity style={styles.editButton} onPress={openEdit}>
-              <Ionicons name="create-outline" size={16} color={COLORS.primary} />
+              <Ionicons name="create-outline" size={16} color={colors.primary} />
               <Text style={styles.editButtonText}>Modifier le profil</Text>
             </TouchableOpacity>
           </View>
@@ -257,6 +269,84 @@ export default function ProfileScreen() {
             </View>
           </View>
 
+          {/* Section Apparence & Thème */}
+          <View style={[styles.menuSection, { backgroundColor: colors.cardBackground }]}>
+            <View style={styles.themeHeaderRow}>
+              <View style={styles.themeHeaderLeft}>
+                <Ionicons name={isDark ? "moon" : "sunny"} size={20} color={colors.primary} />
+                <Text style={[styles.sectionTitle, { color: colors.textDark, marginBottom: 0, marginLeft: 8 }]}>
+                  Apparence & Thème
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={[
+                  styles.darkModeToggle,
+                  { backgroundColor: isDark ? colors.primary : colors.inputBackground }
+                ]}
+                onPress={toggleDarkMode}
+                activeOpacity={0.8}
+              >
+                <Ionicons 
+                  name={isDark ? "moon" : "sunny-outline"} 
+                  size={15} 
+                  color={colors.textDark} 
+                />
+                <Text style={[styles.darkModeText, { color: colors.textDark }]}>
+                  {isDark ? 'Mode Sombre' : 'Mode Clair'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <Text style={[styles.themeSubtitle, { color: colors.textSecondary }]}>
+              Palette active : <Text style={{ color: colors.primary, fontWeight: '700' }}>{palettes.find(p => p.id === palette)?.name || 'Emerald'}</Text>
+            </Text>
+
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false} 
+              contentContainerStyle={styles.paletteScroll}
+            >
+              {palettes.map((p) => {
+                const isSelected = palette === p.id;
+                const paletteColors = isDark ? p.dark : p.light;
+                return (
+                  <TouchableOpacity
+                    key={p.id}
+                    style={[
+                      styles.paletteCard,
+                      {
+                        backgroundColor: paletteColors.cardBackground,
+                        borderColor: isSelected ? p.primaryColor : colors.divider,
+                        borderWidth: isSelected ? 2 : 1,
+                      },
+                    ]}
+                    onPress={() => setPalette(p.id)}
+                    activeOpacity={0.8}
+                  >
+                    <View style={[styles.paletteColorCircle, { backgroundColor: p.primaryColor }]}>
+                      {isSelected && <Ionicons name="checkmark" size={14} color={colors.onPrimary} />}
+                    </View>
+                    <Text 
+                      style={[
+                        styles.paletteName, 
+                        { color: paletteColors.text, fontWeight: isSelected ? '700' : '600' }
+                      ]} 
+                      numberOfLines={1}
+                    >
+                      {p.name.replace('Sweeted ', '').replace('Polytech ', '')}
+                    </Text>
+                    <Text 
+                      style={[styles.paletteDesc, { color: paletteColors.textMuted }]} 
+                      numberOfLines={1}
+                    >
+                      {p.description}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+
           <View style={styles.menuSection}>
             <Text style={styles.sectionTitle}>Vos enregistrements</Text>
             {bookmarks.length === 0 ? (
@@ -271,13 +361,13 @@ export default function ProfileScreen() {
                   onPress={() => navigation.navigate('PostDetails', { post: item })}
                 >
                   <View style={styles.bookmarkLeft}>
-                    <Ionicons name="bookmark" size={18} color={COLORS.primary} />
+                    <Ionicons name="bookmark" size={18} color={colors.primary} />
                     <View style={styles.bookmarkTextContainer}>
                       <Text style={styles.bookmarkContent} numberOfLines={2}>{item.content || '(post sans texte)'}</Text>
                       <Text style={styles.bookmarkMeta}>{item.user} · {item.totalReactions} réaction{item.totalReactions > 1 ? 's' : ''}</Text>
                     </View>
                   </View>
-                  <Ionicons name="chevron-forward" size={18} color="#CCC" />
+                  <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
                 </TouchableOpacity>
               ))
             )}
@@ -288,13 +378,13 @@ export default function ProfileScreen() {
               <Text style={styles.sectionTitle}>Administration</Text>
               <TouchableOpacity style={styles.bookmarkRow} onPress={openCreateUser}>
                 <View style={styles.bookmarkLeft}>
-                  <Ionicons name="person-add-outline" size={20} color={COLORS.primary} />
+                  <Ionicons name="person-add-outline" size={20} color={colors.primary} />
                   <View style={styles.bookmarkTextContainer}>
                     <Text style={styles.bookmarkContent}>Créer un compte utilisateur</Text>
                     <Text style={styles.bookmarkMeta}>Admin · Modérateur · Utilisateur</Text>
                   </View>
                 </View>
-                <Ionicons name="chevron-forward" size={18} color="#CCC" />
+                <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
               </TouchableOpacity>
             </View>
           ) : null}
@@ -316,7 +406,7 @@ export default function ProfileScreen() {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Modifier le profil</Text>
               <TouchableOpacity onPress={() => setEditVisible(false)} disabled={saving}>
-                <Ionicons name="close" size={26} color={COLORS.textDark} />
+                <Ionicons name="close" size={26} color={colors.textDark} />
               </TouchableOpacity>
             </View>
 
@@ -345,7 +435,7 @@ export default function ProfileScreen() {
                 onChangeText={setFiliere}
                 maxLength={100}
                 placeholder="Ex : Génie Logiciel"
-                placeholderTextColor={COLORS.placeholder}
+                placeholderTextColor={colors.placeholder}
                 editable={!saving}
               />
 
@@ -357,7 +447,7 @@ export default function ProfileScreen() {
                 maxLength={280}
                 multiline
                 placeholder="Quelques mots sur vous..."
-                placeholderTextColor={COLORS.placeholder}
+                placeholderTextColor={colors.placeholder}
                 editable={!saving}
               />
 
@@ -369,7 +459,7 @@ export default function ProfileScreen() {
                 disabled={saving}
               >
                 {saving ? (
-                  <ActivityIndicator color="#FFF" />
+                  <ActivityIndicator color={colors.onPrimary} />
                 ) : (
                   <Text style={styles.submitButtonText}>Enregistrer</Text>
                 )}
@@ -390,7 +480,7 @@ export default function ProfileScreen() {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Créer un compte</Text>
               <TouchableOpacity onPress={() => setCreateUserVisible(false)} disabled={cuSaving}>
-                <Ionicons name="close" size={26} color={COLORS.textDark} />
+                <Ionicons name="close" size={26} color={colors.textDark} />
               </TouchableOpacity>
             </View>
 
@@ -401,7 +491,7 @@ export default function ProfileScreen() {
                 value={cuMatricule}
                 onChangeText={setCuMatricule}
                 placeholder="Ex : 5-40014/25"
-                placeholderTextColor={COLORS.placeholder}
+                placeholderTextColor={colors.placeholder}
                 editable={!cuSaving}
                 autoCapitalize="none"
               />
@@ -443,7 +533,7 @@ export default function ProfileScreen() {
                 disabled={cuSaving}
               >
                 {cuSaving ? (
-                  <ActivityIndicator color="#FFF" />
+                  <ActivityIndicator color={colors.onPrimary} />
                 ) : (
                   <Text style={styles.submitButtonText}>Créer le compte</Text>
                 )}
@@ -456,10 +546,11 @@ export default function ProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors, isDark) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.screenBackground,
+    backgroundColor: colors.screenBackground,
+    ...(Platform.OS === 'web' ? { height: '100vh', maxHeight: '100vh', overflow: 'hidden' } : null),
   },
   loadingContainer: {
     flex: 1,
@@ -473,7 +564,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.xl,
   },
   errorText: {
-    color: COLORS.danger,
+    color: colors.danger,
     textAlign: 'center',
     fontSize: 16,
   },
@@ -483,7 +574,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: 'white',
+    backgroundColor: colors.cardBackground,
   },
   headerTitle: {
     fontSize: 18,
@@ -492,33 +583,33 @@ const styles = StyleSheet.create({
   profileSection: {
     alignItems: 'center',
     padding: 25,
-    backgroundColor: 'white',
+    backgroundColor: colors.cardBackground,
   },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#EEE',
+    backgroundColor: colors.inputBackground,
     marginBottom: 12,
   },
   userName: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textDark,
   },
   userTag: {
     fontSize: 14,
-    color: '#888',
+    color: colors.textMuted,
     marginTop: 3,
   },
   userFiliere: {
     fontSize: 13,
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     marginTop: 6,
   },
   userBio: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
     marginTop: 8,
     textAlign: 'center',
     fontStyle: 'italic',
@@ -532,16 +623,16 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: COLORS.primary,
+    borderColor: colors.primary,
   },
   editButtonText: {
-    color: COLORS.primary,
+    color: colors.primary,
     fontWeight: '600',
     fontSize: 14,
   },
   statsContainer: {
     flexDirection: 'row',
-    backgroundColor: 'white',
+    backgroundColor: colors.cardBackground,
     marginVertical: 10,
     paddingVertical: 15,
     justifyContent: 'space-around',
@@ -553,14 +644,14 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: COLORS.primary,
+    color: colors.primary,
   },
   statLabel: {
     fontSize: 12,
-    color: '#888',
+    color: colors.textMuted,
   },
   menuSection: {
-    backgroundColor: 'white',
+    backgroundColor: colors.cardBackground,
     paddingHorizontal: 20,
     paddingTop: 15,
     paddingBottom: 20,
@@ -569,12 +660,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textDark,
     marginBottom: 10,
   },
   emptyBookmarks: {
     fontSize: 13,
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     fontStyle: 'italic',
   },
   bookmarkRow: {
@@ -583,7 +674,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 13,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    borderBottomColor: colors.divider,
   },
   bookmarkLeft: {
     flexDirection: 'row',
@@ -596,11 +687,11 @@ const styles = StyleSheet.create({
   },
   bookmarkContent: {
     fontSize: 14,
-    color: '#222',
+    color: colors.textPrimary,
   },
   bookmarkMeta: {
     fontSize: 12,
-    color: '#888',
+    color: colors.textMuted,
     marginTop: 3,
   },
   logoutButton: {
@@ -609,21 +700,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#FFF0F0',
+    backgroundColor: colors.danger + '1A',
     alignItems: 'center',
   },
   logoutText: {
-    color: COLORS.danger,
+    color: colors.danger,
     fontWeight: 'bold',
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: '#FFF',
+    backgroundColor: colors.cardBackground,
     borderRadius: 16,
     padding: 20,
     width: '90%',
@@ -638,7 +729,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   avatarPicker: {
     alignItems: 'center',
@@ -648,39 +739,39 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: 45,
-    backgroundColor: '#EEE',
+    backgroundColor: colors.inputBackground,
   },
   avatarPickerText: {
     marginTop: 8,
-    color: COLORS.primary,
+    color: colors.primary,
     fontWeight: '600',
   },
   inputLabel: {
     fontSize: 13,
-    color: '#666',
+    color: colors.textSecondary,
     marginBottom: 5,
     marginTop: 10,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.divider,
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 15,
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   bioInput: {
     minHeight: 80,
     textAlignVertical: 'top',
   },
   saveError: {
-    color: COLORS.danger,
+    color: colors.danger,
     marginTop: 12,
     textAlign: 'center',
   },
   feedbackSuccess: {
-    color: COLORS.primary,
+    color: colors.primary,
     marginTop: 12,
     textAlign: 'center',
   },
@@ -694,26 +785,26 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: COLORS.inputBackground || '#F5F5F5',
+    borderColor: colors.divider,
+    backgroundColor: colors.inputBackground,
     alignItems: 'center',
   },
   roleChipActive: {
-    backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   roleChipText: {
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontSize: 13,
     fontWeight: '600',
   },
   roleChipTextActive: {
-    color: '#FFF',
+    color: colors.onPrimary,
     fontSize: 13,
     fontWeight: 'bold',
   },
   submitButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: 'center',
@@ -723,8 +814,62 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   submitButtonText: {
-    color: '#FFF',
+    color: colors.onPrimary,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  themeHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  themeHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  darkModeToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    gap: 6,
+  },
+  darkModeText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  themeSubtitle: {
+    fontSize: 13,
+    marginBottom: 12,
+  },
+  paletteScroll: {
+    flexDirection: 'row',
+    paddingBottom: 4,
+  },
+  paletteCard: {
+    width: 130,
+    padding: 12,
+    borderRadius: 14,
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  paletteColorCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  paletteName: {
+    fontSize: 13,
+    marginBottom: 2,
+    textAlign: 'center',
+  },
+  paletteDesc: {
+    fontSize: 10,
+    textAlign: 'center',
   },
 });

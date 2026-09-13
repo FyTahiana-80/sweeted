@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useRef, useEffect, useCallback } from 'react';
+import { useTheme } from '../../context/ThemeContext';
 import {
   View, Text, StyleSheet, Image, TouchableOpacity, ScrollView,
   Modal, Animated, TextInput, Alert, ActivityIndicator
@@ -9,9 +10,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { apiFetch } from '../../config/apiClient';
 import { API_BASE_URL } from '../../config/api';
 import { formatRelativeTime } from '../../components/formatTime';
-import { COLORS, SPACING, RADIUS } from '../../config/theme';
+import { SPACING, RADIUS } from '../../config/theme';
 
 export default function OfficialDetails({ route }) {
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => getStyles(colors, isDark), [colors, isDark]);
   const { official: initialOfficial } = route.params;
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -27,6 +30,7 @@ export default function OfficialDetails({ route }) {
   const [editBusy, setEditBusy] = useState(false);
   const [editFeedback, setEditFeedback] = useState({ type: '', message: '' });
   const [deleting, setDeleting] = useState(false);
+  const [deleteVisible, setDeleteVisible] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -110,34 +114,26 @@ export default function OfficialDetails({ route }) {
 
   const confirmDelete = useCallback(() => {
     setMenuOpen(false);
-    Alert.alert(
-      'Supprimer',
-      'Voulez-vous vraiment supprimer cette publication officielle ?',
-      [
-        { text: 'Annuler', style: 'cancel' },
-        {
-          text: 'Supprimer',
-          style: 'destructive',
-          onPress: async () => {
-            setDeleting(true);
-            const result = await apiFetch(`/official/${data.id}`, { method: 'DELETE' });
-            setDeleting(false);
-            if (result.ok) {
-              navigation.goBack();
-            } else {
-              Alert.alert('Erreur', result.data?.message || 'Impossible de supprimer la publication.');
-            }
-          },
-        },
-      ]
-    );
-  }, [data, navigation]);
+    setDeleteVisible(true);
+  }, []);
 
+  const doDeleteOfficial = async () => {
+    setDeleting(true);
+    const result = await apiFetch(`/official/${data.id}`, { method: 'DELETE' });
+    setDeleting(false);
+    if (result.ok) {
+      setDeleteVisible(false);
+      navigation.goBack();
+    } else {
+      setDeleteVisible(false);
+      Alert.alert('Erreur', result.data?.message || 'Impossible de supprimer la publication.');
+    }
+  };
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.headerBar}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={24} color={COLORS.primary} />
+          <Icon name="arrow-left" size={24} color={colors.primary} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Publication officielle</Text>
         <View style={styles.headerRight}>
@@ -147,28 +143,31 @@ export default function OfficialDetails({ route }) {
                 style={styles.menuButton}
                 onPress={() => setMenuOpen(o => !o)}
               >
-                <Icon name="dots-vertical" size={22} color={COLORS.primary} />
+                <Icon name="dots-vertical" size={22} color={colors.primary} />
               </TouchableOpacity>
               {menuOpen ? (
-                <View style={styles.dropdown}>
+                <View style={styles.dropdownOverlay}>
+                  <TouchableOpacity style={styles.dropdownBackdrop} onPress={() => setMenuOpen(false)} />
+                  <View style={styles.dropdown}>
                   <TouchableOpacity style={styles.dropdownItem} onPress={openEdit}>
-                    <Icon name="pencil-outline" size={16} color={COLORS.textDark} />
+                    <Icon name="pencil-outline" size={16} color={colors.textDark} />
                     <Text style={styles.dropdownText}>Modifier</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.dropdownItem} onPress={togglePin}>
                     <Icon
                       name={data?.is_pinned === 1 ? 'pin-off-outline' : 'pin-outline'}
                       size={16}
-                      color={COLORS.textDark}
+                      color={colors.textDark}
                     />
                     <Text style={styles.dropdownText}>
                       {data?.is_pinned === 1 ? 'Déépingler' : 'Épingler'}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.dropdownItem} onPress={confirmDelete}>
-                    <Icon name="delete-outline" size={16} color={COLORS.danger} />
+                    <Icon name="delete-outline" size={16} color={colors.danger} />
                     <Text style={[styles.dropdownText, styles.dropdownTextDanger]}>Supprimer</Text>
                   </TouchableOpacity>
+                </View>
                 </View>
               ) : null}
             </View>
@@ -184,7 +183,7 @@ export default function OfficialDetails({ route }) {
             <View style={styles.cardHeader}>
               <View style={styles.authorRow}>
                 <View style={styles.authorAvatar}>
-                  <Icon name="school" size={22} color={COLORS.primary} />
+                  <Icon name="school" size={22} color={colors.primary} />
                 </View>
                 <View>
                   <Text style={styles.authorName}>{authorName}</Text>
@@ -193,7 +192,7 @@ export default function OfficialDetails({ route }) {
               </View>
               {data.is_pinned === 1 ? (
                 <View style={styles.pinnedBadge}>
-                  <Icon name="pin" size={14} color={COLORS.primary} />
+                  <Icon name="pin" size={14} color={colors.primary} />
                   <Text style={styles.pinnedText}>Épinglé</Text>
                 </View>
               ) : null}
@@ -209,7 +208,7 @@ export default function OfficialDetails({ route }) {
                   resizeMode="cover"
                 />
                 <View style={styles.zoomHint}>
-                  <Icon name="fullscreen" size={16} color={COLORS.white} />
+                  <Icon name="fullscreen" size={16} color={colors.onPrimary} />
                   <Text style={styles.zoomHintText}>Toucher pour zoomer</Text>
                 </View>
               </TouchableOpacity>
@@ -241,14 +240,14 @@ export default function OfficialDetails({ route }) {
                 onPress={() => { setEditVisible(false); setEditFeedback({ type: '', message: '' }); }}
                 disabled={editBusy}
               >
-                <Icon name="close" size={28} color={COLORS.textDark} />
+                <Icon name="close" size={28} color={colors.textDark} />
               </TouchableOpacity>
             </View>
 
             <TextInput
               style={styles.textInput}
               placeholder="Contenu de l'avis"
-              placeholderTextColor={COLORS.placeholder}
+              placeholderTextColor={colors.placeholder}
               multiline
               value={editContent}
               onChangeText={setEditContent}
@@ -268,7 +267,7 @@ export default function OfficialDetails({ route }) {
               disabled={editBusy}
             >
               {editBusy ? (
-                <ActivityIndicator color={COLORS.white} />
+                <ActivityIndicator color={colors.onPrimary} />
               ) : (
                 <Text style={styles.saveButtonText}>Enregistrer</Text>
               )}
@@ -285,7 +284,7 @@ export default function OfficialDetails({ route }) {
       >
         <View style={styles.viewerOverlay}>
           <TouchableOpacity style={styles.viewerClose} onPress={() => setViewerVisible(false)}>
-            <Icon name="close" size={30} color={COLORS.white} />
+            <Icon name="close" size={30} color={colors.onPrimary} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.viewerImageContainer}
@@ -303,14 +302,46 @@ export default function OfficialDetails({ route }) {
           </Text>
         </View>
       </Modal>
+
+      <Modal
+        visible={deleteVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => { if (!deleting) setDeleteVisible(false); }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Confirmer la suppression</Text>
+            <Text style={{ marginVertical: 14, color: colors.textSecondary }}>Voulez-vous vraiment supprimer cette publication officielle ?</Text>
+            <TouchableOpacity
+              style={[styles.saveButton, { backgroundColor: colors.danger }, deleting && styles.saveButtonDisabled]}
+              onPress={doDeleteOfficial}
+              disabled={deleting}
+            >
+              {deleting ? (
+                <ActivityIndicator color={colors.onPrimary} />
+              ) : (
+                <Text style={styles.saveButtonText}>Supprimer</Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.saveButton, styles.saveButtonDisabled, { backgroundColor: colors.inputBackground, marginTop: 10 }]}
+              onPress={() => setDeleteVisible(false)}
+              disabled={deleting}
+            >
+              <Text style={[styles.saveButtonText, { color: colors.textDark }]}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors, isDark) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
   },
   headerBar: {
     flexDirection: 'row',
@@ -319,8 +350,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.divider,
-    backgroundColor: COLORS.background,
+    borderBottomColor: colors.divider,
+    backgroundColor: colors.background,
   },
   backButton: {
     padding: SPACING.sm,
@@ -328,7 +359,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   headerRight: {
     width: 40,
@@ -345,15 +376,30 @@ const styles = StyleSheet.create({
     top: 34,
     right: 0,
     zIndex: 50,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.cardBackground,
     borderRadius: RADIUS.lg,
     paddingVertical: 4,
     minWidth: 150,
     elevation: 4,
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
+  },
+  dropdownOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 60,
+  },
+  dropdownBackdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   dropdownItem: {
     flexDirection: 'row',
@@ -364,23 +410,23 @@ const styles = StyleSheet.create({
   },
   dropdownText: {
     fontSize: 13,
-    color: COLORS.textDark,
+    color: colors.textDark,
     fontWeight: '600',
   },
   dropdownTextDanger: {
-    color: COLORS.danger,
+    color: colors.danger,
   },
   spacer: {
     width: 40,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.cardBackground,
     borderRadius: RADIUS.xl,
     paddingHorizontal: SPACING.xl,
     paddingTop: SPACING.xl,
@@ -397,33 +443,33 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 17,
     fontWeight: 'bold',
-    color: COLORS.textDark,
+    color: colors.textDark,
     flex: 1,
     marginRight: SPACING.sm,
   },
   textInput: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.divider,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     fontSize: 15,
-    color: COLORS.textDark,
+    color: colors.textDark,
     minHeight: 90,
     marginBottom: SPACING.md,
     textAlignVertical: 'top',
   },
   feedbackError: {
-    color: COLORS.danger,
+    color: colors.danger,
     marginBottom: SPACING.lg,
     textAlign: 'center',
   },
   feedbackSuccess: {
-    color: COLORS.primary,
+    color: colors.primary,
     marginBottom: SPACING.lg,
     textAlign: 'center',
   },
   saveButton: {
-    backgroundColor: COLORS.headerGreen,
+    backgroundColor: colors.headerGreen,
     paddingVertical: SPACING.md,
     borderRadius: RADIUS.lg,
     alignItems: 'center',
@@ -432,7 +478,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   saveButtonText: {
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -441,11 +487,11 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   card: {
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.cardBackground,
     borderRadius: RADIUS.xl,
     padding: SPACING.lg,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 3,
@@ -464,7 +510,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#E8F5EC',
+    backgroundColor: colors.primary + '1F',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: SPACING.md,
@@ -472,17 +518,17 @@ const styles = StyleSheet.create({
   authorName: {
     fontWeight: 'bold',
     fontSize: 14,
-    color: COLORS.textDark,
+    color: colors.textDark,
   },
   time: {
     fontSize: 11,
-    color: COLORS.textLight,
+    color: colors.textLight,
     marginTop: 1,
   },
   pinnedBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E8F5EC',
+    backgroundColor: colors.primary + '1F',
     borderRadius: RADIUS.full,
     paddingHorizontal: SPACING.sm,
     paddingVertical: 3,
@@ -491,11 +537,11 @@ const styles = StyleSheet.create({
   pinnedText: {
     fontSize: 11,
     fontWeight: 'bold',
-    color: COLORS.primary,
+    color: colors.primary,
   },
   content: {
     fontSize: 15,
-    color: COLORS.textDark,
+    color: colors.textDark,
     lineHeight: 22,
     marginBottom: SPACING.md,
   },
@@ -503,7 +549,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 300,
     borderRadius: RADIUS.lg,
-    backgroundColor: '#eee',
+    backgroundColor: colors.inputBackground,
   },
   zoomHint: {
     position: 'absolute',
@@ -511,14 +557,14 @@ const styles = StyleSheet.create({
     right: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.55)',
+    backgroundColor: colors.backdrop,
     borderRadius: RADIUS.full,
     paddingHorizontal: 10,
     paddingVertical: 5,
     gap: 5,
   },
   zoomHintText: {
-    color: COLORS.white,
+    color: colors.onPrimary,
     fontSize: 11,
     fontWeight: '600',
   },
@@ -527,7 +573,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyText: {
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     fontSize: 14,
   },
   viewerOverlay: {

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import { Entypo, Ionicons, MaterialCommunityIcons as MIcon } from '@expo/vector-icons';
 import ReactionButton from './ReactionButton';
 import { formatRelativeTime } from './formatTime';
-import { COLORS } from '../config/theme';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Post({ post, onReact, currentUserId, role, onDelete, onEdit, onBookmark, onOpenFile }) {
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => getStyles(colors, isDark), [colors, isDark]);
   const [showMenu, setShowMenu] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -27,18 +29,18 @@ export default function Post({ post, onReact, currentUserId, role, onDelete, onE
   };
 
   const toggleMenu = (e) => {
-    if (e) e.stopPropagation();
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
     setShowMenu(prev => !prev);
   };
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: colors.cardBackground, borderColor: isDark ? colors.divider : 'transparent', borderWidth: isDark ? 1 : 0 }]}>
       <View style={styles.header}>
         <View style={styles.userInfo}>
-          <Image source={{ uri: post.avatar }} style={styles.avatar} />
+          <Image source={{ uri: post.avatar || 'https://i.pravatar.cc/150?u=default' }} style={styles.avatar} />
           <View>
-            <Text style={styles.user}>{post.user}</Text>
-            <Text style={styles.time}>{formatRelativeTime(post.created_at)}</Text>
+            <Text style={[styles.user, { color: colors.textPrimary }]}>{post.user}</Text>
+            <Text style={[styles.time, { color: colors.textSecondary }]}>{formatRelativeTime(post.created_at)}</Text>
           </View>
         </View>
 
@@ -49,34 +51,34 @@ export default function Post({ post, onReact, currentUserId, role, onDelete, onE
             hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
             activeOpacity={0.6}
           >
-            <Entypo name="dots-three-horizontal" size={20} color={COLORS.textDark} />
+            <Entypo name="dots-three-horizontal" size={20} color={colors.textDark} />
           </TouchableOpacity>
         )}
       </View>
 
-      <Text style={styles.content}>{post.content}</Text>
+      <Text style={[styles.content, { color: colors.text }]}>{post.content}</Text>
 
       {post.image && (
-        <Image source={{ uri: post.image }} style={styles.postImage} />
+        <Image source={{ uri: post.image }} style={styles.postImage} resizeMode={Platform.OS === 'web' ? 'contain' : 'cover'} />
       )}
 
       {hasAttachment && onOpenFile ? (
         <TouchableOpacity
-          style={styles.attachmentChip}
+          style={[styles.attachmentChip, { backgroundColor: colors.inputBackground, borderColor: colors.divider }]}
           onPress={() => onOpenFile(post)}
           activeOpacity={0.7}
         >
-          <MIcon name="file-pdf-box" size={20} color={COLORS.danger} />
-          <Text style={styles.attachmentName} numberOfLines={1}>
+          <MIcon name="file-pdf-box" size={20} color={colors.danger} />
+          <Text style={[styles.attachmentName, { color: colors.textDark }]} numberOfLines={1}>
             {post.file_name || 'Pièce jointe'}
           </Text>
-          <View style={styles.attachmentBadge}>
+          <View style={[styles.attachmentBadge, { backgroundColor: colors.danger }]}>
             <Text style={styles.attachmentBadgeText}>PDF</Text>
           </View>
         </TouchableOpacity>
       ) : null}
 
-      <View style={styles.footer}>
+      <View style={[styles.footer, { borderTopColor: colors.divider }]}>
         <ReactionButton 
           total={post.totalReactions} 
           hasReacted={post.has_reacted}
@@ -94,7 +96,7 @@ export default function Post({ post, onReact, currentUserId, role, onDelete, onE
             <Ionicons
               name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
               size={22}
-              color={isBookmarked ? COLORS.primary : COLORS.textSecondary}
+              color={isBookmarked ? colors.primary : colors.textSecondary}
             />
           </TouchableOpacity>
         ) : null}
@@ -104,22 +106,22 @@ export default function Post({ post, onReact, currentUserId, role, onDelete, onE
       {showMenu && (
         <View style={styles.dropdownOverlay}>
           <TouchableOpacity style={styles.dropdownBackdrop} onPress={() => setShowMenu(false)} />
-          <View style={styles.dropdown}>
-            <Text style={styles.menuTitle}>Options du post</Text>
+          <View style={[styles.dropdown, { backgroundColor: colors.cardBackground, borderColor: colors.divider, borderWidth: 1 }]}>
+            <Text style={[styles.menuTitle, { color: colors.textMuted }]}>Options du post</Text>
             {isAuthor ? (
               <TouchableOpacity style={styles.menuItem} onPress={handleEdit}>
-                <Ionicons name="pencil-outline" size={20} color={COLORS.textDark} />
-                <Text style={styles.menuItemText}>Modifier le post</Text>
+                <Ionicons name="pencil-outline" size={20} color={colors.textDark} />
+                <Text style={[styles.menuItemText, { color: colors.textDark }]}>Modifier le post</Text>
               </TouchableOpacity>
             ) : null}
 
             <TouchableOpacity style={[styles.menuItem, styles.menuItemDanger]} onPress={() => { setShowMenu(false); setConfirmDelete(true); }}>
-              <Ionicons name="trash-outline" size={20} color={COLORS.danger} />
-              <Text style={[styles.menuItemText, { color: COLORS.danger }]}>Supprimer le post</Text>
+              <Ionicons name="trash-outline" size={20} color={colors.danger} />
+              <Text style={[styles.menuItemText, { color: colors.danger }]}>Supprimer le post</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.cancelButton} onPress={() => setShowMenu(false)}>
-              <Text style={styles.cancelButtonText}>Annuler</Text>
+            <TouchableOpacity style={[styles.cancelButton, { backgroundColor: colors.inputBackground }]} onPress={() => setShowMenu(false)}>
+              <Text style={[styles.cancelButtonText, { color: colors.textDark }]}>Annuler</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -129,14 +131,14 @@ export default function Post({ post, onReact, currentUserId, role, onDelete, onE
       {confirmDelete && (
         <View style={styles.confirmOverlay}>
           <TouchableOpacity style={styles.confirmBackdrop} onPress={() => setConfirmDelete(false)} />
-          <View style={styles.confirmBox}>
-            <Text style={styles.confirmTitle}>Confirmer la suppression</Text>
-            <Text style={styles.confirmSubTitle}>Voulez-vous vraiment supprimer ce post ?</Text>
+          <View style={[styles.confirmBox, { backgroundColor: colors.cardBackground, borderColor: colors.divider, borderWidth: 1 }]}>
+            <Text style={[styles.confirmTitle, { color: colors.textPrimary }]}>Confirmer la suppression</Text>
+            <Text style={[styles.confirmSubTitle, { color: colors.textSecondary }]}>Voulez-vous vraiment supprimer ce post ?</Text>
             <View style={styles.confirmActions}>
-              <TouchableOpacity style={styles.confirmCancelBtn} onPress={() => setConfirmDelete(false)}>
-                <Text style={styles.confirmCancelText}>Annuler</Text>
+              <TouchableOpacity style={[styles.confirmCancelBtn, { backgroundColor: colors.inputBackground }]} onPress={() => setConfirmDelete(false)}>
+                <Text style={[styles.confirmCancelText, { color: colors.textDark }]}>Annuler</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.confirmDeleteBtn} onPress={handleDelete}>
+              <TouchableOpacity style={[styles.confirmDeleteBtn, { backgroundColor: colors.danger }]} onPress={handleDelete}>
                 <Text style={styles.confirmDeleteText}>Supprimer</Text>
               </TouchableOpacity>
             </View>
@@ -147,15 +149,15 @@ export default function Post({ post, onReact, currentUserId, role, onDelete, onE
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors, isDark) => StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: colors.cardBackground,
     marginHorizontal: 15,
     marginVertical: 8,
     padding: 15,
     borderRadius: 15,
     elevation: 3,
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -175,39 +177,38 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 10,
-    backgroundColor: '#ddd',
+    backgroundColor: colors.divider,
   },
   user: {
     fontWeight: 'bold',
     fontSize: 14,
-    color: '#000',
+    color: colors.textPrimary,
   },
   time: {
     fontSize: 11,
-    color: '#999',
+    color: colors.textSecondary,
     marginTop: 1,
   },
   content: {
     fontSize: 16,
-    color: '#1c1e21',
+    color: colors.text,
     lineHeight: 22,
     marginBottom: 10,
   },
   postImage: {
     width: '100%',
     height: Platform.OS === 'web' ? 420 : 200,
-    resizeMode: Platform.OS === 'web' ? 'contain' : 'cover',
     borderRadius: 10,
     marginBottom: 10,
-    backgroundColor: '#eee',
+    backgroundColor: colors.inputBackground,
   },
   attachmentChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F7',
+    backgroundColor: colors.inputBackground,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: colors.divider,
     paddingHorizontal: 12,
     paddingVertical: 9,
     marginBottom: 10,
@@ -216,24 +217,24 @@ const styles = StyleSheet.create({
   attachmentName: {
     flex: 1,
     fontSize: 13,
-    color: '#333',
+    color: colors.textDark,
     fontWeight: '500',
   },
   attachmentBadge: {
-    backgroundColor: COLORS.danger,
+    backgroundColor: colors.danger,
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
   attachmentBadgeText: {
-    color: '#FFF',
+    color: colors.onPrimary,
     fontSize: 10,
     fontWeight: 'bold',
   },
   footer: {
     marginTop: 5,
     borderTopWidth: 1,
-    borderTopColor: '#F0F2F5',
+    borderTopColor: colors.divider,
     paddingTop: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -266,13 +267,13 @@ const styles = StyleSheet.create({
     right: 10,
     zIndex: 50,
     width: 220,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.cardBackground,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingTop: 12,
     paddingBottom: 8,
     elevation: 8,
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.18,
     shadowRadius: 10,
@@ -282,7 +283,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 15,
     textAlign: 'center',
-    color: '#333',
+    color: colors.textDark,
   },
   menuItem: {
     flexDirection: 'row',
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     gap: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    borderBottomColor: colors.divider,
   },
   menuItemDanger: {
     borderBottomWidth: 0,
@@ -298,18 +299,18 @@ const styles = StyleSheet.create({
   menuItemText: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#333',
+    color: colors.textDark,
   },
   cancelButton: {
     marginTop: 15,
     paddingVertical: 10,
-    backgroundColor: '#F5F5F7',
+    backgroundColor: colors.inputBackground,
     borderRadius: 10,
     alignItems: 'center',
   },
   cancelButtonText: {
     fontWeight: 'bold',
-    color: '#666',
+    color: colors.textSecondary,
   },
   confirmOverlay: {
     position: 'absolute',
@@ -324,11 +325,11 @@ const styles = StyleSheet.create({
   },
   confirmBackdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.55)',
+    backgroundColor: colors.backdrop,
     borderRadius: 15,
   },
   confirmBox: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.cardBackground,
     borderRadius: 16,
     padding: 20,
     width: '100%',
@@ -338,12 +339,12 @@ const styles = StyleSheet.create({
   confirmTitle: {
     fontSize: 17,
     fontWeight: 'bold',
-    color: '#111',
+    color: colors.textPrimary,
     marginBottom: 8,
   },
   confirmSubTitle: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
     textAlign: 'center',
     marginBottom: 20,
   },
@@ -356,22 +357,22 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 11,
     borderRadius: 10,
-    backgroundColor: '#F0F2F5',
+    backgroundColor: colors.inputBackground,
     alignItems: 'center',
   },
   confirmCancelText: {
     fontWeight: '600',
-    color: '#444',
+    color: colors.textDark,
   },
   confirmDeleteBtn: {
     flex: 1,
     paddingVertical: 11,
     borderRadius: 10,
-    backgroundColor: COLORS.danger,
+    backgroundColor: colors.danger,
     alignItems: 'center',
   },
   confirmDeleteText: {
     fontWeight: 'bold',
-    color: 'white',
+    color: colors.onPrimary,
   },
 });
